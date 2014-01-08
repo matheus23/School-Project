@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>Anmeldung LG&Ouml;- Datenbank</title>
+	<title>Anmeldung LGÖ - Datenbank</title>
 </head>
 <body>
 <table width="100%" height="95%">
@@ -16,9 +16,9 @@
 					<form method="post">
 						<tr><td><input type="text" name ="Bn"> Benutzername</td></tr>
 						<tr><td><input type="password" name ="Pw"> Passwort</td></tr>
-						<tr><td><input type="password" name ="Pwb"> Passwort best&auml;tigen</td></tr>
+						<tr><td><input type="password" name ="Pwb"> Passwort bestätigen</td></tr>
 						<tr><td><input type="email" name ="email"> Email adresse</td></tr>
-						<tr><td><input type="submit" value="Registrieren"><input type="reset" name="L&ouml;schen"></td></tr>
+						<tr><td><input type="submit" value="Registrieren"><input type="reset" name="Löschen"></td></tr>
 					</form>
 				</table>
 			</td>
@@ -41,13 +41,13 @@ if (alleSchlüsselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	$email = $data["email"];
 	
 	if ($pw != $pwb){
-		echo "Das Passwort stimmt nicht mit der Wiederholung &Uuml;berein";
+		echo "Das Passwort stimmt nicht mit der Wiederholung überein";
 	}
 	
 	$db = öffneBenutzerDB();
 	
 	if (userExestiertBereits($db, $email)) {
-		echo ("Fehler: <div align='center' font color='#FF0000'>ERROR ES GIBT DEN USER F&Uuml;R DIESE E- MAIL ADRESSE BEREITS </div>");
+		echo ("Fehler: <div align='center' font color='#FF0000'>ERROR ES GIBT DEN USER FÜR DIESE E-MAIL ADRESSE BEREITS </div>");
 	}
 	$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
 }
