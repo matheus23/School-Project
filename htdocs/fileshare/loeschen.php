@@ -34,21 +34,17 @@ include "utilities.php";
 
 $data = $_POST;
 
-if (isset ($data['mail']) && ($data['Pw'])){
+if (alleSchlüsselGesetzt($data, "mail", "Pw")){
 	$email = $data["mail"];
 	$pw = $data["Pw"];
 	
-	if (isset($data["mail"]) && isset($data["Pw"])) {
-		$sql = openBenutzerDB();
-		
-		if (userAlreadyExists($sql, $email)) {
-			$sql->query("DELETE FROM `benutzer` where email='$email'");
-		} else {
-			die("USER NICHT VORHANDEN");
-		}		
+	$sql = öffneBenutzerDB();
+    
+	if (userExestiertBereits($sql, $email)) {
+		$sql->query("DELETE FROM `Benutzer` where email='$email'");
+	} else {
+		die("USER NICHT VORHANDEN");
 	}
-} else {
-	echo "Eines der beiden Felder wurde nicht ausgefüllt";
 }
 ?>
 </body>
