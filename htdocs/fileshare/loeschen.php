@@ -14,8 +14,8 @@
 			<td>
 				<table align="center" valign="middle">
 					<form method="post">
-						<tr><td><input type="text" name ="mail"> E- Mail</td></tr>
-						<tr><td><input type="text" name ="Pw"> Passwort</td></tr>
+						<tr><td><input type="email" name ="mail"> E- Mail</td></tr>
+						<tr><td><input type="password" name ="Pw"> Passwort</td></tr>
 						<tr><td><input type="submit" value="Account löschen"><input type="reset"></td></tr>
 					</form>
 				</table>
@@ -42,6 +42,7 @@ if (alleSchlüsselGesetzt($data, "mail", "Pw")){
     
 	if (userExestiertBereits($db, $email)) {
 		$db->query("DELETE FROM `Benutzer` where email='$email'");
+		prüfeSQLFehler($db, "Fehler:", True);
 	} else {
 		die("USER NICHT VORHANDEN");
 	}

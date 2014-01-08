@@ -33,4 +33,18 @@ function alleSchlüsselGesetzt($array) {
 	return true;
 }
 
+// Prüft, ob es einen SQL Fehler gab, gibt gegebenerweise eine
+// $nachricht an, und falls gewollt, den fehlercode dazu.
+// Beispiele:
+// prüfeSQLFehler($db, "Ein interner Fehler ist aufgetreten...");
+// prüfeSQLFehler($db, "Fehler:", True);
+function prüfeSQLFehler($db, $nachricht, $gibFehlercodeAus = False) {
+	if ($db->connect_errno) {
+		$fehlernachricht = $gibFehlercodeAus ? " (" . $db->error . ")" : "";
+		die($nachricht . $fehlernachricht);
+		return true;
+	}
+	return false;
+}
+
 ?>
