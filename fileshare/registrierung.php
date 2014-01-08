@@ -31,6 +31,8 @@
 <?php
 include "utilities.php";
 
+debugModus();
+
 $data = $_POST;
 $fehlerliste="";
 

@@ -1,6 +1,12 @@
 <meta charset="UTF-8" />
 <?php
 
+// Im debugModus gibt php Alle fehler an den Client weiter.
+function debugModus() {
+	error_reporting(E_ALL);
+	ini_set('display_errors', true);
+}
+
 // Findet heraus, ob es bereits einen User mit der 
 // gegebenen email gibt, der bereits registriert ist:
 function userExestiertBereits($db, $userEmail) {
