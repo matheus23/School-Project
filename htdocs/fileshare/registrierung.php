@@ -42,7 +42,7 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	$email = $data["email"];
 	
 	if ($pw != $pwb){
-		$fehlerliste+="<li>Das Passwort stimmt nicht mit der Wiederholung überein</li>\n";
+		$fehlerliste.="<li>Das Passwort stimmt nicht mit der Wiederholung überein</li>";
 	}
 	
 	$db = oeffneBenutzerDB();
