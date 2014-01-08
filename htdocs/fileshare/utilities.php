@@ -5,7 +5,7 @@
 // gegebenen email gibt, der bereits registriert ist:
 function userExestiertBereits($db, $userEmail) {
 	$rows = $db->query("SELECT * FROM Benutzer WHERE Email = '$userEmail'");
-	if ($db->connect_errno) die($db->error);
+	if ($db->connect_errno) return false;
 	return $rows->num_rows > 0;
 }
 

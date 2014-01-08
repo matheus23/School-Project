@@ -44,7 +44,7 @@ if (alleSchlüsselGesetzt($data, "mail", "Pw")){
 		$db->query("DELETE FROM `Benutzer` where email='$email'");
 		prüfeSQLFehler($db, "Fehler:", True);
 	} else {
-		die("USER NICHT VORHANDEN");
+		echo ("Fehler: USER NICHT VORHANDEN");
 	}
 }
 ?>

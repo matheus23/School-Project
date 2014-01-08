@@ -47,7 +47,7 @@ if (alleSchlüsselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	$db = öffneBenutzerDB();
 	
 	if (userExestiertBereits($db, $email)) {
-		die("<div align='center' font color='#FF0000'>ERROR ES GIBT DEN USER F&Uuml;R DIESE E- MAIL ADRESSE BEREITS </div>");
+		echo ("Fehler: <div align='center' font color='#FF0000'>ERROR ES GIBT DEN USER F&Uuml;R DIESE E- MAIL ADRESSE BEREITS </div>");
 	}
 	$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
 }
