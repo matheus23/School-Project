@@ -33,7 +33,7 @@ include "utilities.php";
 
 $data = $_POST;
 
-if (alleSchlüsselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
+if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 
 	$user = $data["Bn"];
 	$pw = $data["Pw"];
@@ -44,7 +44,7 @@ if (alleSchlüsselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		echo "Das Passwort stimmt nicht mit der Wiederholung überein";
 	}
 	
-	$db = öffneBenutzerDB();
+	$db = oeffneBenutzerDB();
 	
 	if (userExestiertBereits($db, $email)) {
 		echo ("Fehler: <div align='center' font color='#FF0000'>ERROR ES GIBT DEN USER FÜR DIESE E-MAIL ADRESSE BEREITS </div>");

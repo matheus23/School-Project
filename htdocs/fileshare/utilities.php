@@ -10,7 +10,7 @@ function userExestiertBereits($db, $userEmail) {
 }
 
 // Öffnet die Datenbank für die Benutzer.
-function öffneBenutzerDB() {
+function oeffneBenutzerDB() {
 	$db = new MySQLi("localhost", "schoolproject", "hallo123", "Fileshare");
 	$db->set_charset("utf-8");
 	return $db;
@@ -25,7 +25,7 @@ function öffneBenutzerDB() {
 // 
 // Gibt True zurück, wenn alle gegebenen Keys im array $array 
 // exestieren.
-function alleSchlüsselGesetzt($array) {
+function alleSchluesselGesetzt($array) {
 	$allargs = func_get_args();
 	for ($i = 1; $i < count($allargs); $i++) {
 		if (!isset($array[$allargs[$i]])) return false;
@@ -38,7 +38,7 @@ function alleSchlüsselGesetzt($array) {
 // Beispiele:
 // prüfeSQLFehler($db, "Ein interner Fehler ist aufgetreten...");
 // prüfeSQLFehler($db, "Fehler:", True);
-function prüfeSQLFehler($db, $nachricht, $gibFehlercodeAus = False) {
+function pruefeSQLFehler($db, $nachricht, $gibFehlercodeAus = False) {
 	if ($db->connect_errno) {
 		$fehlernachricht = $gibFehlercodeAus ? " (" . $db->error . ")" : "";
 		die($nachricht . $fehlernachricht);

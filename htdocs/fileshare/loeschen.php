@@ -34,15 +34,15 @@ include "utilities.php";
 
 $data = $_POST;
 
-if (alleSchlüsselGesetzt($data, "mail", "Pw")){
+if (alleSchluesselGesetzt($data, "mail", "Pw")){
 	$email = $data["mail"];
 	$pw = $data["Pw"];
 	
-	$db = öffneBenutzerDB();
+	$db = oeffneBenutzerDB();
     
 	if (userExestiertBereits($db, $email)) {
 		$db->query("DELETE FROM `Benutzer` where email='$email'");
-		prüfeSQLFehler($db, "Fehler:", True);
+		pruefeSQLFehler($db, "Fehler:", True);
 	} else {
 		echo ("Fehler: USER NICHT VORHANDEN");
 	}
