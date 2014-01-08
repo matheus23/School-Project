@@ -44,12 +44,12 @@ if (alleSchlüsselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		echo "Das Passwort stimmt nicht mit der Wiederholung &Uuml;berein";
 	}
 	
-	$sql = öffneBenutzerDB();
+	$db = öffneBenutzerDB();
 	
-	if (userExestiertBereits($sql, $email)) {
+	if (userExestiertBereits($db, $email)) {
 		die("<div align='center' font color='#FF0000'>ERROR ES GIBT DEN USER F&Uuml;R DIESE E- MAIL ADRESSE BEREITS </div>");
 	}
-	$sql->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
+	$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
 }
 ?>
 </body>

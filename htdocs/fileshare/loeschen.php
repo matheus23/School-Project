@@ -38,10 +38,10 @@ if (alleSchlüsselGesetzt($data, "mail", "Pw")){
 	$email = $data["mail"];
 	$pw = $data["Pw"];
 	
-	$sql = öffneBenutzerDB();
+	$db = öffneBenutzerDB();
     
-	if (userExestiertBereits($sql, $email)) {
-		$sql->query("DELETE FROM `Benutzer` where email='$email'");
+	if (userExestiertBereits($db, $email)) {
+		$db->query("DELETE FROM `Benutzer` where email='$email'");
 	} else {
 		die("USER NICHT VORHANDEN");
 	}

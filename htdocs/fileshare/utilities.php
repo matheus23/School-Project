@@ -4,16 +4,16 @@
 // Findet heraus, ob es bereits einen User mit der 
 // gegebenen email gibt, der bereits registriert ist:
 function userExestiertBereits($db, $userEmail) {
-	$rows = $sql->query("SELECT * FROM Benutzer WHERE Email = '$userEmail'");
-	if ($sql->connect_errno) die($sql->error);
+	$rows = $db->query("SELECT * FROM Benutzer WHERE Email = '$userEmail'");
+	if ($db->connect_errno) die($db->error);
 	return $rows->num_rows > 0;
 }
 
 // Öffnet die Datenbank für die Benutzer.
 function öffneBenutzerDB() {
-	$sql = new MySQLi("localhost", "schoolproject", "hallo123", "Fileshare");
-	$sql->set_charset("utf-8");
-	return $sql;
+	$db = new MySQLi("localhost", "schoolproject", "hallo123", "Fileshare");
+	$db->set_charset("utf-8");
+	return $db;
 }
 
 // Benutzung:
