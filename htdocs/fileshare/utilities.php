@@ -9,7 +9,7 @@ function userAlreadyExists($sql, $userEmail) {
 }
 
 // Öffnet die Datenbank für die Benutzer.
-function openDB() {
+function openBenutzerDB() {
 	$sql = new MySQLi("localhost", "schoolproject", "hallo123", "Fileshare");
 	$sql->set_charset("utf-8");
 	return $sql;

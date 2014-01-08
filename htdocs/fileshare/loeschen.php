@@ -39,7 +39,7 @@ if (isset ($data['mail']) && ($data['Pw'])){
 	$pw = $data["Pw"];
 	
 	if (isset($data["mail"]) && isset($data["Pw"])) {
-		$sql = openDB();
+		$sql = openBenutzerDB();
 		
 		if (userAlreadyExists($sql, $email)) {
 			$sql->query("DELETE FROM `benutzer` where email='$email'");

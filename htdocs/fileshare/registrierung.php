@@ -44,7 +44,7 @@ if (allKeysSet($data, "Bn", "Pw", "Pwb", "email")) {
 		echo "Das Passwort stimmt nicht mit der Wiederholung &Uuml;berein";
 	}
 	
-	$sql = openDB();
+	$sql = openBenutzerDB();
 	
 	if (userAlreadyExists($sql, $email)) {
 		die("<div align='center' font color='#FF0000'>ERROR ES GIBT DEN USER F&Uuml;R DIESE E- MAIL ADRESSE BEREITS </div>");
