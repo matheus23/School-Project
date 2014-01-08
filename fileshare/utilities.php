@@ -1,5 +1,6 @@
 <meta charset="UTF-8" />
 <?php
+include "ExtSQL.php";
 
 // Im debugModus gibt php Alle fehler an den Client weiter.
 function debugModus() {
@@ -15,9 +16,17 @@ function userExestiertBereits($db, $userEmail) {
 	return $rows->num_rows > 0;
 }
 
+$benutzerDB = array(
+	"host" => "localhost",
+	"user" => "schoolproject",
+	"password" => "hallo123",
+	"database" => "Fileshare"
+);
+
 // Öffnet die Datenbank für die Benutzer.
 function oeffneBenutzerDB() {
-	$db = new MySQLi("localhost", "schoolproject", "hallo123", "Fileshare");
+	global $benutzerDB;
+	$db = new ExtSQLi($benutzerDB);
 	$db->set_charset("utf-8");
 	return $db;
 }
