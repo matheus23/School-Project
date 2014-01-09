@@ -43,13 +43,11 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	$pwb = $data["Pwb"];
 	$email = $data["email"];
 	
+	$db = oeffneBenutzerDB();
 	if ($pw != $pwb){
 		$fehlerliste.="<li>Das Passwort stimmt nicht mit der Wiederholung überein</li>";
 	}
-	
-	$db = oeffneBenutzerDB();
-	
-	if (userExestiertBereits($db, $email)) {
+	elseif (userExestiertBereits($db, $email)) {
 		$fehlerliste .= "<li>Diese E-Mail ist bereits vergeben.</li>";
 	}
 	else{
