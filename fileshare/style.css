@@ -12,3 +12,14 @@ body {
     border-radius: 6px;
 	margin-bottom: 4px;
 }
+
+.warnung {
+    font-family: monospace;
+    background-color: #F90;
+    border: 1px solid #F60;
+    color: #d3d7cf;
+    font-weight: bold;
+    padding: 6px;
+    border-radius: 6px;
+	margin-bottom: 4px;
+}
