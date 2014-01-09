@@ -7,6 +7,7 @@ class ExtSQL extends MySQLi {
 			$settings["user"], 
 			$settings["password"], 
 			$settings["database"]);
+		parent::set_charset("utf8");
 	}
 }
 ?>
