@@ -59,10 +59,11 @@ $fehlerliste = array();
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 
-	$user = $data["Bn"];
+	$user = $db->real_escape_string($data["Bn"]);
+	$email = $db->real_escape_string($data["email"]);
+	// wird sowieso gehashed:
 	$pw = $data["Pw"];
 	$pwb = $data["Pwb"];
-	$email = $data["email"];
 	
 	$db = oeffneBenutzerDB();
 	if ($pw != $pwb) {
@@ -72,7 +73,8 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		array_push($fehlerliste, "Diese E-Mail ist bereits vergeben.");
 	}
 	else {
-		$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
+		$pwHash = password_hash($pw);
+		$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
 	}
 }
 
