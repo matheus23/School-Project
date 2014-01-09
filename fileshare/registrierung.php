@@ -25,6 +25,13 @@
 				</table>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<div id="fehlerListe">
+				<noscript><div class='warnung'><img src='img/warning.png' />Javascript muss aktiviert sein!</div></noscript>
+				</div>
+			</td>
+		</tr>
 		</table>
 		<br>
 	</td>
@@ -57,11 +64,8 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	}
 }
 
-$fehlerjs = jsFürFehlerListe("document.getElementById('fehlerListe')", $fehlerliste);
+$fehlerjs = jsFuerFehlerListe("document.getElementById('fehlerListe')", $fehlerliste);
 ?>
-<div id="fehlerListe">
-<noscript><div class='warnung'><img src='img/warning.png' />Javascript muss aktiviert sein!</div></noscript>
-</div>
 <script src="pruefeRegistrierung.js"></script>
 <script type="text/javascript"><?=$fehlerjs?></script>
 </body>

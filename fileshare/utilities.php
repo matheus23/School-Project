@@ -62,10 +62,10 @@ function pruefeSQLFehler($db, $nachricht, $gibFehlercodeAus = False) {
 	return false;
 }
 
-function jsFürFehlerListe($element, $nachrichtenArray) {
+function jsFuerFehlerListe($element, $nachrichtenArray) {
 	$jsAufrufe = "";
 	foreach ($nachrichtenArray as $nachricht) {
-		$jsAufrufe .= "fehlerNachricht($element, $nachricht);\n";
+		$jsAufrufe .= "fehlerNachricht($element, '$nachricht');\n";
 	}
 	return $jsAufrufe;
 }
