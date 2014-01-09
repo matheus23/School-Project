@@ -1,6 +1,6 @@
 //Einstellungen für Passwort-/Benutzernamenlänge
 var minPasswortLaenge = 5;
-var maxPasswortLaenge = 10;
+var maxPasswortLaenge = 50;
 var minBenutzernamenLaenge = 3;
 
 //Elemente der HTML-Seite werden als javascript-variabeln repräsentiert
