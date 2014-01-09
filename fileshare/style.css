@@ -1,0 +1,14 @@
+body {
+    font-family: Sans-Serif;
+}
+
+.fehler {
+    font-family: monospace;
+    background-color: #ef2929;
+    border: 1px solid #cc0000;
+    color: #d3d7cf;
+    font-weight: bold;
+    padding: 6px;
+    border-radius: 6px;
+	margin-bottom: 4px;
+}

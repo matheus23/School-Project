@@ -2,6 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script src="jsUtilities.js" type="text/javascript"></script>
 	<title>Anmeldung LGÖ - Datenbank</title>
 </head>
 <body>
@@ -34,7 +36,7 @@ include "utilities.php";
 debugModus();
 
 $data = $_POST;
-$fehlerliste="";
+$fehlerliste = array();
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 
@@ -43,21 +45,23 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	$pwb = $data["Pwb"];
 	$email = $data["email"];
 	
-	if ($pw != $pwb){
-		$fehlerliste.="<li>Das Passwort stimmt nicht mit der Wiederholung überein</li>";
+	if ($pw != $pwb) {
+		array_push($fehlerliste, "Das Passwort stimmt nicht mit der Wiederholung überein");
 	}
 	
 	$db = oeffneBenutzerDB();
 	
 	if (userExestiertBereits($db, $email)) {
-		$fehlerliste .= "<li>Diese E-Mail ist bereits vergeben.</li>";
+		array_push($fehlerliste, "Diese E-Mail ist bereits vergeben.");
 	}
 	$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
 }
+
+$fehlerjs = jsFürFehlerListe("document.getElementById('fehlerListe')", $fehlerliste);
 ?>
-<ul id="fehlerListe">
-<?=$fehlerliste?>
-</ul>
+<div id="fehlerListe">
+</div>
 <script src="pruefeRegistrierung.js"></script>
+<script type="text/javascript"><?=$fehlerjs?>
 </body>
 </html>
