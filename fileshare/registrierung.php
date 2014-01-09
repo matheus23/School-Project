@@ -52,7 +52,9 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	if (userExestiertBereits($db, $email)) {
 		$fehlerliste .= "<li>Diese E-Mail ist bereits vergeben.</li>";
 	}
+	else{
 	$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
+	}
 }
 ?>
 <ul id="fehlerListe">
