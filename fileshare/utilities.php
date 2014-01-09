@@ -12,7 +12,7 @@ function debugModus() {
 // gegebenen email gibt, der bereits registriert ist:
 function userExestiertBereits($db, $userEmail) {
 	$rows = $db->query("SELECT * FROM Benutzer WHERE Email = '$userEmail'");
-	if ($db->connect_errno) return false;
+	if ($db->connect_errno) return true; // Zeitweise...
 	return $rows->num_rows > 0;
 }
 
@@ -26,7 +26,7 @@ $benutzerDB = array(
 // Öffnet die Datenbank für die Benutzer.
 function oeffneBenutzerDB() {
 	global $benutzerDB;
-	$db = new ExtSQLi($benutzerDB);
+	$db = new ExtSQL($benutzerDB);
 	$db->set_charset("utf-8");
 	return $db;
 }
