@@ -62,6 +62,6 @@ $fehlerjs = jsFürFehlerListe("document.getElementById('fehlerListe')", $fehlerl
 <div id="fehlerListe">
 </div>
 <script src="pruefeRegistrierung.js"></script>
-<script type="text/javascript"><?=$fehlerjs?>
+<script type="text/javascript"><?=$fehlerjs?></script>
 </body>
 </html>
