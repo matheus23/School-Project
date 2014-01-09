@@ -45,16 +45,16 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	$pwb = $data["Pwb"];
 	$email = $data["email"];
 	
+	$db = oeffneBenutzerDB();
 	if ($pw != $pwb) {
 		array_push($fehlerliste, "Das Passwort stimmt nicht mit der Wiederholung überein");
 	}
-	
-	$db = oeffneBenutzerDB();
-	
-	if (userExestiertBereits($db, $email)) {
+	elseif (userExestiertBereits($db, $email)) {
 		array_push($fehlerliste, "Diese E-Mail ist bereits vergeben.");
 	}
-	$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
+	else {
+		$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pw', '$email')");
+	}
 }
 
 $fehlerjs = jsFürFehlerListe("document.getElementById('fehlerListe')", $fehlerliste);
