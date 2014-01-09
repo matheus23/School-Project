@@ -4,7 +4,7 @@ include "ExtSQL.php";
 
 // Im debugModus gibt php Alle fehler an den Client weiter.
 function debugModus() {
-	error_reporting(E_ALL);
+	error_reporting(E_);
 	ini_set('display_errors', true);
 }
 
