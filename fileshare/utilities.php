@@ -27,7 +27,6 @@ $benutzerDB = array(
 function oeffneBenutzerDB() {
 	global $benutzerDB;
 	$db = new ExtSQL($benutzerDB);
-	$db->set_charset("utf-8");
 	return $db;
 }
 
