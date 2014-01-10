@@ -67,7 +67,6 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	$pw = $data["Pw"];
 	$pwb = $data["Pwb"];
 	
-	$db = oeffneBenutzerDB();
 	if ($pw != $pwb) {
 		$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein");
 	}
