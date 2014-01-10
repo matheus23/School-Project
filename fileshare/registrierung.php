@@ -56,7 +56,6 @@ debugModus();
 
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
-$nrt->okay("Testnachricht...");
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 
