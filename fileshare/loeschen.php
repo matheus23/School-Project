@@ -28,7 +28,9 @@
 	</td>
 </tr>
 <tr>
-	<td align="right">Zurück zur <a href="Anmeldung.php">Startseite</a></td>
+	<td class='bottom_fix'>
+		Zurück zur <a href="Anmeldung.php">Startseite
+	</td>
 </tr>
 </table>
 <?php
