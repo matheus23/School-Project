@@ -60,7 +60,7 @@ $nrt = new Nachrichten("fehlerListe");
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 
 	$db = oeffneBenutzerDB($nrt);
-	
+	tabelleNeueSpalte($db,"Benutzer","RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
 	$user = $db->real_escape_string($data["Bn"]);
 	$email = $db->real_escape_string($data["email"]);
 	// wird sowieso gehashed:
@@ -75,15 +75,17 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	}
 	else {
 		$pwHash = passwordHash($pw);
+		$nutzerID=uniqid("reg_",true);
 		// So geht das überprüfen von passwörtern dann:
 		//if (passwordVerify($pw, $pwHash))  {
 		//	$nrt->okay("Passwort hashing funzt!");
 		//}
-		$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
+		$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`,`RegistrierungsID`) VALUES ('$user', '$pwHash', '$email','$nutzerID')");
 		if ($erfolgreich) {
 			$nrt->okay("Erfolgreich registriert!");
 		} // Ansonsten wird bereits ein fehler ausgegeben.
 	}
+	
 }
 $fehlerjs = $nrt->toJsCode();
 ?>
