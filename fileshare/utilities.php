@@ -79,10 +79,10 @@ class Nachricht {
 		$this->art = $art;
 	}
 	
-	public function toJsCall($element) {
+	public function toJsCall($elementVar) {
 		$n = $this->nachricht;
 		$a = $this->art;
-		return "fehlerNachricht($element, $n, $a);";
+		return "fehlerNachricht($elementVar, '$n', '$a');";
 	}
 }
 
@@ -93,7 +93,7 @@ class Nachrichten {
 	
 	public function __construct($jselem) {
 		$this->jsElemVarName = "__$jselem";
-		$this->jsElemVarDef = "var " + $this->jsElemVarName + " = document.getElementById('$jselem');";
+		$this->jsElemVarDef = "var " . $this->jsElemVarName . " = document.getElementById('$jselem');";
 	}
 	
 	public function nachricht($art, $nachricht) {
@@ -113,9 +113,10 @@ class Nachrichten {
 	}
 	
 	public function toJsCode() {
-		$code = $this->jsElemVarDef + "\n";
-		foreach ($this->nachrichtenListe as $nachricht) {
-			$code .= $nachricht->toJsCall($this->jsElemVarName) + "\n";
+		$code = $this->jsElemVarDef . "\n";
+		$nachrichten = $this->nachrichtenListe;
+		foreach ($nachrichten as $nachricht) {
+			$code .= $nachricht->toJsCall($this->jsElemVarName) . "\n";
 		}
 		return $code;
 	}

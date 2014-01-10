@@ -22,6 +22,12 @@ body {
 	color: #555753;
 }
 
+.okay {
+	background-color: #8ae234;
+	border: 1px solid #4e9a06;
+	color: #555753;
+}
+
 .verticalMid {
 	vertical-align: middle;
 }

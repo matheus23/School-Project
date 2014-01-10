@@ -16,10 +16,10 @@
 			<td>
 				<table align="center" valign="middle">
 					<form method="post" id="formular">
-						<tr><td><input type="text" name ="Bn" id="Bn" required> Benutzername</td></tr>
-						<tr><td><input type="password" name ="Pw" id="Pw" required> Passwort</td></tr>
-						<tr><td><input type="password" name ="Pwb" id="Pwb" required> Passwort bestätigen</td></tr>
-						<tr><td><input type="email" name ="email" id="email" required> Email adresse</td></tr>
+						<tr><td><input type="text" name="Bn" id="Bn" required> Benutzername</td></tr>
+						<tr><td><input type="password" name="Pw" id="Pw" required> Passwort</td></tr>
+						<tr><td><input type="password" name="Pwb" id="Pwb" required> Passwort bestätigen</td></tr>
+						<tr><td><input type="email" name="email" id="email" required> Email adresse</td></tr>
 						<tr><td><input type="submit" value="Registrieren" id="button"><input type="reset" name="Löschen"></td></tr>
 					</form>
 				</table>
@@ -56,6 +56,7 @@ debugModus();
 
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
+$nrt->okay("Testnachricht...");
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 
@@ -75,12 +76,11 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		$nrt->fehler("Diese E-Mail ist bereits vergeben.");
 	}
 	else {
-		$pwHash = password_hash($pw);
+		$pwHash = password_hash($pw, PASSWORD_DEFAULT);
 		$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
 		$nrt->okay("Erfolgreich registriert!");
 	}
 }
-
 $fehlerjs = $nrt->toJsCode();
 ?>
 <script src="pruefeRegistrierung.js"></script>
