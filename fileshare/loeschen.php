@@ -2,6 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script src="jsUtilities.js" type="text/javascript"></script>
 	<title>Account löschen</title>
 </head>
 <body>
@@ -9,7 +11,7 @@
 <tr>
 	<td colspan="2">
 		<table align="center">
-		<tr><td><h1>Bitte Anmeldedaten eingeben</h1></td></tr>
+		<tr><td><h1>Bitte Anmeldedaten eingeben, um den Account zu löschen</h1></td></tr>
 		<tr>
 			<td>
 				<table align="center" valign="middle">
@@ -45,7 +47,9 @@
 	</td>
 </tr>
 <tr>
-	<td align="right">Zurück zur <a href="blablablablablablablabla">Startseite</a></td>
+	<td class='bottom_fix'>
+		Zurück zur <a href="Anmeldung.php">Startseite
+	</td>
 </tr>
 </table>
 <?php
@@ -62,6 +66,7 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
     
 	if (userExestiertBereits($db, $email)) {
 		$db->query("DELETE FROM `Benutzer` where email='$email'");
+		echo ("LÖSCHEN DES ACCOUNTS ERFOLGREICH");
 	} else {
 		echo ("Fehler: USER NICHT VORHANDEN");
 	}
