@@ -11,7 +11,7 @@
 <tr>
 	<td colspan="2">
 		<table align="center">
-		<tr><td><h1>Bitte Anmeldedaten eingeben</h1></td></tr>
+		<tr><td><h1>Bitte Anmeldedaten eingeben, um den Account zu löschen</h1></td></tr>
 		<tr>
 			<td>
 				<table align="center" valign="middle">
