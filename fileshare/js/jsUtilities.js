@@ -2,9 +2,9 @@
 var fehlerNachricht = function(element, nachricht, type) {
 	if (typeof type == 'undefined') type = "fehler";
 	
-	var imgPath = "img/error.png";
-	if (type == "okay") imgPath = "img/accept.png";
-	if (type == "warnung") imgPath = "img/warning.png";
+	var imgPath = "../img/error.png";
+	if (type == "okay") imgPath = "../img/accept.png";
+	if (type == "warnung") imgPath = "../img/warning.png";
 	
 	element.innerHTML += 
 	"<div class='infobox " + type + "'>" +

@@ -2,8 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<link rel="stylesheet" type="text/css" href="css/style.css" />
-	<script src="jsUtilities.js" type="text/javascript"></script>
+	<link href="../css/style.css" rel="stylesheet" type="text/css" />
+	<script src="../js/jsUtilities.js" type="text/javascript"></script>
 	<title>Anmeldung LGÖ - Datenbank</title>
 </head>
 <body>
@@ -33,7 +33,7 @@
 						das bedeutet soviel wie: Nur wenn javascript nicht aktiviert ist. -->
 					<div id="jsenable" class='infobox warnung'>
 						<table border="0"><tr><td class="verticalMid">
-							<img src='img/warning.png' width='16' height='16' />
+							<img src='../img/warning.png' width='16' height='16' />
 						</td><td class="verticalMid">
 							Javascript muss aktiviert sein!
 						</td></tr></table>
@@ -50,7 +50,7 @@
 </tr>
 </table>
 <?php
-include "php/utilities.php";
+include "utilities.php";
 
 debugModus();
 
@@ -87,7 +87,7 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 }
 $fehlerjs = $nrt->toJsCode();
 ?>
-<script src="pruefeRegistrierung.js"></script>
+<script src="../js/pruefeRegistrierung.js"></script>
 <script type="text/javascript"><?=$fehlerjs?></script>
 </body>
 </html>

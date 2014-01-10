@@ -2,8 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<link rel="stylesheet" type="text/css" href="css/style.css" />
-	<script src="jsUtilities.js" type="text/javascript"></script>
+	<link href="../css/style.css" rel="stylesheet" type="text/css" />
+	<script src="../jsUtilities.js" type="text/javascript"></script>
 	<title>Startseite LGÖ-Schoolproject</title>
 </head>
 <body>

@@ -1,6 +1,6 @@
 <meta charset="UTF-8" />
 <?php
-include "php/ExtSQL.php";
+include "ExtSQL.php";
 
 // Im debugModus gibt php Alle fehler an den Client weiter.
 function debugModus() {
