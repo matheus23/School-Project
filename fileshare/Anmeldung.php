@@ -16,8 +16,8 @@
 			<td>
 				<table align="center" valign="middle">
 					<form method="post" id="formular" action="passworttest.php">
-						<tr><td>Benutzername:	</td><td><input type="text" name="bnanmeld" id="bnanmeld" requierd></td></tr>
-						<tr><td>Passwort: 		</td><td><input type="text" name="pwanmeld" id="pwanmeld" requierd></td></tr>
+						<tr><td>Benutzername:	</td><td><input type="text" name="bnanmeld" id="bnanmeld" required></td></tr>
+						<tr><td>Passwort: 		</td><td><input type="text" name="pwanmeld" id="pwanmeld" required></td></tr>
 						<tr><td colspan="2"><input type="submit" value="login"></td></tr>
 					</form>
 				</table>
