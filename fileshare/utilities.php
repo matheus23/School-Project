@@ -70,4 +70,55 @@ function jsFuerFehlerListe($element, $nachrichtenArray) {
 	return $jsAufrufe;
 }
 
+class Nachricht {
+	public $nachricht = "";
+	public $art = "fehler";
+	
+	public function __construct($nachricht, $art) {
+		$this->nachricht = $nachricht;
+		$this->art = $art;
+	}
+	
+	public function toJsCall($element) {
+		$n = $this->nachricht;
+		$a = $this->art;
+		return "fehlerNachricht($element, $n, $a);";
+	}
+}
+
+class Nachrichten {
+	public $jsElemVarDef = "";
+	public $jsElemVarName = "";
+	public $nachrichtenListe = array();
+	
+	public function __construct($jselem) {
+		$this->jsElemVarName = "__$jselem";
+		$this->jsElemVarDef = "var " + $this->jsElemVarName + " = document.getElementById('$jselem');";
+	}
+	
+	public function nachricht($art, $nachricht) {
+		array_push($this->nachrichtenListe, new Nachricht($nachricht, $art));
+	}
+	
+	public function okay($nachricht) {
+		$this->nachricht("okay", $nachricht);
+	}
+	
+	public function warnung($nachricht) {
+		$this->nachricht("warnung", $nachricht);
+	}
+	
+	public function fehler($nachricht) {
+		$this->nachricht("fehler", $nachricht);
+	}
+	
+	public function toJsCode() {
+		$code = $this->jsElemVarDef + "\n";
+		foreach ($this->nachrichtenListe as $nachricht) {
+			$code .= $nachricht->toJsCall($this->jsElemVarName) + "\n";
+		}
+		return $code;
+	}
+}
+
 ?>

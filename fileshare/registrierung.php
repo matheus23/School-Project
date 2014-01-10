@@ -55,10 +55,12 @@ include "utilities.php";
 debugModus();
 
 $data = $_POST;
-$fehlerliste = array();
+$nrt = new Nachrichten("fehlerListe");
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 
+	$db = oeffneBenutzerDB();
+	
 	$user = $db->real_escape_string($data["Bn"]);
 	$email = $db->real_escape_string($data["email"]);
 	// wird sowieso gehashed:
@@ -67,18 +69,19 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	
 	$db = oeffneBenutzerDB();
 	if ($pw != $pwb) {
-		array_push($fehlerliste, "Das Passwort stimmt nicht mit der Wiederholung überein");
+		$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein");
 	}
 	elseif (userExestiertBereits($db, $email)) {
-		array_push($fehlerliste, "Diese E-Mail ist bereits vergeben.");
+		$nrt->fehler("Diese E-Mail ist bereits vergeben.");
 	}
 	else {
 		$pwHash = password_hash($pw);
 		$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
+		$nrt->okay("Erfolgreich registriert!");
 	}
 }
 
-$fehlerjs = jsFuerFehlerListe("document.getElementById('fehlerListe')", $fehlerliste);
+$fehlerjs = $nrt->toJsCode();
 ?>
 <script src="pruefeRegistrierung.js"></script>
 <script type="text/javascript"><?=$fehlerjs?></script>
