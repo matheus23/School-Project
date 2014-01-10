@@ -21,6 +21,25 @@
 				</table>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<!-- Falls fehler auftreten, werden hier <div>'s erzeugt, die fehlernachrichten beinhalten: -->
+				<div id="fehlerListe">
+					<!-- Dieses <div> wird nur angezeigt, sofern das <script> danach es nicht sofort wieder löscht,
+						das bedeutet soviel wie: Nur wenn javascript nicht aktiviert ist. -->
+					<div id="jsenable" class='infobox warnung'>
+						<table border="0"><tr><td class="verticalMid">
+							<img src='img/warning.png' width='16' height='16' />
+						</td><td class="verticalMid">
+							Javascript muss aktiviert sein!
+						</td></tr></table>
+					</div>
+					<script type="text/javascript">
+						document.getElementById("jsenable").style.display = 'none';
+					</script>
+				</div>
+			</td>
+		</tr>
 		</table>
 		<br>
 	</td>
@@ -33,20 +52,22 @@
 include "utilities.php";
 
 $data = $_POST;
+$nrt = new Nachrichten("fehlerListe");
 
 if (alleSchluesselGesetzt($data, "mail", "Pw")){
 	$email = $data["mail"];
 	$pw = $data["Pw"];
 	
-	$db = oeffneBenutzerDB();
+	$db = oeffneBenutzerDB($nrt);
     
 	if (userExestiertBereits($db, $email)) {
 		$db->query("DELETE FROM `Benutzer` where email='$email'");
-		pruefeSQLFehler($db, "Fehler:", True);
 	} else {
 		echo ("Fehler: USER NICHT VORHANDEN");
 	}
 }
+$fehlerjs = $nrt->toJsCode();
 ?>
+<script type="text/javascript"><?=$fehlerjs?></script>
 </body>
 </html>

@@ -24,9 +24,9 @@ $benutzerDB = array(
 );
 
 // Öffnet die Datenbank für die Benutzer.
-function oeffneBenutzerDB() {
+function oeffneBenutzerDB($nrt) {
 	global $benutzerDB;
-	$db = new ExtSQL($benutzerDB);
+	$db = new ExtSQL($benutzerDB, $nrt);
 	return $db;
 }
 
@@ -45,20 +45,6 @@ function alleSchluesselGesetzt($array) {
 		if (!isset($array[$allargs[$i]])) return false;
 	}
 	return true;
-}
-
-// Prüft, ob es einen SQL Fehler gab, gibt gegebenerweise eine
-// $nachricht an, und falls gewollt, den fehlercode dazu.
-// Beispiele:
-// prüfeSQLFehler($db, "Ein interner Fehler ist aufgetreten...");
-// prüfeSQLFehler($db, "Fehler:", True);
-function pruefeSQLFehler($db, $nachricht, $gibFehlercodeAus = False) {
-	if ($db->connect_errno) {
-		$fehlernachricht = $gibFehlercodeAus ? " (" . $db->error . ")" : "";
-		die($nachricht . $fehlernachricht);
-		return true;
-	}
-	return false;
 }
 
 function passwordHash($password) {
@@ -90,7 +76,7 @@ class Nachricht {
 	}
 	
 	public function toJsCall($elementVar) {
-		$n = $this->nachricht;
+		$n = addslashes($this->nachricht);
 		$a = $this->art;
 		return "fehlerNachricht($elementVar, '$n', '$a');";
 	}

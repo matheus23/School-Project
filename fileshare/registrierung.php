@@ -59,7 +59,7 @@ $nrt = new Nachrichten("fehlerListe");
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 
-	$db = oeffneBenutzerDB();
+	$db = oeffneBenutzerDB($nrt);
 	
 	$user = $db->real_escape_string($data["Bn"]);
 	$email = $db->real_escape_string($data["email"]);
@@ -79,8 +79,10 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		//if (passwordVerify($pw, $pwHash))  {
 		//	$nrt->okay("Passwort hashing funzt!");
 		//}
-		$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
-		$nrt->okay("Erfolgreich registriert!");
+		$erfolgreich = $db->query("INSERT INTOf `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
+		if ($erfolgreich) {
+			$nrt->okay("Erfolgreich registriert!");
+		} // Ansonsten wird bereits ein fehler ausgegeben.
 	}
 }
 $fehlerjs = $nrt->toJsCode();
