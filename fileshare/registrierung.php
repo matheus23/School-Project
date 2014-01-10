@@ -79,7 +79,7 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		//if (passwordVerify($pw, $pwHash))  {
 		//	$nrt->okay("Passwort hashing funzt!");
 		//}
-		$erfolgreich = $db->query("INSERT INTOf `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
+		$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
 		if ($erfolgreich) {
 			$nrt->okay("Erfolgreich registriert!");
 		} // Ansonsten wird bereits ein fehler ausgegeben.
