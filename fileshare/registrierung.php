@@ -14,15 +14,15 @@
 		<tr><td><h1>Neu registrieren</h1></td></tr>
 		<tr>
 			<td>
-				<table align="center" valign="middle">
-					<form method="post" id="formular">
-						<tr><td><input type="text" name="Bn" id="Bn" required> Benutzername</td></tr>
-						<tr><td><input type="password" name="Pw" id="Pw" required> Passwort</td></tr>
-						<tr><td><input type="password" name="Pwb" id="Pwb" required> Passwort bestätigen</td></tr>
-						<tr><td><input type="email" name="email" id="email" required> Email adresse</td></tr>
-						<tr><td><input type="submit" value="Registrieren" id="button"><input type="reset" name="Löschen"></td></tr>
-					</form>
-				</table>
+				<form method="post" id="formular">
+					<table align="center" valign="middle">					
+						<tr><td class="rightAlign">Benutzername:</td><td><input type="text" name="Bn" id="Bn" required></td></tr>
+						<tr><td class="rightAlign">Passwort:</td><td><input type="password" name="Pw" id="Pw" required></td></tr>
+						<tr><td class="rightAlign">Passwort bestätigen:</td><td><input type="password" name="Pwb" id="Pwb" required></td></tr>
+						<tr><td class="rightAlign">Email Adresse:</td><td><input type="email" name="email" id="email" required></td></tr>
+						<tr><td></td><td><input type="submit" value="Registrieren" id="button"><input type="reset" name="Löschen"></td></tr>
+					</table>
+				</form>
 			</td>
 		</tr>
 		<tr>

@@ -14,13 +14,13 @@
 		<tr><td><h1>Anmeldung</h1></td></tr>
 		<tr>
 			<td>
-				<table align="center" valign="middle">
-					<form method="post" id="formular" action="passworttest.php">
-						<tr><td>Benutzername:	</td><td><input type="text" name="bnanmeld" id="bnanmeld" required></td></tr>
-						<tr><td>Passwort: 		</td><td><input type="text" name="pwanmeld" id="pwanmeld" required></td></tr>
-						<tr><td colspan="2"><input type="submit" value="login"></td></tr>
-					</form>
-				</table>
+				<form method="post" id="formular" action="passworttest.php">
+					<table align="center" valign="middle">
+						<tr><td class="rightAlign">Benutzername:</td><td><input type="text" name="bnanmeld" id="bnanmeld" required></td></tr>
+						<tr><td class="rightAlign">Passwort:</td><td><input type="text" name="pwanmeld" id="pwanmeld" required></td></tr>
+						<tr><td></td><td><input type="submit" value="login"></td></tr>
+					</table>
+				</form>
 			</td>
 		</tr>
 		<tr>
