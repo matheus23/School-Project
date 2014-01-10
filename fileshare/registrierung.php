@@ -75,7 +75,11 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		$nrt->fehler("Diese E-Mail ist bereits vergeben.");
 	}
 	else {
-		$pwHash = password_hash($pw, PASSWORD_DEFAULT);
+		$pwHash = passwordHash($pw);
+		// So geht das überprüfen von passwörtern dann:
+		//if (passwordVerify($pw, $pwHash))  {
+		//	$nrt->okay("Passwort hashing funzt!");
+		//}
 		$db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
 		$nrt->okay("Erfolgreich registriert!");
 	}

@@ -62,6 +62,17 @@ function pruefeSQLFehler($db, $nachricht, $gibFehlercodeAus = False) {
 	return false;
 }
 
+function passwordHash($password) {
+	$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+	$salt = base64_encode($salt);
+	$salt = str_replace('+', '.', $salt);
+	return crypt($password, '$2y$10$' . $salt . '$');
+}
+
+function passwordVerify($password, $actualPasswordHash) {
+	return crypt($password, $actualPasswordHash) == $actualPasswordHash;
+}
+
 function jsFuerFehlerListe($element, $nachrichtenArray) {
 	$jsAufrufe = "";
 	foreach ($nachrichtenArray as $nachricht) {

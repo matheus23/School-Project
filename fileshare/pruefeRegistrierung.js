@@ -13,8 +13,6 @@ var fehlerListe = document.getElementById("fehlerListe");
 
 //Funktion, die beim Abschicken aufgerufen wird
 formular.onsubmit=function(){
-	//fehlerliste wird geleert
-	fehlerListe.innerHTML = "";
 	//Formulardaten werden übernommen
 	var benutzername = benutzernameInput.value;
 	var passwort = passwortInput.value;
