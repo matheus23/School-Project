@@ -26,7 +26,7 @@
 	</td>
 </tr>
 <tr>
-	<td align="right">Zurück zur <a href="blablablablablablablabla">Startseite</a></td>
+	<td align="right">Zurück zur <a href="Anmeldung.php">Startseite</a></td>
 </tr>
 </table>
 <?php
@@ -43,6 +43,7 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
 	if (userExestiertBereits($db, $email)) {
 		$db->query("DELETE FROM `Benutzer` where email='$email'");
 		pruefeSQLFehler($db, "Fehler:", True);
+		echo ("LÖSCHEN DES ACCOUNTS ERFOLGREICH");
 	} else {
 		echo ("Fehler: USER NICHT VORHANDEN");
 	}
