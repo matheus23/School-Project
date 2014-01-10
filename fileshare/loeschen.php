@@ -2,6 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script src="jsUtilities.js" type="text/javascript"></script>
 	<title>Account löschen</title>
 </head>
 <body>
