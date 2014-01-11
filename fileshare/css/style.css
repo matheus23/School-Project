@@ -8,6 +8,10 @@ a {
 	text-decoration: none;
 }
 
+#captcha {
+	border: 1px solid #d3d7cf;
+}
+
 .infobox {
     font-family: monospace;
     color: #d3d7cf;

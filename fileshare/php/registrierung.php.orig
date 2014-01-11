@@ -21,6 +21,7 @@
 						<tr><td class="rightAlign">Passwort:</td><td><input type="password" name="Pw" id="Pw" required></td></tr>
 						<tr><td class="rightAlign">Passwort bestätigen:</td><td><input type="password" name="Pwb" id="Pwb" required></td></tr>
 						<tr><td class="rightAlign">Email Adresse:</td><td><input type="email" name="email" id="email" required></td></tr>
+						<tr><td></td><td><input type="submit" value="Registrieren" id="button"><input type="reset" name="Löschen"></td></tr>
 						<tr><td colspan="2"><h2>Captcha:</h2></td></tr>
 						<tr><td colspan="2">
 							<img id="captcha" src="../securimage/securimage_show.php" alt="CAPTCHA Image" />
@@ -29,7 +30,6 @@
 							<input type="text" name="captcha_code" size="10" maxlength="6" />
 							<a href="#" onclick="document.getElementById('captcha').src = '../securimage/securimage_show.php?' + Math.random(); return false">[ Different Image ]</a>
 						</td></tr>
-						<tr><td colspan="2"><input type="submit" value="Registrieren" id="button"><input type="reset" name="Löschen"></td></tr>
 					</table>
 				</form>
 			</td>
@@ -69,12 +69,12 @@ $nrt = new Nachrichten("fehlerListe");
 $securimage = new Securimage();
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
+<<<<<<< HEAD
 	if ($securimage->check($_POST["captcha_code"]) == false) {
 		$nrt->fehler("Das eingegebene Captcha ist falsch.");
 	} else {
 		$db = oeffneBenutzerDB($nrt);
-		tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
-
+		
 		$user = $db->real_escape_string($data["Bn"]);
 		$email = $db->real_escape_string($data["email"]);
 		// wird sowieso gehashed:
@@ -89,21 +89,48 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		}
 		else {
 			$pwHash = passwordHash($pw);
-			$nutzerID=uniqid("reg_",true);
-			
 			// So geht das überprüfen von passwörtern dann:
 			//if (passwordVerify($pw, $pwHash))  {
 			//	$nrt->okay("Passwort hashing funzt!");
 			//}
-			$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`,`RegistrierungsID`) VALUES ('$user', '$pwHash', '$email','$nutzerID')");
+			$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
 			if ($erfolgreich) {
 				$nrt->okay("Erfolgreich registriert!");
 			} // Ansonsten wird bereits ein fehler ausgegeben.
 		}
-	}	
+	}
 } else {
-
 	$nrt->fehler("Es müssen alle Daten angegeben werden.");
+=======
+
+	$db = oeffneBenutzerDB($nrt);
+	tabelleNeueSpalte($db,"Benutzer","RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
+	$user = $db->real_escape_string($data["Bn"]);
+	$email = $db->real_escape_string($data["email"]);
+	// wird sowieso gehashed:
+	$pw = $data["Pw"];
+	$pwb = $data["Pwb"];
+	
+	if ($pw != $pwb) {
+		$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein");
+	}
+	elseif (userExestiertBereits($db, $email)) {
+		$nrt->fehler("Diese E-Mail ist bereits vergeben.");
+	}
+	else {
+		$pwHash = passwordHash($pw);
+		$nutzerID=uniqid("reg_",true);
+		// So geht das überprüfen von passwörtern dann:
+		//if (passwordVerify($pw, $pwHash))  {
+		//	$nrt->okay("Passwort hashing funzt!");
+		//}
+		$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`,`RegistrierungsID`) VALUES ('$user', '$pwHash', '$email','$nutzerID')");
+		if ($erfolgreich) {
+			$nrt->okay("Erfolgreich registriert!");
+		} // Ansonsten wird bereits ein fehler ausgegeben.
+	}
+	
+>>>>>>> 23ef3821df9be0f6413342a7a1b6ee87cfe97794
 }
 $fehlerjs = $nrt->toJsCode();
 ?>
