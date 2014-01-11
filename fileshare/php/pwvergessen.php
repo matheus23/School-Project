@@ -15,7 +15,7 @@
 		<tr><td align="center"><h2>E-mail eingeben</h2></td></tr>
 		<tr>
 			<td>
-				<form method="post" id="formular" action="passworttest.php">
+				<form method="post" id="formular" action="">
 					<table align="center" valign="middle">
 						<tr><td class="rightAlign">Email Adresse:</td><td><input type="email" name="email" id="email" required></td></tr>
 						<tr><td></td><td><input type="submit" value="Passwort zurücksetzen"></td></tr>
@@ -64,21 +64,18 @@ $nrt = new Nachrichten("fehlerListe");
 if (alleSchluesselGesetzt($data, "email")) {
 	$db = oeffneBenutzerDB($nrt);
 	tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
+	
+	$email = $data["email"];
 
 	if (userExestiertBereits($db, $email)) {
 		$nrt->fehler("HIER WIRD SPÄTER ALLES WEITERE FOLGEN");//automatische E-mail generierung hier einfügen
 	}
 	else {
-		echo"KEIN USER MIT DIESER EMAIL VORHANDEN";
+		$nrt->fehler("Kein Benutzer mit dieser Email vorhanden.");
 	}
 }
-
-
-
-
-$fehlerjs = $nrt->toJsCode();
 ?>
 <script src="pruefeRegistrierung.js"></script>
-<script type="text/javascript"><?=$fehlerjs?></script>
+<?php $nrt->genJsCode(); ?>
 </body>
 </html>

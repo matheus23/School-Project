@@ -116,6 +116,11 @@ class Nachrichten {
 		}
 		return $code;
 	}
+	
+	public function genJsCode() {
+		$jsCode = $this->toJsCode();
+		echo "<script type='text/javascript'>$jsCode</script>";
+	}
 }
 
 //tabelleNeueSpalte erfüllt nur den Zweck fehler durch ungleiche Datenbanken zu verhindern

@@ -107,9 +107,8 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 else {
 	$nrt->fehler("Es müssen alle Daten angegeben werden.");
 }
-$fehlerjs = $nrt->toJsCode();
 ?>
 <script src="../js/pruefeRegistrierung.js"></script>
-<script type="text/javascript"><?=$fehlerjs?></script>
+<?php $nrt->genJsCode(); ?>
 </body>
 </html>
