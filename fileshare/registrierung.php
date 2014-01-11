@@ -48,6 +48,11 @@
 		<br>
 	</td>
 </tr>
+<tr>
+	<td class='bottom_fix_right'>
+		Zurück zur <a href="Anmeldung.php">Startseite
+	</td>
+</tr>
 </table>
 <?php
 include "utilities.php";
