@@ -98,6 +98,8 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 			$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`,`RegistrierungsID`) VALUES ('$user', '$pwHash', '$email','$nutzerID')");
 			if ($erfolgreich) {
 				$nrt->okay("Erfolgreich registriert!");
+				require_once("registrierungsEmail.php");
+				schickeRegistrierungsEmail($user,$email,$nutzerID);
 			} // Ansonsten wird bereits ein fehler ausgegeben.
 		}
 	}	
