@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php session_start(); ?>
 <html>
 <head>
 	<meta charset="UTF-8" />
@@ -21,6 +22,14 @@
 						<tr><td class="rightAlign">Passwort bestätigen:</td><td><input type="password" name="Pwb" id="Pwb" required></td></tr>
 						<tr><td class="rightAlign">Email Adresse:</td><td><input type="email" name="email" id="email" required></td></tr>
 						<tr><td></td><td><input type="submit" value="Registrieren" id="button"><input type="reset" name="Löschen"></td></tr>
+						<tr><td colspan="2"><h2>Captcha:</h2></td></tr>
+						<tr><td colspan="2">
+							<img id="captcha" src="../securimage/securimage_show.php" alt="CAPTCHA Image" />
+						</td></tr>
+						<tr><td colspan="2">
+							<input type="text" name="captcha_code" size="10" maxlength="6" />
+							<a href="#" onclick="document.getElementById('captcha').src = '../securimage/securimage_show.php?' + Math.random(); return false">[ Different Image ]</a>
+						</td></tr>
 					</table>
 				</form>
 			</td>
@@ -51,39 +60,46 @@
 </table>
 <?php
 include "utilities.php";
+include_once "../securimage/securimage.php";
 
 debugModus();
 
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
+$securimage = new Securimage();
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
-
-	$db = oeffneBenutzerDB($nrt);
-	
-	$user = $db->real_escape_string($data["Bn"]);
-	$email = $db->real_escape_string($data["email"]);
-	// wird sowieso gehashed:
-	$pw = $data["Pw"];
-	$pwb = $data["Pwb"];
-	
-	if ($pw != $pwb) {
-		$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein");
+	if ($securimage->check($_POST["captcha_code"]) == false) {
+		$nrt->fehler("Das eingegebene Captcha ist falsch.");
+	} else {
+		$db = oeffneBenutzerDB($nrt);
+		
+		$user = $db->real_escape_string($data["Bn"]);
+		$email = $db->real_escape_string($data["email"]);
+		// wird sowieso gehashed:
+		$pw = $data["Pw"];
+		$pwb = $data["Pwb"];
+		
+		if ($pw != $pwb) {
+			$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein");
+		}
+		elseif (userExestiertBereits($db, $email)) {
+			$nrt->fehler("Diese E-Mail ist bereits vergeben.");
+		}
+		else {
+			$pwHash = passwordHash($pw);
+			// So geht das überprüfen von passwörtern dann:
+			//if (passwordVerify($pw, $pwHash))  {
+			//	$nrt->okay("Passwort hashing funzt!");
+			//}
+			$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
+			if ($erfolgreich) {
+				$nrt->okay("Erfolgreich registriert!");
+			} // Ansonsten wird bereits ein fehler ausgegeben.
+		}
 	}
-	elseif (userExestiertBereits($db, $email)) {
-		$nrt->fehler("Diese E-Mail ist bereits vergeben.");
-	}
-	else {
-		$pwHash = passwordHash($pw);
-		// So geht das überprüfen von passwörtern dann:
-		//if (passwordVerify($pw, $pwHash))  {
-		//	$nrt->okay("Passwort hashing funzt!");
-		//}
-		$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`) VALUES ('$user', '$pwHash', '$email')");
-		if ($erfolgreich) {
-			$nrt->okay("Erfolgreich registriert!");
-		} // Ansonsten wird bereits ein fehler ausgegeben.
-	}
+} else {
+	$nrt->fehler("Es müssen alle Daten angegeben werden.");
 }
 $fehlerjs = $nrt->toJsCode();
 ?>
