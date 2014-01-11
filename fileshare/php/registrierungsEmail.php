@@ -12,7 +12,6 @@ function schickeRegistrierungsEmail($user,$email,$nutzerID){
 		"um deine Registrierung abzuschließen öffne folgenden Link:\n".
 		"$server$pfad/emailBestaetigen.php?nutzerID=$nutzerID";
 	mail($email,$betreff,$message);	
-	print_r($message);
 }
 //Prüft die NutzerID und setzt den jeweilgin Nutzer auf bestätigt
 function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
