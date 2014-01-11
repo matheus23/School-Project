@@ -53,7 +53,7 @@
 </tr>
 </table>
 <?php
-include "php/utilities.php";
+include "../php/utilities.php";
 
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
