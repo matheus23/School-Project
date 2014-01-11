@@ -118,4 +118,16 @@ class Nachrichten {
 	}
 }
 
+//tabelleNeueSpalte erfüllt nur den Zweck fehler durch ungleiche Datenbanken zu verhindern
+//$db = Rückgabewert von oeffneBenutzerDB
+//$tabelle = Tabellenname z.B $tabelle="Benutzer"
+//$spaltenname = einzufügende Spalte z.B $spaltenname="RegistrierungsID"
+//$typ = SQL-Spalten-Typ z.B $typ="VARCHAR(40)" oder $typ="TEXT"
+function tabelleNeueSpalte($db,$tabelle,$spaltenname,$typ){
+	$spalteninfo = $db->query("SHOW COLUMNS FROM $tabelle");
+	while($tabellenspalte = $spalteninfo->fetch_array()[0]){
+		if ($spaltenname == $tabellenspalte) return;//Spalte existiert schon
+	}
+	$db->query("ALTER TABLE $tabelle ADD $spaltenname $typ");
+}
 ?>
