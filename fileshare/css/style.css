@@ -73,8 +73,13 @@ input[type="submit"] {
     background-color: #73d216;
     border-color: #4e9a06;
 }
-.bottom_fix{
+.bottom_fix_right{
 	position: absolute;
     bottom: 10px;
 	right: 10px;
+}
+.bottom_fix_left{
+	position: absolute;
+    bottom: 10px;
+	left: 10px;
 }

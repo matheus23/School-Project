@@ -2,23 +2,23 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<link href="../css/style.css" rel="stylesheet" type="text/css" />
-	<script src="../js/jsUtilities.js" type="text/javascript"></script>
-	<title>Anmeldeseite</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script src="jsUtilities.js" type="text/javascript"></script>
+	<title>Passwort-reset</title>
 </head>
 <body>
-<table width="100%" height="95%">
+<table width="100%" height="100%">
 <tr>
 	<td colspan="2">
 		<table align="center">
-		<tr><td><h1>Anmeldung</h1></td></tr>
+		<tr><td><h1>Passwort vergessen?</h1></td></tr>
+		<tr><td><h2>E-mail eingeben</h2></td></tr>
 		<tr>
 			<td>
 				<form method="post" id="formular" action="passworttest.php">
 					<table align="center" valign="middle">
-						<tr><td class="rightAlign">Benutzername:</td><td><input type="text" name="bnanmeld" id="bnanmeld" required></td></tr>
-						<tr><td class="rightAlign">Passwort:</td><td><input type="text" name="pwanmeld" id="pwanmeld" required></td></tr>
-						<tr><td></td><td><input type="submit" value="login"></td></tr>
+						<tr><td class="rightAlign">Email Adresse:</td><td><input type="email" name="email" id="email" required></td></tr>
+						<tr><td></td><td><input type="submit" value="Zurücksetzen"></td></tr>
 					</table>
 				</form>
 			</td>
@@ -41,10 +41,17 @@
 				</script>
 			</div>
 		</td>
+		<td>
+			Sie werden nach Absenden dieses Formulars eine Email mit dem neuen Passwort erhalten
+		</td>
 	</tr>
+	<tr>
+	<td class='bottom_fix_right'>
+		Zurück zur <a href="Anmeldung.php">Startseite
+	</td>
+</tr>
 </table>
-<div class="bottom_fix_right">Passwort vergessen? <a href="pwvergessen.php">Hier</a> klicken</div>
-<div class="bottom_fix_left">Noch nicht registriert? <a href="registrierung.php">hier</a> Registrieren</div>
+
 
 
 
