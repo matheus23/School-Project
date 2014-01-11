@@ -2,8 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<script src="jsUtilities.js" type="text/javascript"></script>
+	<link href="../css/style.css"  rel="stylesheet" type="text/css"/>
+	<script src="../js/jsUtilities.js" type="text/javascript"></script>
 	<title>Passwort-reset</title>
 </head>
 <body>
@@ -11,14 +11,14 @@
 <tr>
 	<td colspan="2">
 		<table align="center">
-		<tr><td><h1>Passwort vergessen?</h1></td></tr>
-		<tr><td><h2>E-mail eingeben</h2></td></tr>
+		<tr><td align="center"><h1>Passwort vergessen?</h1></td></tr>
+		<tr><td align="center"><h2>E-mail eingeben</h2></td></tr>
 		<tr>
 			<td>
 				<form method="post" id="formular" action="passworttest.php">
 					<table align="center" valign="middle">
 						<tr><td class="rightAlign">Email Adresse:</td><td><input type="email" name="email" id="email" required></td></tr>
-						<tr><td></td><td><input type="submit" value="Zurücksetzen"></td></tr>
+						<tr><td></td><td><input type="submit" value="Passwort zurücksetzen"></td></tr>
 					</table>
 				</form>
 			</td>
@@ -41,7 +41,9 @@
 				</script>
 			</div>
 		</td>
-		<td>
+	</tr>
+	<tr>
+		<td align="center" width="20px">
 			Sie werden nach Absenden dieses Formulars eine Email mit dem neuen Passwort erhalten
 		</td>
 	</tr>
