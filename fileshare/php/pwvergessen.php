@@ -55,7 +55,6 @@
 </table>
 <?php
 include "../php/utilities.php";
-include_once "../securimage/securimage.php";
 
 debugModus();
 
