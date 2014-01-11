@@ -53,14 +53,32 @@
 	</td>
 </tr>
 </table>
+<?php
+include "../php/utilities.php";
+include_once "../securimage/securimage.php";
+
+debugModus();
+
+$data = $_POST;
+$nrt = new Nachrichten("fehlerListe");
+
+if (alleSchluesselGesetzt($data, "email")) {
+	$db = oeffneBenutzerDB($nrt);
+	tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
+
+	if (userExestiertBereits($db, $email)) {
+		$nrt->fehler("HIER WIRD SPÄTER ALLES WEITERE FOLGEN");//automatische E-mail generierung hier einfügen
+	}
+	else {
+		echo"KEIN USER MIT DIESER EMAIL VORHANDEN";
+	}
+}
 
 
 
 
-
-
-
-
+$fehlerjs = $nrt->toJsCode();
+?>
 <script src="pruefeRegistrierung.js"></script>
 <script type="text/javascript"><?=$fehlerjs?></script>
 </body>

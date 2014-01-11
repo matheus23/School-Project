@@ -59,7 +59,7 @@
 </tr>
 </table>
 <?php
-include "utilities.php";
+include "../php/utilities.php";
 include_once "../securimage/securimage.php";
 
 debugModus();
@@ -103,8 +103,8 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 			} // Ansonsten wird bereits ein fehler ausgegeben.
 		}
 	}	
-} else {
-
+} 
+else {
 	$nrt->fehler("Es müssen alle Daten angegeben werden.");
 }
 $fehlerjs = $nrt->toJsCode();
