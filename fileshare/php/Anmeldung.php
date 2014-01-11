@@ -17,7 +17,7 @@
 				<form method="post" id="formular" action="passworttest.php">
 					<table align="center" valign="middle">
 						<tr><td class="rightAlign">Benutzername:</td><td><input type="text" name="bnanmeld" id="bnanmeld" required></td></tr>
-						<tr><td class="rightAlign">Passwort:</td><td><input type="text" name="pwanmeld" id="pwanmeld" required></td></tr>
+						<tr><td class="rightAlign">Passwort:</td><td><input type="password" name="pwanmeld" id="pwanmeld" required></td></tr>
 						<tr><td></td><td><input type="submit" value="login"></td></tr>
 					</table>
 				</form>
@@ -44,7 +44,7 @@
 	</tr>
 </table>
 <div class="bottom_fix_right">Passwort vergessen? <a href="pwvergessen.php">Hier</a> klicken</div>
-<div class="bottom_fix_left">Noch nicht registriert? <a href="registrierung.php">hier</a> Registrieren</div>
+<div class="bottom_fix_left">Noch nicht registriert? <a href="registrierung.php">Hier</a> Registrieren</div>
 
 
 
