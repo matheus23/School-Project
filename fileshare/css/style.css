@@ -1,5 +1,9 @@
 body {
     font-family: Sans-Serif;
+	padding: 0;
+	margin: 0;
+	background-color: #eeeeec;
+	top: 0;
 }
 
 a {
@@ -10,6 +14,32 @@ a {
 
 #captcha {
 	border: 1px solid #d3d7cf;
+}
+
+#header {
+	margin: 0;
+    background-color: #dbdbdb;
+    border-bottom: 1px solid #aaa;
+    /* Generated with http://www.colorzilla.com/gradient-editor/ */
+    background: #f2f2f2; /* Old browsers */
+    background: -moz-linear-gradient(top, #f2f2f2 0%, #dbdbdb 89%, #cccccc 99%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f2f2), color-stop(89%,#dbdbdb), color-stop(99%,#cccccc)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f2f2f2 0%,#dbdbdb 89%,#cccccc 99%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f2f2f2 0%,#dbdbdb 89%,#cccccc 99%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f2f2f2 0%,#dbdbdb 89%,#cccccc 99%); /* IE10+ */
+    background: linear-gradient(to bottom, #f2f2f2 0%,#dbdbdb 89%,#cccccc 99%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f2f2', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+    /* End of generated gradient. */
+
+}
+
+#banner {
+    font-size: 3.5em;
+    padding-left: 2em;
+    margin-bottom: 1px;
+	margin-top: 0px; /* Buxfix für falsches anzeigen einer webpage -.- */
+    color: #aaa;
+    text-shadow: 0 -1px 1px #444, 0 1px 1px #fff;
 }
 
 .infobox {

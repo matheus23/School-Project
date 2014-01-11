@@ -7,6 +7,9 @@
 	<title>Anmeldeseite</title>
 </head>
 <body>
+<div id='header'>
+	<i><h1 id='banner'>Fileshare</h1></i>
+</div>
 <table width="100%" height="95%">
 <tr>
 	<td colspan="2">
