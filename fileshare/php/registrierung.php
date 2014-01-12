@@ -107,10 +107,7 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 				schickeRegistrierungsEmail($user,$email,$nutzerID);
 			} // Ansonsten wird bereits ein fehler ausgegeben.
 		}
-	}	
-} 
-else {
-	$nrt->fehler("Es müssen alle Daten angegeben werden.");
+	}
 }
 ?>
 <script src="../js/pruefeRegistrierung.js"></script>

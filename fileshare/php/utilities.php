@@ -30,6 +30,28 @@ function oeffneBenutzerDB($nrt) {
 	return $db;
 }
 
+define("PASSWORD_PASS", 0);
+define("WRONG_EMAIL", 1);
+define("WRONG_COMBINATION", 2);
+// Testet das Passwort für einen Benutzer:
+// PASSWORD_PASS, (also 0) wenn das Passwort stimmt.
+// WRONG_EMAIL, (also 1) wenn es die Email nicht gibt.
+// WRONG_COMBINATION, (also 2) wenn es die Email gibt, aber das Passwort dazu nicht stimmt.
+function benutzerPwTest($db, $email, $passwort) {
+	$ergebnis = $db->query("SELECT Passwort FROM Benutzer WHERE Email = '$email'");
+	if ($ergebnis) {
+		if (!$ergebnis->data_seek(0)) {
+			return WRONG_EMAIL;
+		} else {
+			$ergebnisZeile = $ergebnis->fetch_array();
+			$pwHash = $ergebnisZeile[0];
+			$pwPasst = passwordVerify($passwort, $pwHash);
+			if ($pwPasst) return PASSWORD_PASS;
+			else return WRONG_COMBINATION;
+		}
+	} // Ansonsten wird bereits ein Fehler ausgegeben.
+}
+
 // Benutzung:
 // $testArray = array("Hallo" => "Ja?", "Test" => "Blah");
 // alleSchlüsselGesetzt($testArray, "Hallo"); // Gibt False zurück

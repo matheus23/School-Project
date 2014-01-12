@@ -56,48 +56,43 @@
 
 <?php
 include "../php/utilities.php";
-include_once "../securimage/securimage.php";
 
 debugModus();
 
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
-$securimage = new Securimage();
 
 if (alleSchluesselGesetzt($data, "APw", "NPw", "NPwb", "email")) {
-		$db = oeffneBenutzerDB($nrt);
-		tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
+	$db = oeffneBenutzerDB($nrt);
+	tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
 
-		$email = $db->real_escape_string($data["email"]);
-		// wird sowieso gehashed:
-		$apw = $data["APw"];
-		$npw = $data["NPw"];
-		$npwb = $data["NPwb"];
+	$email = $db->real_escape_string($data["email"]);
+	// wird sowieso gehashed:
+	$apw = $data["APw"];
+	$npw = $data["NPw"];
+	$npwb = $data["NPwb"];
 		
 	if (userExestiertBereits($db, $email)) {	
 		
 		if ($npw != $npwb) {
 			$nrt->fehler("Das neue Passwort stimmt nicht mit der Wiederholung überein");
 		}
-		
 		else {
-			$pwHash = passwordHash($Npw);
-			
-			
-			// So geht das überprüfen von passwörtern dann:
-			//if (passwordVerify($pw, $pwHash))  {
-			//	$nrt->okay("Passwort hashing funzt!");
-			//}
-			$erfolgreich = $db->query("UPDATE `Benutzer` SET 'Passwort'='$pwHash' WHERE 'Email'='$_POST['Email']'");
-			if ($erfolgreich) {
-				$nrt->okay("Passwort erfolgreich geändert");
-				//Bestätigungs Email, dass das Pw geändert wurde
-			} // Ansonsten wird bereits ein fehler ausgegeben.
+			$passwortTest = benutzerPwTest($db, $email, $apw);
+			if ($passwortTest == PASSWORD_PASS)  {
+				$npwHash = passwordHash($npw);
+				$erfolgreich = $db->query("UPDATE `Benutzer` SET Passwort='$npwHash' WHERE Email='$email'");
+				if ($erfolgreich) {
+					$nrt->okay("Passwort erfolgreich geändert");
+					//Bestätigungs Email, dass das Pw geändert wurde
+				} // Ansonsten wird bereits ein fehler ausgegeben.
+			} elseif ($passwortTest == WRONG_EMAIL) {
+				$nrt->fehler("Diese Email ist nicht registriert.");
+			} else {
+				$nrt->fehler("Email-Passwort Kombination passt nicht.");
+			}
 		}
 	}
-}
-else {
-	$nrt->fehler("Es müssen alle Daten angegeben werden.");
 }
 ?>
 <script src="../js/pruefeRegistrierung.js"></script>
