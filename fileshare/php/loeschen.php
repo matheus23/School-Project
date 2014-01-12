@@ -34,7 +34,7 @@
 						das bedeutet soviel wie: Nur wenn javascript nicht aktiviert ist. -->
 					<div id="jsenable" class='infobox warnung'>
 						<table border="0"><tr><td class="verticalMid">
-							<img src='img/warning.png' width='16' height='16' />
+							<img src='../img/warning.png' width='16' height='16' />
 						</td><td class="verticalMid">
 							Javascript muss aktiviert sein!
 						</td></tr></table>
