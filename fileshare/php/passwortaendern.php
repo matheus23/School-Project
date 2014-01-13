@@ -5,7 +5,7 @@
 	<meta charset="UTF-8" />
 	<link href="../css/style.css" rel="stylesheet" type="text/css" />
 	<script src="../js/jsUtilities.js" type="text/javascript"></script>
-	<title>Passwört ändern</title>
+	<title>Passwort ändern</title>
 </head>
 <body>
 <div id="header">

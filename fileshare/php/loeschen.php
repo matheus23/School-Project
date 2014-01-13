@@ -18,7 +18,7 @@
 		<tr>
 			<td>
 				<table align="center" valign="middle">
-					<form method="post">
+					<form method="post" id="formular">
 						<tr><td><input type="email" name ="mail"> E- Mail</td></tr>
 						<tr><td><input type="password" name ="Pw"> Passwort</td></tr>
 						<tr><td><input type="submit" value="Account löschen"><input type="reset"></td></tr>
@@ -67,13 +67,34 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
 	
 	$db = oeffneBenutzerDB($nrt);
     
+
 	if (userExestiertBereits($db, $email)) {
-		$db->query("DELETE FROM `Benutzer` where email='$email'");
-		$nrt->okay("Benutzer erfolgreich gelöscht");
-	} else {
-		$nrt->fehler("Kein Benutzer mit dieser Email vorhanden");
+		$passwortTest = benutzerPwTest($db, $email, $pw);
+			if ($passwortTest == PASSWORD_PASS)  {
+				
+				$erfolgreich=$db->query("DELETE FROM `Benutzer` where email='$email'");
+				
+				if ($erfolgreich) {
+					$nrt->okay("Account erfolgreich gelöscht");
+					
+					//Email, dass Account erfolgreich gelöscht wurde
+				} 
+			} elseif ($passwortTest == WRONG_EMAIL) {
+				$nrt->fehler("Diese Email ist nicht registriert.");
+			} else {
+				$nrt->fehler("Email-Passwort Kombination passt nicht.");
+			}
+	} 
+	else {
+		$nrt->fehler("Diese Email ist nicht registriert");
 	}
+	
 }
+
+else{
+	$nrt->fehler("Nicht alle Felder ausgefüllt");
+}
+
 $fehlerjs = $nrt->toJsCode();
 ?>
 <script type="text/javascript"><?=$fehlerjs?></script>
