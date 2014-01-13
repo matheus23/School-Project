@@ -81,6 +81,7 @@ form {
     background-color: #eeeeec;
     border: 1px solid #d3d7cf;
     border-radius: 10px;
+	box-shadow: 2px 2px 8px #888;
 }
 
 input[type="text"], input[type="password"], input[type="email"] {
