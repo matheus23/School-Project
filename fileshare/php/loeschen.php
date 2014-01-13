@@ -69,9 +69,9 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
     
 	if (userExestiertBereits($db, $email)) {
 		$db->query("DELETE FROM `Benutzer` where email='$email'");
-		echo ("LÖSCHEN DES ACCOUNTS ERFOLGREICH");
+		$nrt->okay("Benutzer erfolgreich gelöscht");
 	} else {
-		echo ("Fehler: USER NICHT VORHANDEN");
+		$nrt->fehler("Kein Benutzer mit dieser Email vorhanden");
 	}
 }
 $fehlerjs = $nrt->toJsCode();
