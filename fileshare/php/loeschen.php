@@ -14,16 +14,16 @@
 <tr>
 	<td colspan="2">
 		<table align="center">
-		<tr><td><h1>Bitte Anmeldedaten eingeben, um den Account zu löschen</h1></td></tr>
+		<tr><td><h1>Bitte Anmeldedaten eingeben,<br />um den Account zu löschen</h1></td></tr>
 		<tr>
 			<td>
-				<table align="center" valign="middle">
-					<form method="post" id="formular">
-						<tr><td><input type="email" name ="mail"> E- Mail</td></tr>
-						<tr><td><input type="password" name ="Pw"> Passwort</td></tr>
-						<tr><td><input type="submit" value="Account löschen"><input type="reset"></td></tr>
-					</form>
-				</table>
+				<form method="post" id="formular">
+					<table align="center" valign="middle">
+						<tr><td class="rightAlign">E-Mail:</td><td><input type="email" name ="mail"></td></tr>
+						<tr><td class="rightAlign">Passwort:</td><td><input type="password" name ="Pw"></td></tr>
+						<tr><td></td><td><input type="submit" value="Account löschen"><input type="reset"></td></tr>
+					</table>
+				</form>
 			</td>
 		</tr>
 		<tr>
@@ -87,12 +87,7 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
 	} 
 	else {
 		$nrt->fehler("Diese Email ist nicht registriert");
-	}
-	
-}
-
-else{
-	$nrt->fehler("Nicht alle Felder ausgefüllt");
+	}	
 }
 
 $fehlerjs = $nrt->toJsCode();
