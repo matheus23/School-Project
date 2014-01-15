@@ -19,7 +19,7 @@
 			<td>
 				<form method="post" id="formular" action="passworttest.php">
 					<table align="center" valign="middle">
-						<tr><td class="rightAlign">Benutzername:</td><td><input type="text" name="bnanmeld" id="bnanmeld" required></td></tr>
+						<tr><td class="rightAlign">E-Mail:</td><td><input type="text" name="eanmeld" id="eanmeld" required></td></tr>
 						<tr><td class="rightAlign">Passwort:</td><td><input type="password" name="pwanmeld" id="pwanmeld" required></td></tr>
 						<tr><td></td><td><input type="submit" value="login"></td></tr>
 					</table>
