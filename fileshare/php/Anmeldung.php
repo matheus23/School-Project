@@ -64,23 +64,17 @@ if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
 	$db = oeffneBenutzerDB($nrt);
 	$pwTest = benutzerPwTest($db, $emaila, $pwa);
 	if ($pwTest == WRONG_EMAIL) {
-		echo "Falsche Email";
+		$nrt->fehler("Falsche Email");
 	}
 	if ($pwTest == WRONG_COMBINATION) {
-		echo "Falsches Passwort";
+		$nrt->fehler("Falsches Passwort");
 	}
 	if ($pwTest == PASSWORD_PASS) {
-		echo "True";
+		$nrt->okay("Anmeldung erfolgreich");
 	}
 }
-$fehlerjs = $nrt->toJsCode();
 ?>
-
-
-
-
-
 <script src="../js/pruefeRegistrierung.js"></script>
-<script type="text/javascript"><?=$fehlerjs?></script>
+<?php $nrt->genJsCode(); ?>
 </body>
 </html>
