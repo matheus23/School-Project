@@ -78,8 +78,6 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		$nrt->fehler("Das eingegebene Captcha ist falsch.");
 	} else {
 		$db = oeffneBenutzerDB($nrt);
-		tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
-
 		$user = $db->real_escape_string($data["Bn"]);
 		$email = $db->real_escape_string($data["email"]);
 		// wird sowieso gehashed:
@@ -100,11 +98,16 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 			//if (passwordVerify($pw, $pwHash))  {
 			//	$nrt->okay("Passwort hashing funzt!");
 			//}
-			$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`,`RegistrierungsID`) VALUES ('$user', '$pwHash', '$email','$nutzerID')");
+			$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`,`RegistrierungsID`,`Bestaetigt`) VALUES ('$user', '$pwHash', '$email','$nutzerID','0')");
 			if ($erfolgreich) {
-				$nrt->okay("Erfolgreich registriert!");
-				require_once("registrierungsEmail.php");
-				schickeRegistrierungsEmail($user,$email,$nutzerID);
+				include_once("registrierungsEmail.php");
+				$mail = schickeRegistrierungsEmail($user,$email,$nutzerID);
+				if (!$mail){
+					$nrt->fehler("Fehler bei dem Mailversand");
+				}
+				else{
+					$nrt->okay("Erfolgreich registriert! Eine E-Mail ist auf dem Weg...");
+				}
 			} // Ansonsten wird bereits ein fehler ausgegeben.
 		}
 	}

@@ -4,6 +4,7 @@
 //Um E-Mail-Diesnste (gmail,yahoo,...) zu nutzen, sind scheinbar immer zusätzliche programme oder Module für php notwendig,
 //die nicht ins repository passen.
 function schickeRegistrierungsEmail($user,$email,$nutzerID){
+	$header = 'From: "secureshare" <secureshare@limond.de>';
 	$server = $_SERVER["HTTP_HOST"];
 	$betreff = "Registrierung abschließen";
 	$pfad = dirname($_SERVER["REQUEST_URI"]);
@@ -11,7 +12,7 @@ function schickeRegistrierungsEmail($user,$email,$nutzerID){
 		"Hallo $user,\n".
 		"um deine Registrierung abzuschließen öffne folgenden Link:\n".
 		"$server$pfad/emailBestaetigen.php?nutzerID=$nutzerID";
-	mail($email,$betreff,$message);	
+	return mail($email,$betreff,$message,$header);
 }
 //Prüft die NutzerID und setzt den jeweilgin Nutzer auf bestätigt
 function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
