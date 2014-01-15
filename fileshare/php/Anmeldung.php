@@ -17,9 +17,9 @@
 		<tr><td><h1>Anmeldung</h1></td></tr>
 		<tr>
 			<td>
-				<form method="post" id="formular" action="passworttest.php">
+				<form method="post" id="formular" action="">
 					<table align="center" valign="middle">
-						<tr><td class="rightAlign">E-Mail:</td><td><input type="text" name="eanmeld" id="eanmeld" required></td></tr>
+						<tr><td class="rightAlign">E-Mail:</td><td><input type="text" name="eanmeld" id="bnanmeld" required></td></tr>
 						<tr><td class="rightAlign">Passwort:</td><td><input type="password" name="pwanmeld" id="pwanmeld" required></td></tr>
 						<tr><td></td><td><input type="submit" value="login"></td></tr>
 					</table>
@@ -49,7 +49,32 @@
 <div class="bottom_fix_right">Passwort vergessen? <a href="pwvergessen.php">Hier</a> klicken</div>
 <div class="bottom_fix_left">Noch nicht registriert? <a href="registrierung.php">Hier</a> Registrieren</div>
 
+<?php
+include "../php/utilities.php";
+include_once "../securimage/securimage.php";
 
+debugModus();
+
+$data = $_POST;
+$nrt = new Nachrichten("fehlerListe");
+$securimage = new Securimage();
+if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
+	$emaila = ($_POST["eanmeld"]);
+	$pwa = ($_POST["pwanmeld"]);
+	$db = oeffneBenutzerDB($nrt);
+	$pwTest = benutzerPwTest($db, $emaila, $pwa);
+	if ($pwTest == WRONG_EMAIL) {
+		echo "Falsche Email";
+	}
+	if ($pwTest == WRONG_COMBINATION) {
+		echo "Falsches Passwort";
+	}
+	if ($pwTest == PASSWORD_PASS) {
+		echo "True";
+	}
+}
+$fehlerjs = $nrt->toJsCode();
+?>
 
 
 
