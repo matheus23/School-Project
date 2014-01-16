@@ -68,7 +68,7 @@ if (alleSchluesselGesetzt($data, "email")) {
 	$db = oeffneBenutzerDB($nrt);
 	tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
 	
-	$email = $data["email"];
+	$email = strtolower($data["email"]);
 
 	if (userExestiertBereits($db, $email)) {
 		$nrt->fehler("HIER WIRD SPÄTER ALLES WEITERE FOLGEN");//automatische E-mail generierung hier einfügen

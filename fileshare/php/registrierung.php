@@ -79,7 +79,7 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	} else {
 		$db = oeffneBenutzerDB($nrt);
 		$user = $db->real_escape_string($data["Bn"]);
-		$email = $db->real_escape_string($data["email"]);
+		$email = strtolower($db->real_escape_string($data["email"]));
 		// wird sowieso gehashed:
 		$pw = $data["Pw"];
 		$pwb = $data["Pwb"];

@@ -66,7 +66,7 @@ if (alleSchluesselGesetzt($data, "APw", "NPw", "NPwb", "email")) {
 	$db = oeffneBenutzerDB($nrt);
 	tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
 
-	$email = $db->real_escape_string($data["email"]);
+	$email = strtolower($db->real_escape_string($data["email"]));
 	// wird sowieso gehashed:
 	$apw = $data["APw"];
 	$npw = $data["NPw"];

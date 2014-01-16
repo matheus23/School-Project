@@ -62,7 +62,7 @@ $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
 
 if (alleSchluesselGesetzt($data, "mail", "Pw")){
-	$email = $data["mail"];
+	$email = strtolower($data["mail"]);
 	$pw = $data["Pw"];
 	
 	$db = oeffneBenutzerDB($nrt);

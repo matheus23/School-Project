@@ -17,7 +17,7 @@ $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
 $securimage = new Securimage();
 if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
-	$emaila = ($_POST["eanmeld"]);
+	$emaila = strtolower($_POST["eanmeld"]);
 	$pwa = ($_POST["pwanmeld"]);
 	$db = oeffneBenutzerDB($nrt);
 	$pwTest = benutzerPwTest($db, $emaila, $pwa);
