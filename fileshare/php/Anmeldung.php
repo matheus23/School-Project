@@ -72,7 +72,7 @@ $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
 $securimage = new Securimage();
 
-if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld", "merken")) {
+if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
 	$emaila = strtolower($data["eanmeld"]);
 	$pwa = ($data["pwanmeld"]);
 	$db = oeffneBenutzerDB($nrt);
