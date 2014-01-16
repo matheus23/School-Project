@@ -7,8 +7,11 @@
 	<title>Anmeldeseite</title>
 </head>
 <body>
+<?php
+	session_start();
+?>
 <div id='header'>
-	<i><h1 id='banner'>Fileshare</h1></i>
+	<i><h1 id='banner'>Secureshare</h1></i>
 </div>
 <table width="100%" height="95%">
 <tr>
@@ -19,8 +22,18 @@
 			<td>
 				<form method="post" id="formular" action="">
 					<table align="center" valign="middle">
-						<tr><td class="rightAlign">E-Mail:</td><td><input type="text" name="eanmeld" id="bnanmeld" required></td></tr>
+						<?php 
+						if (isset($_SESSION["merken"])) {
+							$merken = $_SESSION["merken"];
+							echo "<tr><td class=\"rightAlign\">E-Mail:</td><td><input type=\"text\" name=\"eanmeld\" id=\"bnanmeld\" value='$merken' required></td></tr>";
+							}
+						else {
+							echo "<tr><td class=\"rightAlign\">E-Mail:</td><td><input type=\"text\" name=\"eanmeld\" id=\"bnanmeld\" required></td></tr>";
+							}
+							
+						?>
 						<tr><td class="rightAlign">Passwort:</td><td><input type="password" name="pwanmeld" id="pwanmeld" required></td></tr>
+						<tr><td colspan="2" class="leftAlign">E-Mail merken <input type="checkbox" name="merken" id="merken"></td></tr>
 						<tr><td></td><td><input type="submit" value="login"></td></tr>
 					</table>
 				</form>
@@ -71,8 +84,21 @@ if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
 	}
 	if ($pwTest == PASSWORD_PASS) {
 		$nrt->okay("Anmeldung erfolgreich");
+		if (isset($_POST["eanmeld"]) && ($_POST["pwanmeld"])) {
+			$_SESSION["semail"] = ($_POST["eanmeld"]);
+			$_SESSION["spw"]	= ($_POST["pwanmeld"]);
+		}
 	}
 }
+if (isset($_POST["merken"])) {
+	$_SESSION["merken"] = ($_POST["eanmeld"]);
+	}
+else {
+	unset($_SESSION['merken']);
+	}
+// Debug 
+echo $_SESSION["semail"];
+echo "<br>" . $_SESSION["spw"];
 ?>
 <script src="../js/pruefeRegistrierung.js"></script>
 <?php $nrt->genJsCode(); ?>
