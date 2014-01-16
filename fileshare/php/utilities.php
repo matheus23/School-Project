@@ -69,6 +69,14 @@ function alleSchluesselGesetzt($array) {
 	return true;
 }
 
+function orDefault($array, $index, $default) {
+	if (isset($array[$index])) {
+		return $array[$index];
+	} else {
+		return $default;
+	}
+}
+
 function passwordHash($password) {
 	$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
 	$salt = base64_encode($salt);

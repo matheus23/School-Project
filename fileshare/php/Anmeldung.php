@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<?php
+	include "../php/utilities.php";
+	include_once "../securimage/securimage.php";
+	
+	session_start();
+?>
 <html>
 <head>
 	<meta charset="UTF-8" />
@@ -7,9 +13,6 @@
 	<title>Anmeldeseite</title>
 </head>
 <body>
-<?php
-	session_start();
-?>
 <div id='header'>
 	<i><h1 id='banner'>Secureshare</h1></i>
 </div>
@@ -22,19 +25,19 @@
 			<td>
 				<form method="post" id="formular" action="">
 					<table align="center" valign="middle">
-						<?php 
-						if (isset($_SESSION["merken"])) {
-							$merken = $_SESSION["merken"];
-							echo "<tr><td class=\"rightAlign\">E-Mail:</td><td><input type=\"text\" name=\"eanmeld\" id=\"bnanmeld\" value='$merken' required></td></tr>";
-							}
-						else {
-							echo "<tr><td class=\"rightAlign\">E-Mail:</td><td><input type=\"text\" name=\"eanmeld\" id=\"bnanmeld\" required></td></tr>";
-							}
-							
-						?>
-						<tr><td class="rightAlign">Passwort:</td><td><input type="password" name="pwanmeld" id="pwanmeld" required></td></tr>
-						<tr><td colspan="2" class="leftAlign">E-Mail merken <input type="checkbox" name="merken" id="merken"></td></tr>
-						<tr><td></td><td><input type="submit" value="login"></td></tr>
+						<tr>
+							<td class="rightAlign">E-Mail:</td>
+							<td><input type="text" name="eanmeld" id="bnanmeld" value="<?php echo orDefault($_SESSION, "gemerkteEmail", ""); ?>" required /></td>
+						</tr><tr>
+							<td class="rightAlign">Passwort:</td>
+							<td><input type="password" name="pwanmeld" id="pwanmeld" required></td>
+						</tr><tr>
+							<td class="rightAlign">E-Mail merken:</td>
+							<td><input type="checkbox" name="merken" id="merken" <?php echo isset($_SESSION["gemerkteEmail"]) ? "checked" : ""; ?>></td>
+						</tr><tr>
+							<td></td>
+							<td><input type="submit" value="Anmelden"></td>
+						</tr>
 					</table>
 				</form>
 			</td>
@@ -63,42 +66,34 @@
 <div class="bottom_fix_left">Noch nicht registriert? <a href="registrierung.php">Hier</a> Registrieren</div>
 
 <?php
-include "../php/utilities.php";
-include_once "../securimage/securimage.php";
-
 debugModus();
 
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
 $securimage = new Securimage();
-if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
-	$emaila = strtolower($_POST["eanmeld"]);
-	$pwa = ($_POST["pwanmeld"]);
+
+if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld", "merken")) {
+	$emaila = strtolower($data["eanmeld"]);
+	$pwa = ($data["pwanmeld"]);
 	$db = oeffneBenutzerDB($nrt);
 	$pwTest = benutzerPwTest($db, $emaila, $pwa);
 	if ($pwTest == WRONG_EMAIL) {
 		$nrt->fehler("Falsche Email");
-	}
-	if ($pwTest == WRONG_COMBINATION) {
+	} elseif ($pwTest == WRONG_COMBINATION) {
 		$nrt->fehler("Falsches Passwort");
-	}
-	if ($pwTest == PASSWORD_PASS) {
+	} elseif ($pwTest == PASSWORD_PASS) {
 		$nrt->okay("Anmeldung erfolgreich");
-		if (isset($_POST["eanmeld"]) && ($_POST["pwanmeld"])) {
-			$_SESSION["semail"] = ($_POST["eanmeld"]);
-			$_SESSION["spw"]	= ($_POST["pwanmeld"]);
+		if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
+			$_SESSION["semail"] = ($data["eanmeld"]);
+			$_SESSION["spw"]	= ($data["pwanmeld"]);
+			if (isset($data["merken"])) {
+				$_SESSION["gemerkteEmail"] = $data["eanmeld"];
+			} else {
+				unset($_SESSION["gemerkteEmail"]);
+			}
 		}
 	}
 }
-if (isset($_POST["merken"])) {
-	$_SESSION["merken"] = ($_POST["eanmeld"]);
-	}
-else {
-	unset($_SESSION['merken']);
-	}
-// Debug 
-echo $_SESSION["semail"];
-echo "<br>" . $_SESSION["spw"];
 ?>
 <script src="../js/pruefeRegistrierung.js"></script>
 <?php $nrt->genJsCode(); ?>
