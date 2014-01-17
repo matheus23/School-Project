@@ -21,10 +21,10 @@ function userExestiertBereits($db, $userEmail) {
 }
 
 $benutzerDB = array(
+	"database" => "Fileshare",
 	"host" => "localhost",
 	"user" => "schoolproject",
-	"password" => "hallo123",
-	"database" => "Fileshare"
+	"password" => "hallo123"
 );
 
 // Öffnet die Datenbank für die Benutzer.
