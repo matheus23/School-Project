@@ -70,7 +70,7 @@ debugModus();
 $data = $_GET;
 $nrt = new Nachrichten("fehlerListe");
 
-if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld", "merken")) {
+if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
 	$emaila = strtolower($data["eanmeld"]);
 	$pwa = ($data["pwanmeld"]);
 	$db = oeffneBenutzerDB($nrt);
