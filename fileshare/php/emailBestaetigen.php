@@ -45,8 +45,7 @@
 </tr>
 </table>
 <?php
-include "../php/utilities.php";
-
+include_once "utilities.php";
 debugModus();
 $data = $_GET;
 $nrt = new Nachrichten("fehlerListe");

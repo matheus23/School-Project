@@ -5,35 +5,40 @@
 //die nicht ins repository passen.
 function schickeRegistrierungsEmail($user,$email,$nutzerID){
 	$header = 'From: "secureshare" <secureshare@limond.de>';
-	$server = $_SERVER["HTTP_HOST"];
 	$betreff = "Registrierung abschließen";
 	$pfad = dirname($_SERVER["REQUEST_URI"]);
 	$message =
 		"Hallo $user,\n".
 		"um deine Registrierung abzuschließen öffne folgenden Link:\n".
-		"$server$pfad/emailBestaetigen.php?nutzerID=$nutzerID";
+		host."$pfad/emailBestaetigen.php?nutzerID=$nutzerID";
 	return mail($email,$betreff,$message,$header);
 }
 //Prüft die NutzerID und setzt den jeweilgin Nutzer auf bestätigt
 function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
-	$antwort = $db->query("SELECT * from Benutzer where RegistrierungsID='$nutzerID'");
-	if (!$antwort) {
-		return;
-	}
-	if(count($nutzer)==0){
-		$nrt->fehler("Kein passender Nutzer gefunden");
-		return;
-	}
-	if($nutzer["Bestaetigt"]==1){
-		$nrt->warnung("Nutzer schon bestätigt");
-		return;
-	}
-	$success = $db->query("UPDATE `Benutzer` SET Bestaetigt=1 where RegistrierungsID='$nutzerID'");
-	if(!$success){
-		$nrt->fehler("Fehler in der Datenbank bei Bestätigung des Kontos");
-		return;
-	}
-	$email = $nutzer["Email"];
-	$nrt->okay("Das Konto mit der E-Mail '$email' wurde erfolgreich bestätigt.");
+	$db->query("SELECT * from Benutzer where RegistrierungsID='$nutzerID'")->fold(
+		function($ergebnis) use (&$nrt,$nutzerID,$db){
+			$nutzer=$ergebnis->fetch_array(MYSQLI_ASSOC);
+			if(count($nutzer)==0){
+				$nrt->fehler("Kein passender Nutzer gefunden");
+				return;
+			}
+			if($nutzer["Bestaetigt"]==1){
+				$nrt->warnung("Nutzer schon bestätigt");
+				return;
+			}
+			$db->query("UPDATE `Benutzer` SET Bestaetigt=1 where RegistrierungsID='$nutzerID'")->fold(
+				function($ergebnis)use (&$nrt,$nutzer){
+					$email = $nutzer["Email"];
+					$nrt->okay("Das Konto mit der E-Mail '$email' wurde erfolgreich bestätigt.");
+				},
+				function($fehlerNachricht)use (&$nrt){
+					$nrt->fehler("Fehler in der Datenbank bei Bestätigung des Kontos");
+				}
+			);
+		},
+		function($fehlerNachricht)use (&$nrt){
+			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+		}
+	);
 }
 ?>

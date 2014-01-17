@@ -2,6 +2,10 @@
 <?php
 include "ExtSQL.php";
 
+#Serverweite Variablen START
+define("host", $_SERVER["HTTP_HOST"]);//Sollte später durch hardcoded ersetzt werden
+#Serverweite Variablen ENDE
+
 // Im debugModus gibt php Alle fehler an den Client weiter.
 function debugModus() {
 	error_reporting(E_ALL);
@@ -169,10 +173,16 @@ class Nachrichten {
 //$spaltenname = einzufügende Spalte z.B $spaltenname="RegistrierungsID"
 //$typ = SQL-Spalten-Typ z.B $typ="VARCHAR(40)" oder $typ="TEXT"
 function tabelleNeueSpalte($db,$tabelle,$spaltenname,$typ){
-	$spalteninfo = $db->query("SHOW COLUMNS FROM $tabelle");
-	while($tabellenspalte = $spalteninfo->fetch_array()[0]){
-		if ($spaltenname == $tabellenspalte) return;//Spalte existiert schon
-	}
-	$db->query("ALTER TABLE $tabelle ADD $spaltenname $typ");
+	$db->query("SHOW COLUMNS FROM $tabelle")->fold(
+		function($ergebnis) use ($tabelle,$spaltenname,$typ){
+			$spalteninfo = $ergebnis;
+			while($tabellenspalte = $spalteninfo->fetch_array()[0]){
+				if ($spaltenname == $tabellenspalte) return;//Spalte existiert schon
+			}
+			$db->query("ALTER TABLE $tabelle ADD $spaltenname $typ");			
+		},
+		function($fehlerNachricht){
+		}
+	);
 }
 ?>
