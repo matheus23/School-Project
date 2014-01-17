@@ -61,7 +61,7 @@
 	</td>
 </tr>
 </table>
-<div class="bottom_fix_right">Bereits registriert? <a href="anmeldung.php">Hier</a> klicken</div>
+<div class="bottom_fix_right">Bereits registriert? <a href="Anmeldung.php">Hier</a> klicken</div>
 
 <?php
 include "../php/utilities.php";
