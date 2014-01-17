@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <?php
 	include "../php/utilities.php";
-	include_once "../securimage/securimage.php";
 	
 	session_start();
 ?>
@@ -23,7 +22,7 @@
 		<tr><td><h1>Anmeldung</h1></td></tr>
 		<tr>
 			<td>
-				<form method="post" id="formular" action="">
+				<form method="get" id="formular" action="">
 					<table align="center" valign="middle">
 						<tr>
 							<td class="rightAlign">E-Mail:</td>
@@ -68,9 +67,8 @@
 <?php
 debugModus();
 
-$data = $_POST;
+$data = $_GET;
 $nrt = new Nachrichten("fehlerListe");
-$securimage = new Securimage();
 
 if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld", "merken")) {
 	$emaila = strtolower($data["eanmeld"]);

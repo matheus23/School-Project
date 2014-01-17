@@ -23,11 +23,11 @@ if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
 	$pwTest = benutzerPwTest($db, $emaila, $pwa);
 	if ($pwTest == WRONG_EMAIL) {
 		echo "Falsche Email";
-	}
-	if ($pwTest == WRONG_COMBINATION) {
+	} 
+	elseif ($pwTest == WRONG_COMBINATION) {
 		echo "Falsches Passwort";
 	}
-	if ($pwTest == PASSWORD_PASS) {
+	elseif ($pwTest == PASSWORD_PASS) {
 		echo "True";
 	}
 }

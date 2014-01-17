@@ -72,13 +72,13 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
 		$passwortTest = benutzerPwTest($db, $email, $pw);
 			if ($passwortTest == PASSWORD_PASS)  {
 				
-				$erfolgreich=$db->query("DELETE FROM `Benutzer` where email='$email'");
-				
-				if ($erfolgreich) {
-					$nrt->okay("Account erfolgreich gelöscht");
-					
-					//Email, dass Account erfolgreich gelöscht wurde
-				} 
+				$db->query("DELETE FROM `Benutzer` where email='$email'")->fold(
+					function($ergebnis) use (&$nrt) {
+						$nrt->okay("Account erfolgreich gelöscht");
+					}, function($fehlerNachricht) use (&$nrt) {
+						$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+					}
+				);
 			} elseif ($passwortTest == WRONG_EMAIL) {
 				$nrt->fehler("Diese Email ist nicht registriert.");
 			} else {

@@ -81,11 +81,14 @@ if (alleSchluesselGesetzt($data, "APw", "NPw", "NPwb", "email")) {
 			$passwortTest = benutzerPwTest($db, $email, $apw);
 			if ($passwortTest == PASSWORD_PASS)  {
 				$npwHash = passwordHash($npw);
-				$erfolgreich = $db->query("UPDATE `Benutzer` SET Passwort='$npwHash' WHERE Email='$email'");
-				if ($erfolgreich) {
-					$nrt->okay("Passwort erfolgreich geändert");
-					//Bestätigungs Email, dass das Pw geändert wurde
-				} // Ansonsten wird bereits ein fehler ausgegeben.
+				$db->query("UPDATE `Benutzer` SET Passwort='$npwHash' WHERE Email='$email'")->fold(
+					function($ergebnis) use (&$nrt) {
+						$nrt->okay("Passwort erfolgreich geändert");
+						//Bestätigungs Email, dass das Pw geändert wurde
+					}, function($fehlerNachricht) use (&$nrt) {
+						$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+					}
+				);
 			} elseif ($passwortTest == WRONG_EMAIL) {
 				$nrt->fehler("Diese Email ist nicht registriert.");
 			} else {

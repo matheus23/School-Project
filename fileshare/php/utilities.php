@@ -11,9 +11,13 @@ function debugModus() {
 // Findet heraus, ob es bereits einen User mit der 
 // gegebenen email gibt, der bereits registriert ist:
 function userExestiertBereits($db, $userEmail) {
-	$rows = $db->query("SELECT * FROM Benutzer WHERE Email = '$userEmail'");
-	if ($db->connect_errno) return true; // Zeitweise...
-	return $rows->num_rows > 0;
+	return $db->query("SELECT * FROM Benutzer WHERE Email = '$userEmail'")->fold(
+		function($rows) {
+			return $rows->num_rows > 0;
+		}, function($fehlerNachricht) {
+			return true;
+		}
+	);
 }
 
 $benutzerDB = array(
@@ -38,18 +42,24 @@ define("WRONG_COMBINATION", 2);
 // WRONG_EMAIL, (also 1) wenn es die Email nicht gibt.
 // WRONG_COMBINATION, (also 2) wenn es die Email gibt, aber das Passwort dazu nicht stimmt.
 function benutzerPwTest($db, $email, $passwort) {
-	$ergebnis = $db->query("SELECT Passwort FROM Benutzer WHERE Email = '$email'");
-	if ($ergebnis) {
-		if (!$ergebnis->data_seek(0)) {
-			return WRONG_EMAIL;
-		} else {
-			$ergebnisZeile = $ergebnis->fetch_array();
-			$pwHash = $ergebnisZeile[0];
-			$pwPasst = passwordVerify($passwort, $pwHash);
-			if ($pwPasst) return PASSWORD_PASS;
-			else return WRONG_COMBINATION;
-		}
-	} // Ansonsten wird bereits ein Fehler ausgegeben.
+	return $db->query("SELECT Passwort FROM Benutzer WHERE Email = '$email'")->fold(
+		function ($ergebnis) use ($email, $passwort) {
+			if ($ergebnis) {
+				if (!$ergebnis->data_seek(0)) {
+					return WRONG_EMAIL;
+				} else {
+					$ergebnisZeile = $ergebnis->fetch_array();
+					$pwHash = $ergebnisZeile[0];
+					$pwPasst = passwordVerify($passwort, $pwHash);
+					if ($pwPasst) return PASSWORD_PASS;
+					else return WRONG_COMBINATION;
+				}
+			} // Bei datenbank-fehler:
+		}, function ($fehlerNachricht) {
+			// Hmmmm naja...
+			// Sollte _eigentlich_ einen fehler Ausgeben...
+			return WRONG_COMBINATION;
+		});
 }
 
 // Benutzung:

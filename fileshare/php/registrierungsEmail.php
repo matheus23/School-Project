@@ -16,7 +16,10 @@ function schickeRegistrierungsEmail($user,$email,$nutzerID){
 }
 //Prüft die NutzerID und setzt den jeweilgin Nutzer auf bestätigt
 function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
-	$nutzer = $db->query("SELECT * from Benutzer where RegistrierungsID='$nutzerID'")->fetch_array(MYSQLI_ASSOC);
+	$antwort = $db->query("SELECT * from Benutzer where RegistrierungsID='$nutzerID'");
+	if (!$antwort) {
+		return;
+	}
 	if(count($nutzer)==0){
 		$nrt->fehler("Kein passender Nutzer gefunden");
 		return;

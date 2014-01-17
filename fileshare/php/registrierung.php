@@ -66,6 +66,7 @@
 <?php
 include "../php/utilities.php";
 include_once "../securimage/securimage.php";
+include_once("registrierungsEmail.php");
 
 debugModus();
 
@@ -98,17 +99,22 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 			//if (passwordVerify($pw, $pwHash))  {
 			//	$nrt->okay("Passwort hashing funzt!");
 			//}
-			$erfolgreich = $db->query("INSERT INTO `Benutzer`(`Nutzername`, `Passwort`, `Email`,`RegistrierungsID`,`Bestaetigt`) VALUES ('$user', '$pwHash', '$email','$nutzerID','0')");
-			if ($erfolgreich) {
-				include_once("registrierungsEmail.php");
-				$mail = schickeRegistrierungsEmail($user,$email,$nutzerID);
-				if (!$mail){
-					$nrt->fehler("Fehler bei dem Mailversand");
+			$sql = 
+				"INSERT INTO ".
+				"`Benutzer`(`Nutzername`, `Passwort`, `Email`, `RegistrierungsID`, `Bestaetigt`) ".
+				"VALUES ('$user', '$pwHash', '$email','$nutzerID','0')"; 
+			$db->query($sql)->fold(
+				function($ergebnis) use (&$nrt, $user, $email, $nutzerID) {
+					$mail = schickeRegistrierungsEmail($user,$email,$nutzerID);
+					if (!$mail) {
+						$nrt->fehler("Fehler bei dem Mailversand");
+					} else {
+						$nrt->okay("Erfolgreich registriert! Eine E-Mail ist auf dem Weg...");
+					}
+				}, function($fehlerNachricht) use (&$nrt) {
+					$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
 				}
-				else{
-					$nrt->okay("Erfolgreich registriert! Eine E-Mail ist auf dem Weg...");
-				}
-			} // Ansonsten wird bereits ein fehler ausgegeben.
+			);
 		}
 	}
 }
