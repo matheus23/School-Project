@@ -27,10 +27,7 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 	<script src="../../js/frontend.js"></script>
 </head>
 <body>
-<div id='header'>
-	<i><h1 id='banner'>Secureshare</h1></i>
-	<a href="../abmelden.php" id="abmelden">abmelden</a>
-</div>
+<?=generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden</a>");?>
 <div id="contentWrapper">
 	<div id="menu">
 		<?=$menu->toHTML()?>
