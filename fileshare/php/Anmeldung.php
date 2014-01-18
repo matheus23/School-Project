@@ -1,8 +1,37 @@
 <!DOCTYPE html>
 <?php
 	include "../php/utilities.php";
-	
 	session_start();
+	debugModus();
+	
+	$data = $_POST;
+	$nrt = new Nachrichten("fehlerListe");
+	
+	if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
+		$db = oeffneBenutzerDB($nrt);
+		
+		$emaila = $db->real_escape_string(strtolower($data["eanmeld"]));
+		$pwa = ($data["pwanmeld"]);
+		$pwTest = benutzerPwTest($db, $emaila, $pwa);
+		if ($pwTest == WRONG_EMAIL) {
+			$nrt->fehler("Falsche Email");
+		} elseif ($pwTest == WRONG_COMBINATION) {
+			$nrt->fehler("Falsches Passwort");
+		} elseif ($pwTest == PASSWORD_PASS) {
+			$nrt->okay("Anmeldung erfolgreich");
+			$_SESSION["semail"] = $emaila;
+			if (isset($data["merken"])) {
+				setcookie("email",$emaila,time()+1*60*60*24*7,"/");//email cookie wird gesetzt (1 Woche)
+			}
+			else{
+				setcookie("email",null,-1,"/");
+			}
+			session_regenerate_id(true);//Session wird neu gestartet
+		}
+	}
+	if ((isset($_SESSION["semail"]))&&($_SESSION["semail"]!="")){//angemeldet
+		header("Location: http://".host.dirname($_SERVER["REQUEST_URI"])."/frontend/dashboard.php");//Umleitung auf Dashboard
+	}
 ?>
 <html>
 <head>
@@ -25,13 +54,13 @@
 						<table align="center" valign="middle">
 							<tr>
 								<td class="rightAlign">E-Mail:</td>
-								<td><input type="text" name="eanmeld" id="bnanmeld" value="<?php echo orDefault($_SESSION, "gemerkteEmail", ""); ?>" required /></td>
+								<td><input type="text" name="eanmeld" id="bnanmeld" value="<?=isset($_COOKIE["email"])?$_COOKIE["email"]:""?>" required /></td>
 							</tr><tr>
 								<td class="rightAlign">Passwort:</td>
 								<td><input type="password" name="pwanmeld" id="pwanmeld" required></td>
 							</tr><tr>
-								<td class="rightAlign">E-Mail merken:</td>
-								<td><input type="checkbox" name="merken" id="merken" <?php echo isset($_SESSION["gemerkteEmail"]) ? "checked" : ""; ?>></td>
+								<td class="rightAlign">Email merken</td>
+								<td><input type="checkbox" name="merken" id="merken"></td>
 							</tr><tr>
 								<td></td>
 								<td><input type="submit" value="Anmelden"></td>
@@ -63,36 +92,6 @@
 <div class="bottom_fix_right">Passwort vergessen? <a href="pwvergessen.php">Hier</a> klicken</div>
 <div class="bottom_fix_left">Noch nicht registriert? <a href="registrierung.php">Hier</a> Registrieren</div>
 
-<?php
-debugModus();
-
-$data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
-
-if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
-	$db = oeffneBenutzerDB($nrt);
-	
-	$emaila = $db->real_escape_string(strtolower($data["eanmeld"]));
-	$pwa = ($data["pwanmeld"]);
-	$pwTest = benutzerPwTest($db, $emaila, $pwa);
-	if ($pwTest == WRONG_EMAIL) {
-		$nrt->fehler("Falsche Email");
-	} elseif ($pwTest == WRONG_COMBINATION) {
-		$nrt->fehler("Falsches Passwort");
-	} elseif ($pwTest == PASSWORD_PASS) {
-		$nrt->okay("Anmeldung erfolgreich");
-		if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
-			$_SESSION["semail"] = ($data["eanmeld"]);
-			$_SESSION["spw"]	= ($data["pwanmeld"]);
-			if (isset($data["merken"])) {
-				$_SESSION["gemerkteEmail"] = $data["eanmeld"];
-			} else {
-				unset($_SESSION["gemerkteEmail"]);
-			}
-		}
-	}
-}
-?>
 <script src="../js/pruefeRegistrierung.js"></script>
 <?php $nrt->genJsCode(); ?>
 </body>
