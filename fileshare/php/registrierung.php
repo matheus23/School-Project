@@ -9,7 +9,7 @@
 </head>
 <body>
 <div id="header">
-    <i><h1 id="banner">Fileshare</h1></i>
+    <i><h1 id="banner">Secureshare</h1></i>
 </div>
 <table width="100%" height="95%">
 <tr>
@@ -86,7 +86,10 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		$pwb = $data["Pwb"];
 		
 		if ($pw != $pwb) {
-			$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein");
+			$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein.");
+		}
+		elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+			$nrt->fehler("Die E-Mail-Adresse hat ein ungültiges Format.");
 		}
 		elseif (userExestiertBereits($db, $email)) {
 			$nrt->fehler("Diese E-Mail ist bereits vergeben.");
