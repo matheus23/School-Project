@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<?php session_start(); ?>
+<?php session_start();
+include "generate.php";
+?>
 <html>
 <head>
 	<meta charset="UTF-8" />

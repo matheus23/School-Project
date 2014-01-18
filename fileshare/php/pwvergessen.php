@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+include "generate.php";
+?>
 <html>
 <head>
 	<meta charset="UTF-8" />
