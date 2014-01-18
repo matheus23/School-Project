@@ -54,7 +54,7 @@
 						<table align="center" valign="middle">
 							<tr>
 								<td class="rightAlign">E-Mail:</td>
-								<td><input type="text" name="eanmeld" id="bnanmeld" value="<?=isset($_COOKIE["email"])?$_COOKIE["email"]:""?>" required /></td>
+								<td><input type="text" name="eanmeld" id="bnanmeld" value="<?=orDefault($_COOKIE,"email","")?>" required /></td>
 							</tr><tr>
 								<td class="rightAlign">Passwort:</td>
 								<td><input type="password" name="pwanmeld" id="pwanmeld" required></td>

@@ -66,7 +66,7 @@
 <?php
 include "../php/utilities.php";
 include_once "../securimage/securimage.php";
-include_once("registrierungsEmail.php");
+include_once("benutzerEmail.php");
 
 debugModus();
 

@@ -57,7 +57,7 @@
 </tr>
 </table>
 <?php
-include "../php/utilities.php";
+include "utilities.php";
 
 debugModus();
 
@@ -66,12 +66,26 @@ $nrt = new Nachrichten("fehlerListe");
 
 if (alleSchluesselGesetzt($data, "email")) {
 	$db = oeffneBenutzerDB($nrt);
-	tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
 	
-	$email = strtolower($data["email"]);
+	$email = $db->real_escape_string(strtolower($data["email"]));
 
 	if (userExestiertBereits($db, $email)) {
-		$nrt->fehler("HIER WIRD SPÄTER ALLES WEITERE FOLGEN");//automatische E-mail generierung hier einfügen
+		include_once "benutzerEmail.php";
+		$neuesPasswort = zufallPasswort();
+		$pwHash = passwordHash($neuesPasswort);
+		$db->query("UPDATE Benutzer SET Passwort='$pwHash' where Email='$email'")->fold(
+			function($ergebnis) use (&$nrt,$email,$neuesPasswort){
+				if(schickePasswortEmail($nrt,$email,$neuesPasswort)){
+					$nrt->okay("Dein neues Passwort wurde an '$email' geschickt.");
+				}
+				else{
+					$nrt->fehler("Es gab einen Fehler beim E-Mail-Versand.");
+				}
+			},
+			function($fehlerNachricht) use (&$nrt) {
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+			}
+		);
 	}
 	else {
 		$nrt->fehler("Kein Benutzer mit dieser Email vorhanden.");

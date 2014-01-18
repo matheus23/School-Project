@@ -53,7 +53,7 @@ if (alleSchluesselGesetzt($data, "nutzerID")){
 	$db = oeffneBenutzerDB($nrt);
 	tabelleNeueSpalte($db, "Benutzer", "Bestaetigt","BOOL");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
 	$nutzerID=$db->real_escape_string($data["nutzerID"]);
-	require_once("registrierungsEmail.php");
+	require_once("benutzerEmail.php");
 	pruefeRegistrierungsEmail($nutzerID,$db,$nrt);
 }
 else{

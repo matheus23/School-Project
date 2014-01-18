@@ -41,4 +41,17 @@ function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
 		}
 	);
 }
+
+function schickePasswortEmail($nrt,$email,$neuesPasswort){
+	$header = 'From: "secureshare" <secureshare@limond.de>';
+	$betreff = "Neues Passwort";
+	$pfad = dirname($_SERVER["REQUEST_URI"]);
+	$message =
+		"Hallo,\n".
+		"dein Passwort für Secureshare wurde geändert in:\n".
+		"$neuesPasswort\n\n".
+		"Bitte logge dich ein, um dein Passwort zu ändern, sodass du diese E-Mail löschen kannst:\n".
+		host."$pfad/Anmeldung.php";
+	return mail($email,$betreff,$message,$header);
+}
 ?>

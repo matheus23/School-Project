@@ -185,4 +185,10 @@ function tabelleNeueSpalte($db,$tabelle,$spaltenname,$typ){
 		}
 	);
 }
+
+function zufallPasswort(){
+	$passwort = substr(str_shuffle('abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'),0,10);
+	$passwort .= substr(str_shuffle('!%&=+*#_'),0,2);
+	return str_shuffle($passwort);
+}
 ?>
