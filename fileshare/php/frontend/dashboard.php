@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <?php
 include "../utilities.php";
+include "../generate.php";
 
 session_start();
 debugModus();
@@ -21,9 +22,9 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 <head>
 	<meta charset="utf-8">
 	<title>Dashboard</title>
-	<link type="text/css" rel="stylesheet" href="/github/fileshare/css/style.css">
-	<link type="text/css" rel="stylesheet" href="/github/fileshare/css/frontendStyle.css">
-	<script src="/github/fileshare/js/frontend.js"></script>
+	<link type="text/css" rel="stylesheet" href="../../css/style.css">
+	<link type="text/css" rel="stylesheet" href="../../css/frontendStyle.css">
+	<script src="../../js/frontend.js"></script>
 </head>
 <body>
 <div id='header'>

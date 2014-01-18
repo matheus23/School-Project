@@ -8,9 +8,7 @@
 	<title>Anmeldung LGÖ - Datenbank</title>
 </head>
 <body>
-<div id="header">
-    <i><h1 id="banner">Secureshare</h1></i>
-</div>
+<?=generateHeaderBanner()?>
 <table width="100%" height="95%">
 <tr>
 	<td colspan="2">

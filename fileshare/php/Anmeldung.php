@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
 	include "../php/utilities.php";
+	include "generate.php";
 	session_start();
 	debugModus();
 	
@@ -41,9 +42,7 @@
 	<title>Anmeldeseite</title>
 </head>
 <body>
-<div id='header'>
-	<i><h1 id='banner'>Secureshare</h1></i>
-</div>
+<?=generateHeaderBanner()?>
 <table width="100%" height="95%">
 	<tr><td colspan="2">
 		<table align="center">
