@@ -15,7 +15,9 @@ body,html{
 }
 #panel{
 	position:relative;
-	box-sizing:border-box;
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
 	height: 100%;
 	width:100%;
 	padding: 40px;
@@ -67,3 +69,88 @@ body,html{
 	right:10px;
 	top:10px;
 }
+/* gruppen.php START */
+#uiWrapper{
+	min-width: 490px;
+	position: relative;
+	width:100%;
+	height:auto;
+}
+.label{
+	margin-bottom: 20px;
+	color: #204a87;
+	font-weight:bold;
+	border-bottom: solid #204a87 1px;
+}
+.liste{
+	float:left;
+	border: solid #888888 1px;
+	position: relative;
+	width: 20%;
+	height: auto;
+	padding:10px;
+}
+.nofloat{
+	float:none;
+}
+.listenelement{
+	padding:5px;
+	border: solid #cdcdcd 1px;
+	-webkit-user-select: none;       
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+.hinzufuegen{
+	display: inline-block;
+	position:relative;
+	width:16px;
+	height:16px;
+	background-image: url('../img/add.png')
+}
+.loeschen{
+	display: inline-block;
+	position:relative;
+	width:16px;
+	height:16px;
+	background-image: url('../img/bin_closed.png')
+}
+.rightfloat{
+	float:right;
+}
+.liste .listenlabel{
+	position: relative;
+	margin-right: 20px;
+	text-overflow: ellipsis;
+	white-space:nowrap;
+	overflow: hidden;
+}
+#gruppeneditor{
+	float: right;
+	border: solid #888888 1px;
+	position: relative;
+	width: 70%;
+	height: auto;
+	padding:10px;
+}
+#mitgliederliste{
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
+	width: 100%;
+}
+#hinzufuegenAuswahl{
+	display:none;
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
+	width: 100%;
+}
+#auswahlliste{
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
+	width: 100%;
+}
+/* gruppen.php ENDE */

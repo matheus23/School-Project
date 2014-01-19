@@ -1,10 +1,10 @@
 // element: Das element in das Fehlernachrichten hinzugefügt werden.
-var fehlerNachricht = function(element, nachricht, type) {
+var fehlerNachricht = function(element, nachricht, type,path) {
 	if (typeof type == 'undefined') type = "fehler";
 	
-	var imgPath = "../img/error.png";
-	if (type == "okay") imgPath = "../img/accept.png";
-	if (type == "warnung") imgPath = "../img/warning.png";
+	var imgPath = path + "img/error.png";
+	if (type == "okay") imgPath = path + "img/accept.png";
+	if (type == "warnung") imgPath = path + "img/warning.png";
 	
 	element.innerHTML += 
 	"<div class='infobox " + type + "'>" +

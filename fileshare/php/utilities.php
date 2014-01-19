@@ -1,4 +1,3 @@
-<meta charset="UTF-8" />
 <?php
 include "ExtSQL.php";
 
@@ -113,16 +112,19 @@ function jsFuerFehlerListe($element, $nachrichtenArray) {
 class Nachricht {
 	public $nachricht = "";
 	public $art = "fehler";
+	public $path = "../";
 	
-	public function __construct($nachricht, $art) {
+	public function __construct($nachricht, $art,$path) {
 		$this->nachricht = $nachricht;
 		$this->art = $art;
+		$this->path = $path;
 	}
 	
 	public function toJsCall($elementVar) {
 		$n = addslashes($this->nachricht);
 		$a = $this->art;
-		return "fehlerNachricht($elementVar, '$n', '$a');";
+		$path = $this->path;
+		return "fehlerNachricht($elementVar, '$n', '$a','$path');";
 	}
 }
 
@@ -131,13 +133,14 @@ class Nachrichten {
 	public $jsElemVarName = "";
 	public $nachrichtenListe = array();
 	
-	public function __construct($jselem) {
+	public function __construct($jselem,$path="../") {
 		$this->jsElemVarName = "__$jselem";
 		$this->jsElemVarDef = "var " . $this->jsElemVarName . " = document.getElementById('$jselem');";
+		$this->path = $path;
 	}
 	
 	public function nachricht($art, $nachricht) {
-		array_push($this->nachrichtenListe, new Nachricht($nachricht, $art));
+		array_push($this->nachrichtenListe, new Nachricht($nachricht, $art,$this->path));
 	}
 	
 	public function okay($nachricht) {
