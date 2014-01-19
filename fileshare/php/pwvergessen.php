@@ -72,12 +72,14 @@ if (alleSchluesselGesetzt($data, "email")) {
 
 	if (userExestiertBereits($db, $email)) {
 		include_once "benutzerEmail.php";
-		$neuesPasswort = zufallPasswort();
-		$pwHash = passwordHash($neuesPasswort);
-		$db->query("UPDATE Benutzer SET Passwort='$pwHash' where Email='$email'")->fold(
-			function($ergebnis) use (&$nrt,$email,$neuesPasswort){
-				if(schickePasswortEmail($nrt,$email,$neuesPasswort)){
-					$nrt->okay("Dein neues Passwort wurde an '$email' geschickt.");
+		
+		$resetID=uniqid("reset_",true);
+		$verfallsdatum = date ("Y-m-d H:i:s", strtotime("+1 day"));//1 Tag im MYSQL-Date Format
+		
+		$db->query("INSERT INTO `Passwortreset`(`Email`, `ID`, `Verfalldatum`) VALUES ('$email','$resetID','$verfallsdatum')")->fold(
+			function($ergebnis) use (&$nrt,$email,$resetID,$verfallsdatum){
+				if(schickePasswortResetEmail($nrt,$email,$resetID,$verfallsdatum)){
+					$nrt->okay("Eine Passwort-Reset-Mail wurde an '$email' geschickt.");
 				}
 				else{
 					$nrt->fehler("Es gab einen Fehler beim E-Mail-Versand.");

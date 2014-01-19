@@ -98,7 +98,7 @@ if (alleSchluesselGesetzt($data, "APw", "NPw", "NPwb", "email")) {
 	}
 }
 ?>
-<script src="../js/pruefeRegistrierung.js"></script>
+<script src="../js/pruefeAenderung.js"></script>
 <?php $nrt->genJsCode(); ?>
 </body>
 </html>
