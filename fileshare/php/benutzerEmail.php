@@ -4,8 +4,8 @@
 //Um E-Mail-Diesnste (gmail,yahoo,...) zu nutzen, sind scheinbar immer zusätzliche programme oder Module für php notwendig,
 //die nicht ins repository passen.
 function schickeRegistrierungsEmail($user,$email,$nutzerID){
-	$header = 'From: "secureshare" <secureshare@limond.de>';
-	$betreff = "Registrierung abschließen";
+	$header = 'From: "secureshare" <secureshare@limond.de>' . "\r\n" . 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n";
+	$betreff = '=?UTF-8?B?'.base64_encode("Registrierung abschließen").'?=';
 	$pfad = dirname($_SERVER["REQUEST_URI"]);
 	$message =
 		"Hallo $user,\n".
@@ -43,8 +43,8 @@ function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
 }
 
 function schickePasswortResetEmail($nrt,$email,$resetID,$verfallsdatum){
-	$header = 'From: "secureshare" <secureshare@limond.de>';
-	$betreff = "Passwort zurücksetzen";
+	$header = 'From: "secureshare" <secureshare@limond.de>' . "\r\n" . 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n";
+	$betreff = '=?UTF-8?B?'.base64_encode("Passwort zurücksetzen").'?=';
 	$pfad = dirname($_SERVER["REQUEST_URI"]);
 	$message =
 		"Hallo,\n".
