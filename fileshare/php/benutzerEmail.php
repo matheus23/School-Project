@@ -20,6 +20,8 @@ function schickeGeloeschtEmail($user,$email,$nutzerID){
 	$message =
 		"Hallo $user,\n".
 		"Dein account wurde erfolgreich gelöscht\n";
+	return mail($email,$betreff,$message,$header);
+}
 
 
 
