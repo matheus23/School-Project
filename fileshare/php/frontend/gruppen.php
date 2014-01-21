@@ -1,8 +1,11 @@
 <!DOCTYPE HTML>
 <?php
-include "../utilities.php";
-include "../generate.php";
+include_once "../utilities.php";
+include_once "../generate.php";
+include_once "frontendUtilities.php";
 
+$nrt = new Nachrichten("fehlerListeGruppe","../../");
+$db = oeffneBenutzerDB($nrt);
 
 session_start();
 debugModus();
@@ -40,7 +43,8 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 			<h1>Gruppen</h1>
 			<div class="liste" id="gruppenliste">
 				<div class="label">Gruppenliste:<div id="neuegruppe" class="hinzufuegen rightfloat"></div></div>
-				<div class="listenelement"><span class="listenlabel">Test</span></div>
+				<div id="fehlerListeGruppe"></div>
+				<?=generateHTMLGruppen($db)?>
 			</div>
 			<div id="gruppeneditor">
 				<div class="label">Gruppeneditor:</div>
@@ -55,11 +59,12 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 					</div>
 					<p>Mitglieder:</p>
 				</div>
-				<button id="editFertig">Fertig</button>
+				<input id="editFertig" type="button" value="Fertig"/>
 			</div>
 		</div>
 	</div>
 </div>
 </body>
 <script src="../../js/gruppen.js"></script>
+<?php $nrt->genJsCode(); ?>
 </html>

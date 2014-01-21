@@ -2,12 +2,14 @@
 //Diese Datei braucht kein HTML, wird nur für AJAX-Anfrage benutzt
 session_start();
 include "../utilities.php";
+include_once "frontendUtilities.php";
 debugModus();
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe","../../");
 if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){
 	$nrt->fehler("Session abgelaufen.");
 	echo json_encode(array("nrt"=>$nrt->toJsCode()));
+	die();
 }
 
 if (alleSchluesselGesetzt($data, "aktion")) {
@@ -17,6 +19,15 @@ if (alleSchluesselGesetzt($data, "aktion")) {
 			break;
 		case "fertigGruppe":
 			fertigGruppe();
+			break;
+		case "neueGruppe":
+			neueGruppe();
+			break;
+		case "schickeMitglieder":
+			schickeMitglieder();
+			break;
+		case "schickeGruppen":
+			schickeGruppen();
 			break;
 	}
 }
@@ -44,51 +55,157 @@ function schickeNutzerEmail(){
 	}
 }
 
-/*
+
 function fertigGruppe(){
 	global $data, $nrt;
-	$erfolg = false;
 	$semail = $_SESSION["semail"];
-	if (alleSchluesselGesetzt($data, "emails","neueGruppe","gruppenname")){
+	$erfolg=false;
+	if (alleSchluesselGesetzt($data, "emails","gruppenname","GruppenID")){
 		$db = oeffneBenutzerDB($nrt);
 		$emails=json_decode($data["emails"]);
 		$gruppenname=$db->real_escape_string($data["gruppenname"]);
+		$gruppenID=$db->real_escape_string($data["GruppenID"]);
+		
+		if(strlen($gruppenname)==0){
+			$nrt->fehler("Kein Gruppenname angegeben");
+			echo json_encode(array("nrt"=>$nrt->toJsCode()));
+			die();
+		}
+		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorEmail='$semail' AND ID!='$gruppenID'";
+		$db->query($sql)->fold(
+			function ($ergebnis) use (&$nrt){
+				if($ergebnis->num_rows>0){
+					$nrt->fehler("Es gibt bereits eine Gruppe mit diesem Namen.");
+					echo json_encode(array("nrt"=>$nrt->toJsCode()));
+					die();
+				}
+			},
+			function($fehlerNachricht) use (&$nrt) {
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				die();
+			}
+		);
+		$erfolg=true;
+		$sql="UPDATE Gruppe SET Name='$gruppenname' WHERE ID='$gruppenID'";
+		$db->query($sql)->fold(
+			function ($ergebnis) use (&$nrt){
+			},
+			function($fehlerNachricht) use (&$nrt,&$erfolg) {
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				$erfolg=false;
+			}
+		);
 		foreach($emails as &$email){
 			$email = $db->real_escape_string($email);
 		}
-		if($data["neueGruppe"]){
-			$sql=
-				"INSERT INTO ".
-				"`Gruppe`(`ID`, `Name`, `ModeratorEmail`) ".
-				"VALUES (0, '$gruppenname', '$semail')"; 
+		$sql="SELECT NutzerEmail FROM Gruppenmitglieder WHERE GruppenID='$gruppenID'";	
+		$bisherigeMitglieder=array();
+		$db->query($sql)->fold(
+			function ($ergebnis) use (&$bisherigeMitglieder){
+				while($nutzer = $ergebnis->fetch_array(MYSQLI_ASSOC)){
+					array_push($bisherigeMitglieder,$nutzer["NutzerEmail"]);
+				}
+			},
+			function($fehlerNachricht) use (&$nrt,&$erfolg){
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				$erfolg=false;
+			}
+		);
+		$loeschen = array_diff($bisherigeMitglieder,$emails);
+		$hinzufuegen = array_diff($emails,$bisherigeMitglieder);
+		
+		foreach($loeschen as $loeschMitglied){
+			$sql="DELETE FROM Gruppenmitglieder WHERE GruppenID='$gruppenID' AND NutzerEmail='$loeschMitglied'";	
 			$db->query($sql)->fold(
-				function ($ergebnis) use(&$nrt,$db,$emails,&$erfolg){
-					$id = $db->insert_id;
-					foreach($emails as $email){
-						$sql=
-							"INSERT INTO ".
-							"`Gruppenmitglieder`(`GruppenID`, `NutzerEmail`) ".
-							"VALUES ($id, '$email')";
-						$db->query($sql)->fold(
-							function ($ergebnis) use(&$nrt,&$erfolg){
-									$nrt->okay("Gruppe erfolgreich hinzugefügt.");
-									$erfolg = true;
-							},
-							function($fehlerNachricht) use (&$nrt) {
-								$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-							}
-						);
-					}
+				function ($ergebnis){
 				},
-				function($fehlerNachricht) use (&$nrt) {
+				function($fehlerNachricht) use (&$nrt,&$erfolg){
 					$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+					$erfolg=false;
 				}
 			);
 		}
-		else{
+		foreach($hinzufuegen as $hinzufuegenMitglied){
+			$sql=
+				"INSERT INTO ".
+				"`Gruppenmitglieder`(`GruppenID`, `NutzerEmail`) ".
+				"VALUES ('$gruppenID', '$hinzufuegenMitglied')";
+			$db->query($sql)->fold(
+				function ($ergebnis){
+					
+				},
+				function($fehlerNachricht) use (&$nrt,&$erfolg){
+					$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+					$erfolg=false;
+				}
+			);				
 		}
 	}
-	echo json_encode(array("nrt"=>$nrt->toJsCode(),"erfolg"=>$erfolg));
-}*/
+	if ($erfolg){
+		$nrt->okay("Liste gespeichert");
+	}
+	echo json_encode(array("nrt"=>$nrt->toJsCode()));
+}
 
+function neueGruppe(){
+	global $data;
+	$nrt = new Nachrichten("fehlerListeGruppe","../../"); //Achtung: aneres Nachrichten-Feld
+	$semail = $_SESSION["semail"];
+	if (alleSchluesselGesetzt($data,"gruppenname")){	
+		$db = oeffneBenutzerDB($nrt);
+		$gruppenname=$db->real_escape_string($data["gruppenname"]);
+		if(strlen($gruppenname)==0){
+			$nrt->fehler("Kein Gruppenname angegeben");
+			echo json_encode(array("nrt"=>$nrt->toJsCode()));
+			die();
+		}
+		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorEmail='$semail'";
+		$db->query($sql)->fold(
+			function ($ergebnis) use (&$nrt){
+				if($ergebnis->num_rows>0){
+					$nrt->fehler("Es gibt bereits eine Gruppe mit diesem Namen.");
+					echo json_encode(array("nrt"=>$nrt->toJsCode()));
+					die();
+				}
+			},
+			function($fehlerNachricht) use (&$nrt) {
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				die();
+			}
+		);
+		$sql=
+			"INSERT INTO ".
+			"`Gruppe`(`ID`, `Name`, `ModeratorEmail`) ".
+			"VALUES (0, '$gruppenname', '$semail')"; 
+		$db->query($sql)->fold(
+			function ($ergebnis) use(&$nrt,$db){
+				$nrt->okay("Gruppe erfolgreich hinzugefügt.");
+				echo json_encode(array("nrt"=>$nrt->toJsCode(),"gruppenHTML"=>generateHTMLGruppen($db)));
+				die();
+			},
+			function($fehlerNachricht) use (&$nrt) {
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				die();
+			}
+		);
+	}
+}
+
+function schickeMitglieder(){
+	global $data,$nrt;
+	if (alleSchluesselGesetzt($data, "GruppenID")) {
+		$db = oeffneBenutzerDB($nrt);
+		$gruppenID = $data["GruppenID"];
+		echo generateHTMLMitglieder($db,$gruppenID);
+	}
+		
+}
+function schickeGruppen(){
+	global $data,$nrt;
+	$db = oeffneBenutzerDB($nrt);
+	echo generateHTMLGruppen($db);
+}
 ?>
