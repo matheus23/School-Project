@@ -76,7 +76,7 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
 					}
 					else {
 						$nrt->okay("Account erfolgreich gelöscht! Eine E-Mail ist auf dem Weg...");
-						$db->query("DELETE FROM `Benutzer` where email='$email'")
+						$db->query("DELETE FROM `Benutzer` where email='$email'");
 					}
 					
 				
