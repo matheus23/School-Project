@@ -13,6 +13,16 @@ function schickeRegistrierungsEmail($user,$email,$nutzerID){
 		host."$pfad/emailBestaetigen.php?nutzerID=$nutzerID";
 	return mail($email,$betreff,$message,$header);
 }
+
+function schickeGeloeschtEmail($user,$email,$nutzerID){
+	$header = 'From: "secureshare" <secureshare@limond.de>' . "\r\n" . 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n";
+	$betreff = '=?UTF-8?B?'.base64_encode("Account erfolgreich gelöscht").'?=';
+	$message =
+		"Hallo $user,\n".
+		"Dein account wurde erfolgreich gelöscht\n";
+
+
+
 //Prüft die NutzerID und setzt den jeweilgin Nutzer auf bestätigt
 function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
 	$db->query("SELECT * from Benutzer where RegistrierungsID='$nutzerID'")->fold(

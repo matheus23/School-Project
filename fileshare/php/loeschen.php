@@ -55,6 +55,7 @@
 </table>
 <?php
 include "../php/utilities.php";
+include_once("benutzerEmail.php");
 
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
@@ -64,19 +65,21 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
 	$pw = $data["Pw"];
 	
 	$db = oeffneBenutzerDB($nrt);
-    
+    $mail = schickeGeloeschtEmail($user,$email,$nutzerID);
 
 	if (userExestiertBereits($db, $email)) {
 		$passwortTest = benutzerPwTest($db, $email, $pw);
 			if ($passwortTest == PASSWORD_PASS)  {
 				
-				$db->query("DELETE FROM `Benutzer` where email='$email'")->fold(
-					function($ergebnis) use (&$nrt) {
-						$nrt->okay("Account erfolgreich gelöscht");
-					}, function($fehlerNachricht) use (&$nrt) {
-						$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+					if (!$mail) {
+						$nrt->fehler("Fehler bei dem Mailversand");
 					}
-				);
+					else {
+						$nrt->okay("Account erfolgreich gelöscht! Eine E-Mail ist auf dem Weg...");
+						$db->query("DELETE FROM `Benutzer` where email='$email'")
+					}
+					
+				
 			} elseif ($passwortTest == WRONG_EMAIL) {
 				$nrt->fehler("Diese Email ist nicht registriert.");
 			} else {
