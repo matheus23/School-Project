@@ -38,7 +38,7 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 	<div id="panel">
 		<div id="uiWrapper">
 			<h1>Gruppen</h1>
-			<div class="liste">
+			<div class="liste" id="gruppenliste">
 				<div class="label">Gruppenliste:<div id="neuegruppe" class="hinzufuegen rightfloat"></div></div>
 				<div class="listenelement"><span class="listenlabel">Test</span></div>
 			</div>

@@ -1,6 +1,5 @@
 // Sorry für das jQuery - ist hier aber sehr angenehm zu schreiben :)
 //Sollte mit etwas css gut verständlich sein
-var neueGruppe = false;
 
 $("#neuesmitglied").click(function(){
 	$("#auswahlliste").html("");
@@ -74,7 +73,6 @@ function mitgliedSchonInListe(nutzer){//Prüft, ob Nutzer schon in Mitgliederlis
 }
 
 $("#neuegruppe").click(function(){
-	neueGruppe = true;
 	$("#gruppenname").val("");
 	$("#nameemail").val("");
 	$("#mitgliederliste > .listenelement").remove()
@@ -98,15 +96,23 @@ $("#editFertig").click(function(){
 	$.ajax({//Frage an den Server, ob Name/Email existiert bzw. mehrere Treffer
 		type: "POST",//Schicke mit POST
 		url: "gruppeAjax.php",//Anfrage an gruppeAjax.php
-		data: {emails:JSON.stringify(emails),aktion:"fertigGruppe",neueGruppe:neueGruppe,gruppenname:gruppenname},//Sende nutzername/Email mit
+		data: {emails:JSON.stringify(emails),aktion:"fertigGruppe",gruppenname:gruppenname},//Sende nutzername/Email mit
 		success: function(antwort){//Weiter gehts mit der Antwort
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwortObjekt);
 			eval(antwortObjekt.nrt);
-			if(antwortObjekt.erfolg){
-				neueGruppe = false;
-			}
 		}
 	});
+});
+$("#neuegruppe").click(function(){
+	var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
+	var nameFeld = $("<input>").attr("type","text");//Input für Gruppennamen wird erstellt
+	listenelement.append(nameFeld);//Input wird auf Listenelement gelegt
+	var hinzufuegen = $("<div>").addClass("hinzufuegen").addClass("rightfloat");
+	hinzufuegen.click(function(event){
+		$(this).parent().remove();//Löscht Listenelement bei Klick auf das Müllsymbol
+	})
+	listenelement.append(hinzufuegen);
+	$("#gruppenliste").append(listenelement);
 });

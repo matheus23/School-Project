@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+	include "generate.php";
+?>
 <html>
 <head>
 	<meta charset="UTF-8" />
@@ -61,10 +64,10 @@ $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");
 
 if (alleSchluesselGesetzt($data, "mail", "Pw")){
-	$email = strtolower($data["mail"]);
+	$db = oeffneBenutzerDB($nrt);
+	$email = $db->real_escape_string(strtolower($data["mail"]));
 	$pw = $data["Pw"];
 	
-	$db = oeffneBenutzerDB($nrt);
     $mail = schickeGeloeschtEmail($user,$email,$nutzerID);
 
 	if (userExestiertBereits($db, $email)) {

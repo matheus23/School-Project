@@ -44,6 +44,7 @@ function schickeNutzerEmail(){
 	}
 }
 
+/*
 function fertigGruppe(){
 	global $data, $nrt;
 	$erfolg = false;
@@ -88,5 +89,6 @@ function fertigGruppe(){
 		}
 	}
 	echo json_encode(array("nrt"=>$nrt->toJsCode(),"erfolg"=>$erfolg));
-}
+}*/
+
 ?>
