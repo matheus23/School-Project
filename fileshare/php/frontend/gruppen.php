@@ -44,7 +44,7 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 			</div>
 			<div id="gruppeneditor">
 				<div class="label">Gruppeneditor:</div>
-				<div>Gruppenname:<input type='text' id="gruppenname" name="gruppenname"/></div>
+				<div class="bottommargin">Gruppenname:<input type='text' id="gruppenname" name="gruppenname"/></div>
 				<div class="liste" id="mitgliederliste">
 					<div class="label">Mitglieder:</div>
 					<div>Neues Mitglied (Benutzername oder Email):<input type='text' id="nameemail"/><div id="neuesmitglied" class="hinzufuegen"></div></div>
@@ -55,6 +55,7 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 					</div>
 					<p>Mitglieder:</p>
 				</div>
+				<button id="editFertig">Fertig</button>
 			</div>
 		</div>
 	</div>

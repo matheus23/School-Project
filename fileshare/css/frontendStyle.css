@@ -107,14 +107,16 @@ body,html{
 	position:relative;
 	width:16px;
 	height:16px;
-	background-image: url('../img/add.png')
+	background-image: url('../img/add.png');
+	cursor: pointer;
 }
 .loeschen{
 	display: inline-block;
 	position:relative;
 	width:16px;
 	height:16px;
-	background-image: url('../img/bin_closed.png')
+	background-image: url('../img/bin_closed.png');
+	cursor: pointer;
 }
 .rightfloat{
 	float:right;
@@ -152,5 +154,14 @@ body,html{
     -moz-box-sizing: border-box;
     box-sizing: border-box; 
 	width: 100%;
+}
+.bottommargin{
+	margin-bottom: 20px;
+}
+#mitgliederliste > .listenelement{
+	cursor: default;
+}
+#auswahlliste > .listenelement{
+	cursor: pointer;
 }
 /* gruppen.php ENDE */
