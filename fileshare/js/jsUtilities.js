@@ -1,5 +1,6 @@
 // element: Das element in das Fehlernachrichten hinzugefügt werden.
 var fehlerNachricht = function(element, nachricht, type,path) {
+	path = typeof path !== 'undefined' ? path : '../';
 	if (typeof type == 'undefined') type = "fehler";
 	
 	var imgPath = path + "img/error.png";

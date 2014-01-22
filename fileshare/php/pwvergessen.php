@@ -81,9 +81,6 @@ if (alleSchluesselGesetzt($data, "email")) {
 				if(schickePasswortResetEmail($nrt,$email,$resetID,$verfallsdatum)){
 					$nrt->okay("Eine Passwort-Reset-Mail wurde an '$email' geschickt.");
 				}
-				else{
-					$nrt->fehler("Es gab einen Fehler beim E-Mail-Versand.");
-				}
 			},
 			function($fehlerNachricht) use (&$nrt) {
 				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");

@@ -108,10 +108,8 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 				"VALUES ('$user', '$pwHash', '$email','$nutzerID','0')"; 
 			$db->query($sql)->fold(
 				function($ergebnis) use (&$nrt, $user, $email, $nutzerID) {
-					$mail = schickeRegistrierungsEmail($user,$email,$nutzerID);
-					if (!$mail) {
-						$nrt->fehler("Fehler bei dem Mailversand");
-					} else {
+					$mail = schickeRegistrierungsEmail($user,$email,$nutzerID,$nrt);
+					if ($mail) {//Bei einem Fehler wurde dieser bereits in $nrt geschrieben
 						$nrt->okay("Erfolgreich registriert! Eine E-Mail ist auf dem Weg...");
 					}
 				}, function($fehlerNachricht) use (&$nrt) {

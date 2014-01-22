@@ -1,26 +1,77 @@
 <?php
-//Funktion, zum Senden der E-mail
-//Diese Funktion ist ohne Wirkung, solange in der php.ini kein SMTP-Server angegeben ist.
-//Um E-Mail-Diesnste (gmail,yahoo,...) zu nutzen, sind scheinbar immer zusätzliche programme oder Module für php notwendig,
-//die nicht ins repository passen.
-function schickeRegistrierungsEmail($user,$email,$nutzerID){
-	$header = 'From: "secureshare" <secureshare@limond.de>' . "\r\n" . 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n";
-	$betreff = '=?UTF-8?B?'.base64_encode("Registrierung abschließen").'?=';
+require_once '../PHPMailer/PHPMailerAutoload.php';
+require_once '../../../EmailPasswort.php';
+
+#####################################################################
+#							WICHTIG:								#
+#		Der Mailversand ist nur mit dem Passwort möglich, das		#
+#		in Skype steht.												#
+#																	#
+#		BITTE VERWENDET DIESES PASSWORT NICHT IN EINER DATEI IN 	#
+#		EUREM GIT-REPOSITORY!										#
+#																	#
+#		Das Passwort wird von außerhalb über das Skript				#
+#		'../../../EmailPasswort.php' eingebunden, das nicht im		#
+#		Repository liegt. Es definiert die Kostante					#
+#		EMAIL_PASSWORT												#
+#####################################################################
+
+class ExtPHPMailer extends PHPMailer {
+	public function __construct() {
+		parent::__construct();
+		parent::isSMTP();
+		$this->setLanguage('de');
+		$this->Host='smtp-mail.outlook.com';
+		$this->Hostname='limond.de';//Wichtig für Backtrace (Spam-Erkennung)
+		$this->XMailer=' ';//Wichtig für Spam-Erkennung (Der Default-Wert "PHPMailer..." wird fast überall als Spam erkannt
+		$this->SMTPAuth=true;
+		$this->Username = 'secureshare@limond.de';
+		$this->Password = EMAIL_PASSWORT;
+		$this->SMTPSecure = 'tls';
+		$this->From = 'secureshare@limond.de';
+		$this->FromName = 'Secureshare';
+		$this->CharSet = 'utf-8';
+		parent::isHTML(true);
+		
+	}
+}
+
+function schickeRegistrierungsEmail($user,$email,$nutzerID,$nrt){
+	$mail= new ExtPHPMailer();
+	$mail->Subject = 'Registrierung abschließen';
 	$pfad = dirname($_SERVER["REQUEST_URI"]);
-	$message =
+	$mail->addAddress($email);
+	$mail->Body =//Email-Text für HTML-Mails (Link anklickbar)
+		"Hallo $user,<br>".
+		"um deine Registrierung abzuschließen öffne folgenden Link:<br>".
+		"<a href='".host."$pfad/emailBestaetigen.php?nutzerID=$nutzerID'>".host."$pfad/emailBestaetigen.php?nutzerID=$nutzerID</a>";
+	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
 		"Hallo $user,\n".
 		"um deine Registrierung abzuschließen öffne folgenden Link:\n".
 		host."$pfad/emailBestaetigen.php?nutzerID=$nutzerID";
-	return mail($email,$betreff,$message,$header);
+	if(!$mail->send()) {
+		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
+		return false;
+	}
+	return true;
 }
 
-function schickeGeloeschtEmail($user,$email,$nutzerID){
-	$header = 'From: "secureshare" <secureshare@limond.de>' . "\r\n" . 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n";
-	$betreff = '=?UTF-8?B?'.base64_encode("Account erfolgreich gelöscht").'?=';
-	$message =
+function schickeGeloeschtEmail($user,$email,$nutzerID,$nrt){
+	$mail= new ExtPHPMailer();
+	$mail->Subject = 'Account erfolgreich gelöscht';
+	//$pfad = dirname($_SERVER["REQUEST_URI"]);
+	$mail->addAddress($email);
+	$mail->Body =//Email-Text für HTML-Mails
+		"Hallo $user,<br>".
+		"dein Account wurde erfolgreich gelöscht.<br>";
+	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
 		"Hallo $user,\n".
-		"Dein account wurde erfolgreich gelöscht\n";
-	return mail($email,$betreff,$message,$header);
+		"dein Account wurde erfolgreich gelöscht.\n";
+	if(!$mail->send()) {
+		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
+		return false;
+	}
+	return true;
 }
 
 
@@ -55,15 +106,25 @@ function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
 }
 
 function schickePasswortResetEmail($nrt,$email,$resetID,$verfallsdatum){
-	$header = 'From: "secureshare" <secureshare@limond.de>' . "\r\n" . 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n";
-	$betreff = '=?UTF-8?B?'.base64_encode("Passwort zurücksetzen").'?=';
+	$mail= new ExtPHPMailer();
+	$mail->Subject = 'Passwort zurücksetzen';
 	$pfad = dirname($_SERVER["REQUEST_URI"]);
-	$message =
+	$mail->addAddress($email);
+	$mail->Body =//Email-Text für HTML-Mails (Link anklickbar)
+		"Hallo,<br>".
+		"Um dein Passwort zu ändern, benutze den folgenden Link:<br>".
+		"<a href='".host."$pfad/passwortreset.php?resetID=$resetID'>".host."$pfad/passwortreset.php?resetID=$resetID</a><br><br>".
+		"Der Link ist 24 Stunden gültig.";
+	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
 		"Hallo,\n".
 		"Um dein Passwort zu ändern, benutze den folgenden Link:\n".
 		host."$pfad/passwortreset.php?resetID=$resetID\n\n".
 		"Der Link ist 24 Stunden gültig.";
-	return mail($email,$betreff,$message,$header);
+	if(!$mail->send()) {
+		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
+		return false;
+	}
+	return true;
 }
 
 function resetPasswortEmail($resetID,$passwordHash,$db,$nrt){
