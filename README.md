@@ -6,6 +6,15 @@ Geschrieben von:
 Leon Kaucher,
 Luca Leitzbach,
 Yannick Herrling und
-Philipp Krüger
+Philipp KrÃ¼ger
 
 Verwendetes Iconset: [http://led24.de/iconset/]
+
+##Verwendete Libraries:
+###Securimage 3.5.1
+* Ort: /fileshare/securimage/
+* Lizenz: [BSD License](/fileshare/securimage/LICENSE.txt)
+
+###PHPMailer
+* Ort: /fileshare/PHPMailer/
+* Lizenz: [LGPL v2.1](/fileshare/PHPMailer/LICENSE)
