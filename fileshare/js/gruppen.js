@@ -203,6 +203,10 @@ function loescheGruppe(zuLoeschen){
 		return false;
 	}
 	var gruppenID = $(zuLoeschen).parent().data("id");
+	if (gruppenID==gruppeEditiertID){
+		gruppenEditorReset();
+		$("#gruppeneditor").hide(0);
+	}
 	$.ajax({
 		type: "POST",
 		url: "gruppeAjax.php",
@@ -246,5 +250,9 @@ function aktualisiereGruppen(){
 		behandleKlickGruppe(this);
 	});
 	
+}
+function gruppenEditorReset(){
+	$("#auswahlliste").html("");
+	$("#gruppeneditor input[type=text]").val("");
 }
 aktualisiereGruppen();
