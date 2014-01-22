@@ -44,7 +44,6 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 			<div class="liste" id="gruppenliste">
 				<div class="label">Gruppenliste:<div id="neuegruppe" class="hinzufuegen rightfloat"></div></div>
 				<div id="fehlerListeGruppe"></div>
-				<?=generateHTMLGruppen($db)?>
 			</div>
 			<div id="gruppeneditor">
 				<div class="label">Gruppeneditor:</div>

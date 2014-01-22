@@ -24,10 +24,13 @@ if (alleSchluesselGesetzt($data, "aktion")) {
 			neueGruppe();
 			break;
 		case "schickeMitglieder":
-			schickeMitglieder();
+			echo schickeMitglieder();
 			break;
 		case "schickeGruppen":
-			schickeGruppen();
+			echo schickeGruppen();
+			break;
+		case "loescheGruppe":
+			loescheGruppe();
 			break;
 	}
 }
@@ -199,13 +202,46 @@ function schickeMitglieder(){
 	if (alleSchluesselGesetzt($data, "GruppenID")) {
 		$db = oeffneBenutzerDB($nrt);
 		$gruppenID = $data["GruppenID"];
-		echo generateHTMLMitglieder($db,$gruppenID);
-	}
-		
+		return generateHTMLMitglieder($db,$gruppenID);
+	}		
 }
+
 function schickeGruppen(){
 	global $data,$nrt;
 	$db = oeffneBenutzerDB($nrt);
-	echo generateHTMLGruppen($db);
+	return generateHTMLGruppen($db);
+}
+
+function loescheGruppe(){
+	global $data;
+	$nrt = new Nachrichten("fehlerListeGruppe","../../"); //Achtung: aneres Nachrichten-Feld
+	
+	if (alleSchluesselGesetzt($data, "GruppenID")) {
+		
+		$db = oeffneBenutzerDB($nrt);
+		$gruppenID = $data["GruppenID"];
+		$sql="DELETE FROM Gruppe  WHERE ID='$gruppenID'";
+		$db->query($sql)->fold(
+			function ($ergebnis){
+			},
+			function($fehlerNachricht) use (&$nrt) {
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				die();
+			}
+		);
+		$sql="DELETE FROM Gruppenmitglieder  WHERE GruppenID='$gruppenID'";
+		$db->query($sql)->fold(
+			function ($ergebnis) use (&$nrt){
+				$nrt->okay("Erfolgreich gelöscht");
+			},
+			function($fehlerNachricht) use (&$nrt) {
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				die();
+			}
+		);
+		echo json_encode(array("nrt"=>$nrt->toJsCode()));
+	}		
 }
 ?>

@@ -6,7 +6,6 @@ var gruppeEditiertID;
 $("#neuesmitglied").click(function(){
 	$("#auswahlliste").html("");
 	$("#hinzufuegenAuswahl").hide();
-	$("#fehlerListe").html("");
 	var nameemail = $("#nameemail").val();
 	if(nameemail.length===0){
 		return;
@@ -18,7 +17,12 @@ $("#neuesmitglied").click(function(){
 		success: function(antwort){//Weiter gehts mit der Antwort
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwortObjekt);
-			eval(antwortObjekt.nrt);//Führe Fehlerlistenskript aus (eval ist hier nicht unsicherer als php generiertes js)
+			$("#fehlerListe").show();
+			eval(antwortObjekt.nrt);
+			$("#fehlerListe").delay(5000).hide(500).queue(function(){
+					$(this).html("");
+					$(this).dequeue()
+				});
 			$("#nameemail").val("");
 			if(antwortObjekt.nutzer.length===1){//Wenn nur ein Nutzer gefunden wurde:
 				mitgliedZurListe(antwortObjekt.nutzer[0]);
@@ -33,7 +37,12 @@ $("#neuesmitglied").click(function(){
 
 function mitgliedZurListe(nutzer){
 	if(mitgliedSchonInListe(nutzer)){
+		$("#fehlerListe").show();
 		fehlerNachricht($("#fehlerListe")[0],"Der Nutzer ist schon in der Liste.","warnung","../../");
+		$("#fehlerListe").delay(5000).hide(500).queue(function(){
+			$(this).html("");
+			$(this).dequeue()
+		});
 		return;
 	}
 	var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
@@ -75,16 +84,22 @@ function mitgliedSchonInListe(nutzer){//Prüft, ob Nutzer schon in Mitgliederlis
 }
 
 $("#neuegruppe").click(function(){
+	$('#gruppeneditor').hide();
 	$("#gruppenname").val("");
 	$("#nameemail").val("");
 	$("#mitgliederliste > .listenelement").remove()
+	hinzuguegenGruppe();
 });
 
 $("#editFertig").click(function(){
-	$("#fehlerListe").html("");	
 	var gruppenname = $("#gruppenname").val();
 	if(gruppenname.length===0){
+		$("#fehlerListe").show();
 		fehlerNachricht($("#fehlerListe")[0],"Gruppenname ausfüllen.","fehler","../../");
+		$("#fehlerListe").delay(5000).hide(500).queue(function(){
+				$(this).html("");
+				$(this).dequeue()
+			});
 		return;
 	}
 	var emails = [];
@@ -92,34 +107,39 @@ $("#editFertig").click(function(){
 		emails.push($(listenelement).data("email"));
 	});
 	if(emails.length===0){
+		$("#fehlerListe").show();
 		fehlerNachricht($("#fehlerListe")[0],"Die Gruppe muss Mitglieder enthalten.","fehler","../../");
+		$("#fehlerListe").delay(5000).hide(500).queue(function(){
+			$(this).html("");
+			$(this).dequeue()
+		});
 		return;
 	}
 	$.ajax({
 		type: "POST",
 		url: "gruppeAjax.php",
 		data: {emails:JSON.stringify(emails),aktion:"fertigGruppe",gruppenname:gruppenname,GruppenID:gruppeEditiertID},
+		async:false,
 		success: function(antwort){
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwortObjekt);
+			$("#fehlerListe").show();
 			eval(antwortObjekt.nrt);
-			$.ajax({//Verschachtelung #TODO Code schöner machen :D
-				type: "POST",
-				url: "gruppeAjax.php",
-				data: {aktion:"schickeGruppen"},
-				success: function(antwort){
-					$('#gruppenliste > .listenelement').remove();
-					$('#gruppenliste').append(antwort);
-				}
-			});
+			$("#fehlerListe").delay(5000).hide(500).queue(function(){
+					$(this).html("");
+					$(this).dequeue()
+				});
+			aktualisiereGruppen();
 		}
 	});
 });
+
+/*
 $("#neuegruppe").click(function(){
-	$("#fehlerListeGruppe").html("");
 	hinzuguegenGruppe();
 });
+*/
 
 function hinzuguegenGruppe(){
 	$("#neuegruppe").unbind("click");//Entfernt das Klick-Event
@@ -128,9 +148,9 @@ function hinzuguegenGruppe(){
 	listenelement.append(nameFeld);//Input wird auf Listenelement gelegt
 	var akzeptieren = $("<div>").addClass("akzeptieren").addClass("rightfloat");
 	akzeptieren.click(function(event){
+		event.stopPropagation();//Verhindert das Klick-Event des dahinterliegenden Listenelements
 		$(this).parent().remove();
 		$("#neuegruppe").click(function(){
-			$("#fehlerListeGruppe").html("");
 			hinzuguegenGruppe();
 		});
 		var gruppenname = $(this).parent().children("input").val();
@@ -138,22 +158,29 @@ function hinzuguegenGruppe(){
 			type: "POST",//Schicke mit POST
 			url: "gruppeAjax.php",//Anfrage an gruppeAjax.php
 			data: {aktion:"neueGruppe",gruppenname:gruppenname},//Sende nutzername/Email mit
+			async:false,
 			success: function(antwort){//Weiter gehts mit der Antwort
 				console.log(antwort);
 				var antwortObjekt = JSON.parse(antwort);
+				$("#fehlerListeGruppe").show();
 				eval(antwortObjekt.nrt);
+				$("#fehlerListeGruppe").delay(5000).hide(500).queue(function(){
+					$(this).html("");
+					$(this).dequeue()
+				});
 			}
 		});
+		aktualisiereGruppen();
 	})
 	listenelement.append(akzeptieren);
 	$("#gruppenliste").append(listenelement);
 }
-$("#gruppenliste > .listenelement").click(function(){
+function behandleKlickGruppe(element){
 	$("#gruppeneditor").show();
 	$("#gruppenliste > .listenelement").removeClass("gruppeEditiert");
-	$(this).addClass("gruppeEditiert");
-	gruppeEditiertID = $(this).data("id");
-	$("#gruppenname").val($(this).children(".listenlabel").text());
+	$(element).addClass("gruppeEditiert");
+	gruppeEditiertID = $(element).data("id");
+	$("#gruppenname").val($(element).children(".listenlabel").text());
 	$.ajax({
 		type: "POST",
 		url: "gruppeAjax.php",
@@ -164,10 +191,60 @@ $("#gruppenliste > .listenelement").click(function(){
 			$("#mitgliederliste > .listenelement").each(function(index,element){
 				var muell = $("<div>").addClass("loeschen").addClass("rightfloat");
 				muell.click(function(event){
-					$(this).parent().remove();
+					$(element).parent().remove();
 				})
 				$(element).append(muell);
 			});
 		}
 	});
-});
+}
+function loescheGruppe(zuLoeschen){
+	if(!confirm("Willst du die Gruppe '"+$(zuLoeschen).parent().text()+"' wirklich löschen?")){
+		return false;
+	}
+	var gruppenID = $(zuLoeschen).parent().data("id");
+	$.ajax({
+		type: "POST",
+		url: "gruppeAjax.php",
+		data: {aktion:"loescheGruppe",GruppenID:gruppenID},
+		async:false,
+		success: function(antwort){
+			console.log(antwort);
+			antwortObjekt = JSON.parse(antwort);
+			$("#fehlerListeGruppe").show();
+			eval(antwortObjekt.nrt);
+			$("#fehlerListeGruppe").delay(5000).hide(500).queue(function(){
+					$(this).html("");
+					$(this).dequeue()
+				});
+		}
+	});
+	aktualisiereGruppen();
+}
+function aktualisiereGruppen(){
+	$('#gruppenliste > .listenelement').remove();
+	var gruppen;
+	//Lade Gruppen vom Server
+	$.ajax({
+		type: "POST",
+		url: "gruppeAjax.php",
+		data: {aktion:"schickeGruppen"},
+		async:false,
+		success: function(antwort){
+			gruppen = antwort;
+		}
+	});
+	$('#gruppenliste').append(gruppen);
+	$("#gruppenliste > .listenelement").each(function(index,element){
+		var muell = $("<div>").addClass("loeschen").addClass("rightfloat");
+		muell.click(function(){
+			loescheGruppe(this);
+		});
+		$(element).append(muell);
+	});
+	$("#gruppenliste > .listenelement").click(function(){
+		behandleKlickGruppe(this);
+	});
+	
+}
+aktualisiereGruppen();
