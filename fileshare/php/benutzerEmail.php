@@ -56,7 +56,7 @@ function schickeRegistrierungsEmail($user,$email,$nutzerID,$nrt){
 	return true;
 }
 
-function schickeGeloeschtEmail($user,$email,$nutzerID,$nrt){
+function schickeGeloeschtEmail($user,$email,$nrt){
 	$mail= new ExtPHPMailer();
 	$mail->Subject = 'Account erfolgreich gelöscht';
 	//$pfad = dirname($_SERVER["REQUEST_URI"]);
