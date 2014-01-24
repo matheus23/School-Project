@@ -96,7 +96,7 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		}
 		else {
 			$pwHash = passwordHash($pw);
-			$nutzerID=uniqid("reg_",true);
+			$nutzerID=sichereID("reg_",30);
 			
 			// So geht das überprüfen von passwörtern dann:
 			//if (passwordVerify($pw, $pwHash))  {

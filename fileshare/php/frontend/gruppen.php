@@ -64,6 +64,7 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 	</div>
 </div>
 </body>
+<?=(new CSRFSchutz())->neu()->genJS()?>
 <script src="../../js/gruppen.js"></script>
 <?php $nrt->genJsCode(); ?>
 </html>

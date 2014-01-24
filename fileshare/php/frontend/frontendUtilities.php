@@ -5,7 +5,7 @@ function generateHTMLGruppen($db){
 	$gruppenHTML="";
 	$sql="SELECT ID,Name FROM Gruppe WHERE ModeratorEmail='$semail'";
 	$db->query($sql)->fold(
-		function ($ergebnis) use(&$gruppenHTML){
+		function ($ergebnis) use (&$gruppenHTML){
 			while($gruppe = $ergebnis->fetch_array(MYSQLI_ASSOC)){
 				$id = $gruppe["ID"];
 				$name = $gruppe["Name"];
@@ -43,5 +43,55 @@ function generateHTMLMitglieder($db,$GruppenID){
 		}
 	);
 	return $mitgliederHTML;
+}
+
+//Token gegen das ungewollte abschicken von formulardaten durch fremde Seiten
+//Benötigt eine offene Session
+class CSRFSchutz{
+	public $token;
+	public function __construct($token=""){
+		$this->token=$token;
+	}
+	public function neu(){//Erstellung eines neuen Tokens (pro request oder mehrere requests)
+		$_SESSION["token"] = sichereID("CSRFToken_",30);
+		$this->token = $_SESSION["token"];
+		return $this;
+	}
+	public function get(){//Gibt den Token zurück
+		return $this->token;
+	}
+	public function post(){//Liest den Token aus den Formulardaten
+		if(alleSchluesselGesetzt($_POST,"CSRFToken")){
+			$this->token = $_POST["CSRFToken"];
+		}
+		else{
+			$this->token = "";
+		}
+		return $this;
+	}
+	public function pruefe(){//Prüft ob der jetzige Token mit der Sessionvariable übereinstimmt
+		if($this->token == $_SESSION["token"]){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	public function autoUmleitung(){
+		if (!$this->pruefe()){
+			session_destroy();//Löscht die Session serverseitig
+			header("Location: http://".host.dirname(dirname($_SERVER["REQUEST_URI"]))."/Anmeldung.php");//Umleitung zur Anmeldung
+			die();//Verhindert das weitere Ausführen von Code
+		}
+	}
+	public function genHTML(){//Generiert ein Input mit dem Token
+		$token = $this->token;
+		return "<input type='hidden' id='CSRFToken' name='CSRFToken' value='$token'/>";
+	}
+	public function genJS(){//Generiert javascript mit dem Token
+		$token = $this->token;
+		return "<script>var CSRFToken='$token'</script>";
+	}
+
 }
 ?>

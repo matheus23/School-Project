@@ -13,15 +13,16 @@ $("#neuesmitglied").click(function(){
 	$.ajax({//Frage an den Server, ob Name/Email existiert bzw. mehrere Treffer
 		type: "POST",//Schicke mit POST
 		url: "gruppeAjax.php",//Anfrage an gruppeAjax.php
-		data: {nameemail:nameemail,aktion:"schickeNutzerEmail"},//Sende nutzername/Email mit
+		data: {nameemail:nameemail,aktion:"schickeNutzerEmail",CSRFToken:CSRFToken},//Sende nutzername/Email mit
 		success: function(antwort){//Weiter gehts mit der Antwort
+			if (fehlerBehandlung(antwort)) return;
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwortObjekt);
 			$("#fehlerListe").show();
 			eval(antwortObjekt.nrt);
 			$("#fehlerListe").delay(5000).hide(500).queue(function(){
 					$(this).html("");
-					$(this).dequeue()
+					$(this).dequeue();
 				});
 			$("#nameemail").val("");
 			if(antwortObjekt.nutzer.length===1){//Wenn nur ein Nutzer gefunden wurde:
@@ -41,7 +42,7 @@ function mitgliedZurListe(nutzer){
 		fehlerNachricht($("#fehlerListe")[0],"Der Nutzer ist schon in der Liste.","warnung","../../");
 		$("#fehlerListe").delay(5000).hide(500).queue(function(){
 			$(this).html("");
-			$(this).dequeue()
+			$(this).dequeue();
 		});
 		return;
 	}
@@ -50,7 +51,7 @@ function mitgliedZurListe(nutzer){
 	var muell = $("<div>").addClass("loeschen").addClass("rightfloat");
 	muell.click(function(event){
 		$(this).parent().remove();//Löscht Listenelement bei Klick auf das Müllsymbol
-	})
+	});
 	listenelement.append(label);//Label wird auf Listenelement gepackt
 	listenelement.append(muell);//Muellicon wird auf Listenelement gepackt
 	listenelement.data("email",nutzer.Email);//belege Element mit Daten: Email (JS->HTML-Element)
@@ -87,7 +88,7 @@ $("#neuegruppe").click(function(){
 	$('#gruppeneditor').hide();
 	$("#gruppenname").val("");
 	$("#nameemail").val("");
-	$("#mitgliederliste > .listenelement").remove()
+	$("#mitgliederliste > .listenelement").remove();
 	hinzuguegenGruppe();
 });
 
@@ -98,7 +99,7 @@ $("#editFertig").click(function(){
 		fehlerNachricht($("#fehlerListe")[0],"Gruppenname ausfüllen.","fehler","../../");
 		$("#fehlerListe").delay(5000).hide(500).queue(function(){
 				$(this).html("");
-				$(this).dequeue()
+				$(this).dequeue();
 			});
 		return;
 	}
@@ -111,24 +112,25 @@ $("#editFertig").click(function(){
 		fehlerNachricht($("#fehlerListe")[0],"Die Gruppe muss Mitglieder enthalten.","fehler","../../");
 		$("#fehlerListe").delay(5000).hide(500).queue(function(){
 			$(this).html("");
-			$(this).dequeue()
+			$(this).dequeue();
 		});
 		return;
 	}
 	$.ajax({
 		type: "POST",
 		url: "gruppeAjax.php",
-		data: {emails:JSON.stringify(emails),aktion:"fertigGruppe",gruppenname:gruppenname,GruppenID:gruppeEditiertID},
+		data: {emails:JSON.stringify(emails),aktion:"fertigGruppe",gruppenname:gruppenname,GruppenID:gruppeEditiertID,CSRFToken:CSRFToken},
 		async:false,
 		success: function(antwort){
 			console.log(antwort);
+			if (fehlerBehandlung(antwort)) return;
 			var antwortObjekt = JSON.parse(antwort);
+			eval(antwortObjekt.nrt);
 			console.log(antwortObjekt);
 			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
 			$("#fehlerListe").delay(5000).hide(500).queue(function(){
 					$(this).html("");
-					$(this).dequeue()
+					$(this).dequeue();
 				});
 			aktualisiereGruppen();
 		}
@@ -157,21 +159,22 @@ function hinzuguegenGruppe(){
 		$.ajax({//Frage an den Server, ob Name/Email existiert bzw. mehrere Treffer
 			type: "POST",//Schicke mit POST
 			url: "gruppeAjax.php",//Anfrage an gruppeAjax.php
-			data: {aktion:"neueGruppe",gruppenname:gruppenname},//Sende nutzername/Email mit
+			data: {aktion:"neueGruppe",gruppenname:gruppenname,CSRFToken:CSRFToken},//Sende nutzername/Email mit
 			async:false,
 			success: function(antwort){//Weiter gehts mit der Antwort
 				console.log(antwort);
+				if (fehlerBehandlung(antwort)) return;
 				var antwortObjekt = JSON.parse(antwort);
 				$("#fehlerListeGruppe").show();
 				eval(antwortObjekt.nrt);
 				$("#fehlerListeGruppe").delay(5000).hide(500).queue(function(){
 					$(this).html("");
-					$(this).dequeue()
+					$(this).dequeue();
 				});
 			}
 		});
 		aktualisiereGruppen();
-	})
+	});
 	listenelement.append(akzeptieren);
 	$("#gruppenliste").append(listenelement);
 }
@@ -184,15 +187,16 @@ function behandleKlickGruppe(element){
 	$.ajax({
 		type: "POST",
 		url: "gruppeAjax.php",
-		data: {aktion:"schickeMitglieder",GruppenID:gruppeEditiertID},
+		data: {aktion:"schickeMitglieder",GruppenID:gruppeEditiertID,CSRFToken:CSRFToken},
 		success: function(antwort){
+			if (fehlerBehandlung(antwort)) return;
 			$("#mitgliederliste > .listenelement").remove();
 			$("#mitgliederliste").append(antwort);
 			$("#mitgliederliste > .listenelement").each(function(index,element){
 				var muell = $("<div>").addClass("loeschen").addClass("rightfloat");
 				muell.click(function(event){
-					$(element).parent().remove();
-				})
+					$(element).remove();
+				});
 				$(element).append(muell);
 			});
 		}
@@ -203,23 +207,24 @@ function loescheGruppe(zuLoeschen){
 		return false;
 	}
 	var gruppenID = $(zuLoeschen).parent().data("id");
-	if (gruppenID==gruppeEditiertID){
+	if (gruppenID===gruppeEditiertID){
 		gruppenEditorReset();
 		$("#gruppeneditor").hide(0);
 	}
 	$.ajax({
 		type: "POST",
 		url: "gruppeAjax.php",
-		data: {aktion:"loescheGruppe",GruppenID:gruppenID},
+		data: {aktion:"loescheGruppe",GruppenID:gruppenID,CSRFToken:CSRFToken},
 		async:false,
 		success: function(antwort){
 			console.log(antwort);
+			if (fehlerBehandlung(antwort)) return;
 			antwortObjekt = JSON.parse(antwort);
 			$("#fehlerListeGruppe").show();
 			eval(antwortObjekt.nrt);
 			$("#fehlerListeGruppe").delay(5000).hide(500).queue(function(){
 					$(this).html("");
-					$(this).dequeue()
+					$(this).dequeue();
 				});
 		}
 	});
@@ -232,9 +237,10 @@ function aktualisiereGruppen(){
 	$.ajax({
 		type: "POST",
 		url: "gruppeAjax.php",
-		data: {aktion:"schickeGruppen"},
+		data: {aktion:"schickeGruppen",CSRFToken:CSRFToken},
 		async:false,
 		success: function(antwort){
+			if (fehlerBehandlung(antwort)) return;
 			gruppen = antwort;
 		}
 	});
@@ -254,5 +260,13 @@ function aktualisiereGruppen(){
 function gruppenEditorReset(){
 	$("#auswahlliste").html("");
 	$("#gruppeneditor input[type=text]").val("");
+}
+
+function fehlerBehandlung(antwort){
+	if (antwort==="interner Fehler"){
+		alert("Etwas stimmt mit deiner Authentifizierung nicht, bitte melde dich erneut an.");
+		window.location.href = "../Anmeldung.php";
+	}
+	return false;
 }
 aktualisiereGruppen();
