@@ -194,4 +194,14 @@ function zufallPasswort(){
 	$passwort .= substr(str_shuffle('!%&=+*#_'),0,2);
 	return str_shuffle($passwort);
 }
+
+//Gibt eine ID zurück, die sowohl einzigartig ist, als auch nicht vorhersehbar
+//$laengeZufall ist nicht die Länge der ID, sondern die Länge der angehängten Zufallsdaten
+function sichereID($praefix="",$laengeZufall=20){
+	$bytes = ceil($laengeZufall/4) * 3;//Base64 3 Bytes => 4 Zeichen
+	$zufallString = base64_encode(openssl_random_pseudo_bytes($bytes));
+	$zufallString = substr($zufallString,0,$laengeZufall);
+	$zufallString = md5(microtime()).$zufallString;
+	return $praefix.$zufallString;
+}
 ?>

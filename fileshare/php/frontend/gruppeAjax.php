@@ -6,9 +6,15 @@ include_once "frontendUtilities.php";
 debugModus();
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe","../../");
+$nrtGruppe = new Nachrichten("fehlerListeGruppe","../../");
 if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){
-	$nrt->fehler("Session abgelaufen.");
-	echo json_encode(array("nrt"=>$nrt->toJsCode()));
+	session_destroy();
+	echo "interner Fehler";
+	die();
+}
+if(!(new CSRFSchutz())->post()->pruefe()){//Übernimmt den CSRFToken aus den Post-Daten und überprüft ihn mit dem Token in der Session
+	session_destroy();
+	echo "interner Fehler";
 	die();
 }
 
@@ -24,10 +30,13 @@ if (alleSchluesselGesetzt($data, "aktion")) {
 			neueGruppe();
 			break;
 		case "schickeMitglieder":
-			schickeMitglieder();
+			echo schickeMitglieder();
 			break;
 		case "schickeGruppen":
-			schickeGruppen();
+			echo schickeGruppen();
+			break;
+		case "loescheGruppe":
+			loescheGruppe();
 			break;
 	}
 }
@@ -149,29 +158,28 @@ function fertigGruppe(){
 }
 
 function neueGruppe(){
-	global $data;
-	$nrt = new Nachrichten("fehlerListeGruppe","../../"); //Achtung: aneres Nachrichten-Feld
+	global $data, $nrtGruppe;
 	$semail = $_SESSION["semail"];
 	if (alleSchluesselGesetzt($data,"gruppenname")){	
-		$db = oeffneBenutzerDB($nrt);
+		$db = oeffneBenutzerDB($nrtGruppe);
 		$gruppenname=$db->real_escape_string($data["gruppenname"]);
 		if(strlen($gruppenname)==0){
-			$nrt->fehler("Kein Gruppenname angegeben");
-			echo json_encode(array("nrt"=>$nrt->toJsCode()));
+			$nrtGruppe->fehler("Kein Gruppenname angegeben");
+			echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
 			die();
 		}
 		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorEmail='$semail'";
 		$db->query($sql)->fold(
-			function ($ergebnis) use (&$nrt){
+			function ($ergebnis) use (&$nrtGruppe){
 				if($ergebnis->num_rows>0){
-					$nrt->fehler("Es gibt bereits eine Gruppe mit diesem Namen.");
-					echo json_encode(array("nrt"=>$nrt->toJsCode()));
+					$nrtGruppe->fehler("Es gibt bereits eine Gruppe mit diesem Namen.");
+					echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
 					die();
 				}
 			},
-			function($fehlerNachricht) use (&$nrt) {
-				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+			function($fehlerNachricht) use (&$nrtGruppe) {
+				$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
 				die();
 			}
 		);
@@ -180,14 +188,14 @@ function neueGruppe(){
 			"`Gruppe`(`ID`, `Name`, `ModeratorEmail`) ".
 			"VALUES (0, '$gruppenname', '$semail')"; 
 		$db->query($sql)->fold(
-			function ($ergebnis) use(&$nrt,$db){
-				$nrt->okay("Gruppe erfolgreich hinzugefügt.");
-				echo json_encode(array("nrt"=>$nrt->toJsCode(),"gruppenHTML"=>generateHTMLGruppen($db)));
+			function ($ergebnis) use(&$nrtGruppe,$db){
+				$nrtGruppe->okay("Gruppe erfolgreich hinzugefügt.");
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode(),"gruppenHTML"=>generateHTMLGruppen($db)));
 				die();
 			},
-			function($fehlerNachricht) use (&$nrt) {
-				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+			function($fehlerNachricht) use (&$nrtGruppe) {
+				$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
 				die();
 			}
 		);
@@ -199,13 +207,45 @@ function schickeMitglieder(){
 	if (alleSchluesselGesetzt($data, "GruppenID")) {
 		$db = oeffneBenutzerDB($nrt);
 		$gruppenID = $data["GruppenID"];
-		echo generateHTMLMitglieder($db,$gruppenID);
-	}
-		
+		return generateHTMLMitglieder($db,$gruppenID);
+	}		
 }
+
 function schickeGruppen(){
 	global $data,$nrt;
 	$db = oeffneBenutzerDB($nrt);
-	echo generateHTMLGruppen($db);
+	return generateHTMLGruppen($db);
+}
+
+function loescheGruppe(){
+	global $data,$nrtGruppe;
+	
+	if (alleSchluesselGesetzt($data, "GruppenID")) {
+		
+		$db = oeffneBenutzerDB($nrtGruppe);
+		$gruppenID = $data["GruppenID"];
+		$sql="DELETE FROM Gruppe  WHERE ID='$gruppenID'";
+		$db->query($sql)->fold(
+			function ($ergebnis){
+			},
+			function($fehlerNachricht) use (&$nrtGruppe) {
+				$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+				die();
+			}
+		);
+		$sql="DELETE FROM Gruppenmitglieder  WHERE GruppenID='$gruppenID'";
+		$db->query($sql)->fold(
+			function ($ergebnis) use (&$nrtGruppe){
+				$nrtGruppe->okay("Erfolgreich gelöscht");
+			},
+			function($fehlerNachricht) use (&$nrtGruppe) {
+				$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+				die();
+			}
+		);
+		echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+	}		
 }
 ?>
