@@ -32,8 +32,37 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 	<div id="menu">
 		<?=$menu->toHTML()?>
 	</div>
-	<div id="panel">
-		<h1>Upload</h1>
+		<div id="panel">
+			<h1>Upload</h1>
+			<div id="uiWrapper">
+				<table width="100%">
+					<tr><td>
+						<table align="left">
+							
+							
+						</table>
+						<table align="center">
+							<form enctype="multipart/form-data">
+								<tr><td><h4>Datei für Upload auswählen<h4></td></tr>
+								<tr><td><input type="file" name="Datei"></td></tr>
+								<tr><td align="center"><input type="submit" value="Hochladen"></td></tr>
+							</form>
+							
+						</table>
+					</td></tr>
+				</table>
+			</div>
+		</div>
 	</div>
+<?php
+$kb = 1024;
+$mb = 1024*$kb;
+
+if ($_FILES['Datei']['size'] > 2*$mb) {
+	
+}
+
+
+?>
 </body>
 </html>
