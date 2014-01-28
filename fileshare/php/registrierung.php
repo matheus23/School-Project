@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <?php session_start();
 include "generate.php";
+include "../php/utilities.php";
+include "websiteFunktionen/registrierung.php";
+include_once "../securimage/securimage.php";
+include_once("benutzerEmail.php");
+
+debugModus();
+
+$data = $_POST;
+$nrt = new Nachrichten("fehlerListe");
+$securimage = new Securimage();
+
+if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
+	if ($securimage->check($_POST["captcha_code"]) == false) {
+		$nrt->fehler("Das eingegebene Captcha ist falsch.");
+	} else {
+		verarbeiteRegistrierung($nrt, $data["Bn"], $data["Pw"], $data["Pwb"], $data["email"]);
+	}
+}
 ?>
 <html>
 <head>
@@ -63,63 +81,6 @@ include "generate.php";
 </table>
 <div class="bottom_fix_right">Bereits registriert? <a href="Anmeldung.php">Hier</a> klicken</div>
 
-<?php
-include "../php/utilities.php";
-include_once "../securimage/securimage.php";
-include_once("benutzerEmail.php");
-
-debugModus();
-
-$data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
-$securimage = new Securimage();
-
-if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
-	if ($securimage->check($_POST["captcha_code"]) == false) {
-		$nrt->fehler("Das eingegebene Captcha ist falsch.");
-	} else {
-		$db = oeffneBenutzerDB($nrt);
-		$user = $db->real_escape_string($data["Bn"]);
-		$email = $db->real_escape_string(strtolower($data["email"]));
-		// wird sowieso gehashed:
-		$pw = $data["Pw"];
-		$pwb = $data["Pwb"];
-		
-		if ($pw != $pwb) {
-			$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein.");
-		}
-		elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-			$nrt->fehler("Die E-Mail-Adresse hat ein ungültiges Format.");
-		}
-		elseif (userExestiertBereits($db, $email)) {
-			$nrt->fehler("Diese E-Mail ist bereits vergeben.");
-		}
-		else {
-			$pwHash = passwordHash($pw);
-			$nutzerID=uniqid("reg_",true);
-			
-			// So geht das überprüfen von passwörtern dann:
-			//if (passwordVerify($pw, $pwHash))  {
-			//	$nrt->okay("Passwort hashing funzt!");
-			//}
-			$sql = 
-				"INSERT INTO ".
-				"`Benutzer`(`Nutzername`, `Passwort`, `Email`, `RegistrierungsID`, `Bestaetigt`) ".
-				"VALUES ('$user', '$pwHash', '$email','$nutzerID','0')"; 
-			$db->query($sql)->fold(
-				function($ergebnis) use (&$nrt, $user, $email, $nutzerID) {
-					$mail = schickeRegistrierungsEmail($user,$email,$nutzerID,$nrt);
-					if ($mail) {//Bei einem Fehler wurde dieser bereits in $nrt geschrieben
-						$nrt->okay("Erfolgreich registriert! Eine E-Mail ist auf dem Weg...");
-					}
-				}, function($fehlerNachricht) use (&$nrt) {
-					$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				}
-			);
-		}
-	}
-}
-?>
 <script src="../js/pruefeRegistrierung.js"></script>
 <?php $nrt->genJsCode(); ?>
 </body>

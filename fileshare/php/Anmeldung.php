@@ -1,39 +1,23 @@
-<!DOCTYPE html>
 <?php
+	session_start();
 	include "../php/utilities.php";
 	include "generate.php";
-	session_start();
+	include "websiteFunktionen/anmeldung.php";
+	
 	debugModus();
 	
 	$data = $_POST;
 	$nrt = new Nachrichten("fehlerListe");
 	
-	if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
-		$db = oeffneBenutzerDB($nrt);
-		
-		$emaila = $db->real_escape_string(strtolower($data["eanmeld"]));
-		$pwa = ($data["pwanmeld"]);
-		$pwTest = benutzerPwTest($db, $emaila, $pwa);
-		if ($pwTest == WRONG_EMAIL) {
-			$nrt->fehler("Falsche Email");
-		} elseif ($pwTest == WRONG_COMBINATION) {
-			$nrt->fehler("Falsches Passwort");
-		} elseif ($pwTest == PASSWORD_PASS) {
-			$nrt->okay("Anmeldung erfolgreich");
-			$_SESSION["semail"] = $emaila;
-			if (isset($data["merken"])) {
-				setcookie("email",$emaila,time()+1*60*60*24*7,"/");//email cookie wird gesetzt (1 Woche)
-			}
-			else{
-				setcookie("email",null,-1,"/");
-			}
-			session_regenerate_id(true);//Session wird neu gestartet
-		}
-	}
 	if ((isset($_SESSION["semail"]))&&($_SESSION["semail"]!="")){//angemeldet
 		header("Location: http://".host.dirname($_SERVER["REQUEST_URI"])."/frontend/dashboard.php");//Umleitung auf Dashboard
+	} else {
+		if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
+			verarbeiteAnmeldung($nrt, $data["eanmeld"], isset($data["merken"]), $data["pwanmeld"]);
+		}
 	}
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8" />
