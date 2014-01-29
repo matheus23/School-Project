@@ -46,7 +46,6 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php",true));
 			<div class="label">Einstellungen</div>
 			<form method="POST" action="" id="nameAendern">
 				<table>
-					<tr><td>Nutername ändern:</td></tr>
 					<tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
 					<tr><td>Aktuelles Passwort:</td><td><input type="password" name="pwa" id="pwa"></td></tr>
 					<tr><td>Neuer Nutzername:</td><td><input type="password" name="pwn" id="pwn"><td></tr>
@@ -55,7 +54,6 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php",true));
 			</form>
 			<form method="POST" action="" id="emailAendern">
 				<table>
-					<tr><td>Email ändern:</td></tr>
 				    <tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
 				    <tr><td>Neue Email:</td><td><input type="password" name="pwa" id="pwa"></td></tr>
 				    <tr><td colspan="2"><input type="submit" value="Email ändern" name="emaila"></td></tr>
@@ -63,7 +61,6 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php",true));
 			</form>
 			<form method="POST" action="" id="passwortAendern">
 				<table>
-					<tr><td>Passwort ändern:</td></tr>
 					<tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
 					<tr><td>Aktuelles Passowort:</td><td><input type="password" name="pwa" id="pwa"></tr></td>
 					<tr><td>Neues Passwort:</td><td><input type="password" name="pwn" id="pwn"></td></tr>
@@ -73,7 +70,6 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php",true));
 			</form>
 			<form method="POST" action="" id="accountLoeschen">
 				<table>
-					<tr><td>Account Löschen</td></tr>
 					<tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
 					<tr><td>Passwort:</td><td><input type="password" name="pw" id="pw"></td></tr>
 					<tr><td colspan="2">Account wirklich löschen: <input type="checkbox"></td></tr>
@@ -86,9 +82,10 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php",true));
 		Du wirst weitergeleitet und musst deine Daten betsätigen.-->
 	</div>
 <script>
-	$("form").hide(0);
+	$("#editor > form").hide(0);
 	$(".listenelement").click(function(){
-		$("form").hide(0);
+		$("#editor > .label").text($(this).text());
+		$("#editor > form").hide(0);
 		$("#editor").show(0);
 		var element = $(this).data("aufruf");
 		$(element).show(0);
