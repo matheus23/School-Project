@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <?php session_start();
 include "generate.php";
+include "websiteFunktionen/passwortaenderung.php";
+
+include "../php/utilities.php";
+
+debugModus();
+
+$data = $_POST;
+$nrt = new Nachrichten("fehlerListe");
+
+if (alleSchluesselGesetzt($data, "APw", "NPw", "NPwb", "email")) {
+	verarbeitePasswortaenderung($nrt, $data["email"], $data["APw"], $data["NPw"], $data["NPwb"]);
+}
 ?>
 <html>
 <head>
@@ -53,51 +65,6 @@ include "generate.php";
 	</td>
 </tr>
 </table>
-
-<?php
-include "../php/utilities.php";
-
-debugModus();
-
-$data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
-
-if (alleSchluesselGesetzt($data, "APw", "NPw", "NPwb", "email")) {
-	$db = oeffneBenutzerDB($nrt);
-	tabelleNeueSpalte($db, "Benutzer", "RegistrierungsID","TEXT");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
-
-	$email = $db->real_escape_string(strtolower($data["email"]));
-	// wird sowieso gehashed:
-	$apw = $data["APw"];
-	$npw = $data["NPw"];
-	$npwb = $data["NPwb"];
-		
-	if (userExestiertBereits($db, $email)) {	
-		
-		if ($npw != $npwb) {
-			$nrt->fehler("Das neue Passwort stimmt nicht mit der Wiederholung überein");
-		}
-		else {
-			$passwortTest = benutzerPwTest($db, $email, $apw);
-			if ($passwortTest == PASSWORD_PASS)  {
-				$npwHash = passwordHash($npw);
-				$db->query("UPDATE `Benutzer` SET Passwort='$npwHash' WHERE Email='$email'")->fold(
-					function($ergebnis) use (&$nrt) {
-						$nrt->okay("Passwort erfolgreich geändert");
-						//Bestätigungs Email, dass das Pw geändert wurde
-					}, function($fehlerNachricht) use (&$nrt) {
-						$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-					}
-				);
-			} elseif ($passwortTest == WRONG_EMAIL) {
-				$nrt->fehler("Diese Email ist nicht registriert.");
-			} else {
-				$nrt->fehler("Email-Passwort Kombination passt nicht.");
-			}
-		}
-	}
-}
-?>
 <script src="../js/pruefeAenderung.js"></script>
 <?php $nrt->genJsCode(); ?>
 </body>
