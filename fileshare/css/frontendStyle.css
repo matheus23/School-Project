@@ -136,13 +136,14 @@ body,html{
 	white-space:nowrap;
 	overflow: hidden;
 }
-#gruppeneditor{
+#editor{
 	float: right;
 	border: solid #888888 1px;
 	position: relative;
 	width: 70%;
 	height: auto;
 	padding:10px;
+	display:none;
 }
 #mitgliederliste{
 	-webkit-box-sizing: border-box;
@@ -172,11 +173,8 @@ body,html{
 #auswahlliste > .listenelement{
 	cursor: pointer;
 }
-#gruppenliste > .listenelement{
+#gruppenliste,#verwaltungsliste > .listenelement{
 	cursor: pointer;
-}
-#gruppeneditor{
-	display:none;
 }
 .gruppeEditiert{
 	background-color: #949494;

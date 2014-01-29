@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
-	include "generate.php";
+	include "../generate.php";
+	debugModus();
 ?>
 <html>
 <head>
@@ -57,10 +58,8 @@
 </tr>
 </table>
 <?php
-include "../php/utilities.php";
-include_once("benutzerEmail.php");
-
-debugModus();
+include "../utilities.php";
+include_once "../benutzerEmail.php";
 
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe");

@@ -45,7 +45,7 @@ $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
 				<div class="label">Gruppenliste:<div id="neuegruppe" class="hinzufuegen rightfloat"></div></div>
 				<div id="fehlerListeGruppe"></div>
 			</div>
-			<div id="gruppeneditor">
+			<div id="editor">
 				<div class="label">Gruppeneditor:</div>
 				<div class="bottommargin">Gruppenname:<input type='text' id="gruppenname" name="gruppenname"/></div>
 				<div class="liste" id="mitgliederliste">

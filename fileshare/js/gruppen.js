@@ -85,7 +85,7 @@ function mitgliedSchonInListe(nutzer){//Prüft, ob Nutzer schon in Mitgliederlis
 }
 
 $("#neuegruppe").click(function(){
-	$('#gruppeneditor').hide();
+	$('#editor').hide();
 	$("#gruppenname").val("");
 	$("#nameemail").val("");
 	$("#mitgliederliste > .listenelement").remove();
@@ -179,7 +179,7 @@ function hinzuguegenGruppe(){
 	$("#gruppenliste").append(listenelement);
 }
 function behandleKlickGruppe(element){
-	$("#gruppeneditor").show();
+	$("#editor").show();
 	$("#gruppenliste > .listenelement").removeClass("gruppeEditiert");
 	$(element).addClass("gruppeEditiert");
 	gruppeEditiertID = $(element).data("id");
@@ -209,7 +209,7 @@ function loescheGruppe(zuLoeschen){
 	var gruppenID = $(zuLoeschen).parent().data("id");
 	if (gruppenID===gruppeEditiertID){
 		gruppenEditorReset();
-		$("#gruppeneditor").hide(0);
+		$("#editor").hide(0);
 	}
 	$.ajax({
 		type: "POST",
@@ -259,7 +259,7 @@ function aktualisiereGruppen(){
 }
 function gruppenEditorReset(){
 	$("#auswahlliste").html("");
-	$("#gruppeneditor input[type=text]").val("");
+	$("#editor input[type=text]").val("");
 }
 
 function fehlerBehandlung(antwort){
