@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <?php
-	include "generate.php";
+include "generate.php";	
+include "../php/utilities.php";
+include "websiteFunktionen/loeschung.php";
+include_once("benutzerEmail.php");
+
+debugModus();
+
+$data = $_POST;
+$nrt = new Nachrichten("fehlerListe");
+
+if (alleSchluesselGesetzt($data, "mail", "Pw")) {
+	verarbeiteLoeschung($nrt, $data["mail"], $data["Pw"]);
+}
+
 ?>
 <html>
 <head>
@@ -56,51 +69,6 @@
 	</td>
 </tr>
 </table>
-<?php
-include "../php/utilities.php";
-include_once("benutzerEmail.php");
-
-debugModus();
-
-$data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
-
-if (alleSchluesselGesetzt($data, "mail", "Pw")){
-	$db = oeffneBenutzerDB($nrt);
-	$email = $db->real_escape_string(strtolower($data["mail"]));
-	$pw = $data["Pw"];
-
-	if (userExestiertBereits($db, $email)) {
-		$passwortTest = benutzerPwTest($db, $email, $pw);
-		if ($passwortTest == PASSWORD_PASS)  {
-			$db->query("SELECT Nutzername FROM Benutzer WHERE Email='$email'")->fold(
-				function ($ergebnis) use (&$nrt, $email, $db) {
-					$user = $ergebnis->fetch_assoc()["Nutzername"];
-					$mail = schickeGeloeschtEmail($user,$email,$nrt);
-					if ($mail){
-						$nrt->okay("Account erfolgreich gelöscht! Eine E-Mail ist auf dem Weg...");
-						$db->query("DELETE FROM `Benutzer` WHERE email='$email'");
-					} else {
-						$nrt->fehler("Fehler beim Mailversandt...");
-					}
-				},
-				function ($fehlerNachricht) use (&$nrt) {
-					$nrt->fehler("Fehler beim Zugriff auf die Datenbank: $fehlerNachricht");
-				}
-			);
-		} elseif ($passwortTest == WRONG_EMAIL) {
-			$nrt->fehler("Diese Email ist nicht registriert.");
-		} else {
-			$nrt->fehler("Email-Passwort Kombination passt nicht.");
-		}
-	} 
-	else {
-		$nrt->fehler("Diese Email ist nicht registriert");
-	}	
-}
-
-$fehlerjs = $nrt->toJsCode();
-?>
-<script type="text/javascript"><?=$fehlerjs?></script>
+<script type="text/javascript"><?=$nrt->toJsCode()?></script>
 </body>
 </html>
