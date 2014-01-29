@@ -1,7 +1,24 @@
 <!DOCTYPE html>
 <?php
+<<<<<<< HEAD
 	include "../generate.php";
 	debugModus();
+=======
+include "generate.php";	
+include "../php/utilities.php";
+include "websiteFunktionen/loeschung.php";
+include_once("benutzerEmail.php");
+
+debugModus();
+
+$data = $_POST;
+$nrt = new Nachrichten("fehlerListe");
+
+if (alleSchluesselGesetzt($data, "mail", "Pw")) {
+	verarbeiteLoeschung($nrt, $data["mail"], $data["Pw"]);
+}
+
+>>>>>>> ab9ceb7839accecbc417ab37e3800bf0a603be5c
 ?>
 <html>
 <head>
@@ -57,6 +74,7 @@
 	</td>
 </tr>
 </table>
+<<<<<<< HEAD
 <?php
 include "../utilities.php";
 include_once "../benutzerEmail.php";
@@ -101,5 +119,8 @@ if (alleSchluesselGesetzt($data, "mail", "Pw")){
 $fehlerjs = $nrt->toJsCode();
 ?>
 <script type="text/javascript"><?=$fehlerjs?></script>
+=======
+<script type="text/javascript"><?=$nrt->toJsCode()?></script>
+>>>>>>> ab9ceb7839accecbc417ab37e3800bf0a603be5c
 </body>
 </html>

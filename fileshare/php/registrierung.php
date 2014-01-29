@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <?php session_start();
 include "generate.php";
+include "../php/utilities.php";
+include "websiteFunktionen/registrierung.php";
+include_once "../securimage/securimage.php";
+include_once("benutzerEmail.php");
+
+debugModus();
+
+$data = $_POST;
+$nrt = new Nachrichten("fehlerListe");
+$securimage = new Securimage();
+
+if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
+	if ($securimage->check($_POST["captcha_code"]) == false) {
+		$nrt->fehler("Das eingegebene Captcha ist falsch.");
+	} else {
+		verarbeiteRegistrierung($nrt, $data["Bn"], $data["Pw"], $data["Pwb"], $data["email"]);
+	}
+}
 ?>
 <html>
 <head>
@@ -63,6 +81,7 @@ include "generate.php";
 </table>
 <div class="bottom_fix_right">Bereits registriert? <a href="Anmeldung.php">Hier</a> klicken</div>
 
+<<<<<<< HEAD
 <?php
 include "../php/utilities.php";
 include_once "../securimage/securimage.php";
@@ -120,6 +139,8 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	}
 }
 ?>
+=======
+>>>>>>> ab9ceb7839accecbc417ab37e3800bf0a603be5c
 <script src="../js/pruefeRegistrierung.js"></script>
 <?php $nrt->genJsCode(); ?>
 </body>
