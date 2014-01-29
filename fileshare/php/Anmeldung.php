@@ -8,13 +8,12 @@
 	
 	$data = $_POST;
 	$nrt = new Nachrichten("fehlerListe");
-	
+
+	if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
+		verarbeiteAnmeldung($nrt, $data["eanmeld"], isset($data["merken"]), $data["pwanmeld"]);
+	}
 	if ((isset($_SESSION["semail"]))&&($_SESSION["semail"]!="")){//angemeldet
 		header("Location: http://".host.dirname($_SERVER["REQUEST_URI"])."/frontend/dashboard.php");//Umleitung auf Dashboard
-	} else {
-		if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
-			verarbeiteAnmeldung($nrt, $data["eanmeld"], isset($data["merken"]), $data["pwanmeld"]);
-		}
 	}
 ?>
 <!DOCTYPE html>
