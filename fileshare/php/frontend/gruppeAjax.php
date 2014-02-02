@@ -47,7 +47,7 @@ function schickeNutzerEmail(){
 		$db = oeffneBenutzerDB($nrt);
 		$nameemail=$db->real_escape_string($data["nameemail"]);
 		$ergebnisArray = array();
-		$db->query("SELECT Email, Nutzername FROM Benutzer WHERE Email='$nameemail' OR Nutzername='$nameemail'")->fold(
+		$db->query("SELECT Email, Nutzername, ID FROM Benutzer WHERE Email='$nameemail' OR Nutzername='$nameemail'")->fold(
 			function ($ergebnis) use (&$ergebnisArray){
 				while($nutzer = $ergebnis->fetch_array(MYSQLI_ASSOC)){
 					array_push($ergebnisArray,$nutzer);
@@ -168,7 +168,8 @@ function neueGruppe(){
 			echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
 			die();
 		}
-		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorEmail='$semail'";
+		$moderatorID=EmailZuNutzerID($semail,$nrtGruppe);
+		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorID='$moderatorID";
 		$db->query($sql)->fold(
 			function ($ergebnis) use (&$nrtGruppe){
 				if($ergebnis->num_rows>0){
@@ -185,8 +186,8 @@ function neueGruppe(){
 		);
 		$sql=
 			"INSERT INTO ".
-			"`Gruppe`(`ID`, `Name`, `ModeratorEmail`) ".
-			"VALUES (0, '$gruppenname', '$semail')"; 
+			"`Gruppe`(`ID`, `Name`, `ModeratorID`) ".
+			"VALUES (0, '$gruppenname', '$moderatorID')"; 
 		$db->query($sql)->fold(
 			function ($ergebnis) use(&$nrtGruppe,$db){
 				$nrtGruppe->okay("Gruppe erfolgreich hinzugefügt.");
@@ -206,7 +207,7 @@ function schickeMitglieder(){
 	global $data,$nrt;
 	if (alleSchluesselGesetzt($data, "GruppenID")) {
 		$db = oeffneBenutzerDB($nrt);
-		$gruppenID = $data["GruppenID"];
+		$gruppenID = $db->real_escape_string($data["GruppenID"]);
 		return generateHTMLMitglieder($db,$gruppenID);
 	}		
 }
@@ -223,7 +224,7 @@ function loescheGruppe(){
 	if (alleSchluesselGesetzt($data, "GruppenID")) {
 		
 		$db = oeffneBenutzerDB($nrtGruppe);
-		$gruppenID = $data["GruppenID"];
+		$gruppenID = $db->real_escape_string($data["GruppenID"]);
 		$sql="DELETE FROM Gruppe  WHERE ID='$gruppenID'";
 		$db->query($sql)->fold(
 			function ($ergebnis){

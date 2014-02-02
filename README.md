@@ -18,3 +18,11 @@ Verwendetes Iconset: [http://led24.de/iconset/]
 ###PHPMailer
 * Ort: /fileshare/PHPMailer/
 * Lizenz: [LGPL v2.1](/fileshare/PHPMailer/LICENSE)
+
+###forge
+* Ort: /fileshare/js/forge/
+* Lizenz: [BSD License](/fileshare/js/forge/LICENSE)
+
+###FileSaver.js
+* Ort: /fileshare/js/fileSaver/
+* Lizenz: [MIT/X11 license](/fileshare/js/fileSaver/LICENSE.md)

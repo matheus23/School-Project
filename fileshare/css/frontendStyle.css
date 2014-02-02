@@ -145,7 +145,7 @@ body,html{
 	padding:10px;
 	display:none;
 }
-#mitgliederliste{
+#mitgliederliste,#dateischluesselListe,#auswahlliste,#hinzufuegenAuswahl{
 	-webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box; 
@@ -153,16 +153,6 @@ body,html{
 }
 #hinzufuegenAuswahl{
 	display:none;
-	-webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box; 
-	width: 100%;
-}
-#auswahlliste{
-	-webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box; 
-	width: 100%;
 }
 .bottommargin{
 	margin-bottom: 20px;

@@ -21,6 +21,7 @@ $menu->add(new Menupunkt("download","Download","download.php"));
 $menu->add(new Menupunkt("upload","Upload","upload.php"));
 $menu->add(new Menupunkt("gruppen","Gruppen","gruppen.php",true));
 $menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
+$menu->add(new Menupunkt("schluesselverwaltung","Schlüsselverwaltung","schluesselverwaltung.php"));
 ?>
 <html>
 <head>

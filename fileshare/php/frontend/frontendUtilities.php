@@ -92,6 +92,39 @@ class CSRFSchutz{
 		$token = $this->token;
 		return "<script>var CSRFToken='$token'</script>";
 	}
+}
 
+function NutzerIDZuEmail($nutzerID,$nrt){
+	$db = oeffneBenutzerDB($nrt);
+	$sql="SELECT Email FROM Benutzer  WHERE ID='$nutzerID'";
+	$email;
+	$db->query($sql)->fold(
+		function ($ergebnis) use (&$email){
+			$email = $ergebnis->fetch_array()[0];
+		},
+		function($fehlerNachricht) use (&$nrtGruppe) {
+			$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+			echo json_encode(array("nrt"=>$nrt->toJsCode()));
+			die();
+		}
+	);
+	return $email;
+}
+
+function EmailZuNutzerID($email,$nrt){
+	$db = oeffneBenutzerDB($nrt);
+	$sql="SELECT ID FROM Benutzer WHERE Email='$email'";
+	$id;
+	$db->query($sql)->fold(
+		function ($ergebnis) use (&$id){
+			$id = $ergebnis->fetch_array()[0];
+		},
+		function($fehlerNachricht) use (&$nrtGruppe) {
+			$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+			echo json_encode(array("nrt"=>$nrt->toJsCode()));
+			die();
+		}
+	);
+	return $id;
 }
 ?>
