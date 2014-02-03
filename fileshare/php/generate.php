@@ -11,4 +11,8 @@ function generateHeader($content) {
 function generateHeaderBanner() {
 	return generateHeader(generateBanner());
 }
+
+function generateHeaderBannerLogout() {
+	return generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden</a>");
+}
 ?>

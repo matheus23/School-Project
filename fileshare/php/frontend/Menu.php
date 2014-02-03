@@ -3,12 +3,10 @@ class Menupunkt{
 	public $titel;
 	public $seite;
 	public $id;
-	public $aktiv;
-	public function __construct($id,$titel, $seite,$aktiv=false) {
+	public function __construct($id,$titel, $seite) {
 		$this->titel = $titel;
 		$this->seite = $seite;
 		$this->id = $id;
-		$this->aktiv = $aktiv;
 	}
 }
 //Zum Bauen des Seitenmenüs
@@ -21,8 +19,10 @@ class Menupunkt{
 //$menu->toHTML() generiert den HTML-Text
 class Menu {
 	public $menupunkte;
-	public function __construct($menupunkte=array()) {
+	public $aktiverMenupunkt;
+	public function __construct($menupunkte=array(), $aktiverMenupunkt) {
 		$this->menupunkte = $menupunkte;
+		$this->aktiverMenupunkt = $aktiverMenupunkt;
 	}
 	public function add($menupunkt) {
 		array_push($this->menupunkte,$menupunkt);
@@ -31,7 +31,7 @@ class Menu {
 		$html="";
 		foreach($this->menupunkte as $menupunkt){
 			$class = "menupunkt";
-			$class .=  $menupunkt->aktiv ? " aktiv" : "";
+			$class .=  ($menupunkt->id == $this->aktiverMenupunkt) ? " aktiv" : "";
 			$html.="<div class='$class' id='$menupunkt->id'><span>$menupunkt->titel</span><a href='$menupunkt->seite'></a></div>\n";
 		}
 		return $html;

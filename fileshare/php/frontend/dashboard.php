@@ -1,23 +1,14 @@
 <!DOCTYPE HTML>
 <?php
-include "../utilities.php";
-include "../generate.php";
+include_once "../utilities.php";
+debugModus();
+include_once "../generate.php";
+include_once "frontendUtilities.php"; // Definiert auch $frontendMenu
+include_once "Menu.php";
 
 session_start();
-debugModus();
-if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){//Nicht angemeldet
-	session_destroy();
-	header("Location: http://".host.dirname(dirname($_SERVER["REQUEST_URI"]))."/Anmeldung.php");//Umleitung zur Anmeldung
-}
-
-include "Menu.php";
-$menu = new Menu();
-$menu->add(new Menupunkt("dashboard","Dashboard","dashboard.php",true));
-$menu->add(new Menupunkt("download","Download","download.php"));
-$menu->add(new Menupunkt("upload","Upload","upload.php"));
-$menu->add(new Menupunkt("gruppen","Gruppen","gruppen.php"));
-$menu->add(new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"));
-$menu->add(new Menupunkt("schluesselverwaltung","Schlüsselverwaltung","schluesselverwaltung.php"));
+leiteUmWennNichtAngemeldet();
+$menu = new Menu($frontendMenu, "dashboard");
 ?>
 <html>
 <head>
@@ -28,7 +19,7 @@ $menu->add(new Menupunkt("schluesselverwaltung","Schlüsselverwaltung","schluess
 	<script src="../../js/frontend.js"></script>
 </head>
 <body>
-<?=generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden</a>");?>
+<?=generateHeaderBannerLogout();?>
 <div id="contentWrapper">
 	<div id="menu">
 		<?=$menu->toHTML()?>

@@ -1,5 +1,7 @@
 <?php
 include_once "../utilities.php";
+include_once "Menu.php";
+
 function generateHTMLGruppen($db){
 	$semail = $_SESSION["semail"];
 	$gruppenHTML="";
@@ -126,5 +128,29 @@ function EmailZuNutzerID($email,$nrt){
 		}
 	);
 	return $id;
+}
+
+$frontendMenu = array(
+  new Menupunkt("dashboard","Dashboard","dashboard.php"),
+  new Menupunkt("download","Download","download.php"),
+  new Menupunkt("upload","Upload","upload.php"),
+  new Menupunkt("gruppen","Gruppen","gruppen.php"),
+  new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"),
+  new Menupunkt("schluesselverwaltung","Schlüsselverwaltung","schluesselverwaltung.php")
+);
+
+function istAngemeldet() {
+	return (isset($_SESSION["semail"])) && ($_SESSION["semail"] != "");
+}
+
+function umleitenZuAnmeldung() {
+	header("Location: http://".host.dirname(dirname($_SERVER["REQUEST_URI"]))."/Anmeldung.php");
+}
+
+function leiteUmWennNichtAngemeldet() {
+	if (!istAngemeldet()) {
+		session_destroy();
+		umleitenZuAnmeldung();
+	}
 }
 ?>
