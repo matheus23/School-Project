@@ -15,7 +15,7 @@ NutzerB kann in download.php nun die Datei downloaden und mit seinem privaten Da
 
 ###Dateiverarbeitung
 
-Die Schaubilder beantworten Fragen zur Dateibehandlung nicht vollständig. So wird die Datei beim Einlesen als ArrayBuffer bzw. Uint8Array. Uint8Arrays sind Arrays mit jeweils einem Byte pro Element als Integer, also eine Zahl zwischen 0 und 255.
+Die Schaubilder beantworten Fragen zur Dateibehandlung nicht vollständig. So wird die Datei beim Einlesen als ArrayBuffer bzw. Uint8Array dargestellt. Uint8Arrays sind Arrays mit jeweils einem Byte pro Element als Integer, also eine Zahl zwischen 0 und 255.
 
 Dann gibt es die BinaryStrings, mit denen die Verschlüsselungs-Bibliothek forge arbeitet bzw. zurückgibt. Das sind Zeichenketten deren Zeichen für jeweils ein Byte stehen. Ein Beispiel: Der Uint8Array mit nur einem Element ["33"] wird zu dem BinaryString "!" weil das "!" das 33. Zeichen des Unicode-Zeichensatzes ist.
 
