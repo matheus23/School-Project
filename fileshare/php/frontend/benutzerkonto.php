@@ -3,6 +3,7 @@
 include_once "../utilities.php";
 debugModus();
 include_once "../generate.php";
+include_once "frontendUtilities.php"; // Definiert auch $frontendMenu
 include_once "Menu.php";
 
 session_start();
