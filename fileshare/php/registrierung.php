@@ -9,7 +9,7 @@ include_once("benutzerEmail.php");
 debugModus();
 
 $data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
+$nrt = new Nachrichten("#fehlerListe");
 $securimage = new Securimage();
 
 if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {

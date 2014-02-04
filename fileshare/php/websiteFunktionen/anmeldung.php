@@ -1,7 +1,12 @@
 <?php
+<<<<<<< HEAD
 	include "../../php/utilities.php";
 	include_once dirname(__FILE__)."/../frontend/frontendUtilities.php";
 	
+=======
+	include_once dirname(__FILE__) . "/../utilities.php";
+
+>>>>>>> 9788e11c2490ab45b500de76bf05bd89cda78de9
 	function verarbeiteAnmeldung($nrt, $emailUnescaped, $merken, $passwort) {
 		$db = oeffneBenutzerDB($nrt);
 		
@@ -10,8 +15,10 @@
 		
 		if ($pwTest == WRONG_EMAIL) {
 			$nrt->fehler("Falsche Email");
+			return false;
 		} elseif ($pwTest == WRONG_COMBINATION) {
 			$nrt->fehler("Falsches Passwort");
+			return false;
 		} elseif ($pwTest == PASSWORD_PASS) {
 			$nrt->okay("Anmeldung erfolgreich");
 			$_SESSION["semail"] = $email;
@@ -23,6 +30,7 @@
 				setcookie("email",null,-1,"/");
 			}
 			session_regenerate_id(true);//Session wird neu gestartet
+			return true;
 		}
 	}
 ?>

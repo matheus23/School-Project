@@ -1,6 +1,6 @@
 <?php
-include_once "../utilities.php";
-include_once "Menu.php";
+include_once dirname(__FILE__) . "/../utilities.php";
+include_once dirname(__FILE__) . "/Menu.php";
 
 function generateHTMLGruppen($db){
 	$seid = $_SESSION["seid"];

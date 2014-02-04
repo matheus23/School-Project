@@ -5,7 +5,7 @@ include "../utilities.php";
 include_once "frontendUtilities.php";
 debugModus();
 $data = $_POST;
-$nrt = new Nachrichten("fehlerListe","../../");
+$nrt = new Nachrichten("#fehlerListe","../../");
 if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){
 	session_destroy();
 	echo "interner Fehler";
@@ -52,12 +52,12 @@ function neuerDateischluessel(){
 		$db->query($sql)->fold(
 			function ($ergebnis) use(&$nrt,$db){
 				$nrt->okay("Schlüssel erfolgreich geändert");
-				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 				die();
 			},
 			function($fehlerNachricht) use (&$nrt) {
 				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 				die();
 			}
 		);
@@ -80,7 +80,7 @@ function aktuellerDateischluessel(){
 		function($fehlerNachricht){		
 		}
 	);
-	echo json_encode(array("nrt"=>$nrt->toJsCode(),"versionID"=>$versionID));
+	echo json_encode(array("nrt"=>$nrt->toJsonUnencoded(),"versionID"=>$versionID));
 	die();
 }
 
@@ -102,12 +102,12 @@ function neuerSignaturschluessel(){
 		$db->query($sql)->fold(
 			function ($ergebnis) use(&$nrt,$db){
 				$nrt->okay("Schlüssel erfolgreich geändert");
-				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 				die();
 			},
 			function($fehlerNachricht) use (&$nrt) {
 				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 				die();
 			}
 		);
@@ -130,7 +130,7 @@ function aktuellerSignaturschluessel(){
 		function($fehlerNachricht){		
 		}
 	);
-	echo json_encode(array("nrt"=>$nrt->toJsCode(),"versionID"=>$versionID));
+	echo json_encode(array("nrt"=>$nrt->toJsonUnencoded(),"versionID"=>$versionID));
 	die();
 }
 ?>

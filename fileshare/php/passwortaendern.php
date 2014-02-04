@@ -8,7 +8,7 @@ include "../php/utilities.php";
 debugModus();
 
 $data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
+$nrt = new Nachrichten("#fehlerListe");
 
 if (alleSchluesselGesetzt($data, "APw", "NPw", "NPwb", "email")) {
 	verarbeitePasswortaenderung($nrt, $data["email"], $data["APw"], $data["NPw"], $data["NPwb"]);

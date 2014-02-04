@@ -2,6 +2,8 @@ var signaturschluesselVorhanden = false;
 var signaturschluessel;
 var signaturschluesselUnverschluesselt;
 
+var pfadZuOrdnerFileshare = "../../";
+
 updateSignaturschluessel();
 function updateSignaturschluessel(){//Fast gleich wie Funktion in schluessel.js... Funktionen müssen vereinfacht werden/zusammengelegt werden
 	signaturschluessel = JSON.parse(localStorage.signaturschluessel || "{}");
@@ -13,12 +15,7 @@ function updateSignaturschluessel(){//Fast gleich wie Funktion in schluessel.js.
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			$("#aktuellerSignaturschluessel").text("Kein Signaturschlüssel gefunden, bitte in der Schlüsselverwaltung generieren!").css("color","red");
 			if (signaturschluessel.versionID === antwortObjekt.versionID){
 				$("#aktuellerSignaturschluessel").text(signaturschluessel.versionID).css("color","green");
@@ -32,59 +29,31 @@ $("#hochladen").click(function(){
 	var email = $("#emailEmpfaenger").val();
 	
 	if (passwort.length==0){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Du musst ein Passwort angeben","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Du musst ein Passwort angeben.", pfadZuOrdnerFileshare);
 		return;
 	}
 	if ($("#file")[0].files.length==0){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Du musst eine Datei gewählt haben.","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Du musst eine Datei gewählt haben.", pfadZuOrdnerFileshare);
 		return;
 	}
 	if (email.length==0){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Du musst einen Empfänger angeben","warnung","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Du musst einen Empfänger angeben.", pfadZuOrdnerFileshare);
 		return;
 	}
 	if(!signaturschluesselVorhanden){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Kein Signaturschlüssel gefunden","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Kein Signaturschlüssel gefunden.", pfadZuOrdnerFileshare);
 		return;
 	}
 	if(!bereiteSignierungVor(passwort)){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Falsches Passwort oder beschädigter Schlüssel","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Falsches Passwort oder beschädigter Schlüssel.", pfadZuOrdnerFileshare);
 		return;
 	}
 	var infoObject = holeBenutzerInfo(email);
 	if (!infoObject){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Es gab ein Problem beim Abholen der Empfängerinfos - Hat der Empfänger schon einen Dateischlüssel generiert?","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
-		return
+		fehlerNachricht("#fehlerListe", "fehler", 
+			"Es gab ein Problem beim Abholen der Empfängerinfos - Hat der Empfänger schon einen Dateischlüssel generiert?", 
+			pfadZuOrdnerFileshare);
+		return;
 	}
 	leseUndVerschluesseleDatei(infoObject);
 });
@@ -121,12 +90,7 @@ function holeBenutzerInfo(email){
 		async:false,
 		success: function(antwort){
 			var antwortObjekt = JSON.parse(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			if(!!antwortObjekt.info){
 				info = antwortObjekt.info;
 			}
@@ -186,12 +150,7 @@ function hochladen(dateiVerschluesselt,dateiname,infoObject){
 		async:false,
 		success: function(antwort){
 			var antwortObjekt = JSON.parse(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 		}
 	});
 }

@@ -120,27 +120,29 @@ class Nachricht {
 		$this->path = $path;
 	}
 	
-	public function toJsCall($elementVar) {
+	public function toJsonUnencoded() {
 		$n = addslashes($this->nachricht);
 		$a = $this->art;
 		$path = $this->path;
-		return "fehlerNachricht($elementVar, '$n', '$a','$path');";
+		return array("typ" => $a, "nachricht" => $n);
+	}
+	
+	public function toJson() {
+		return json_encode($this->toJsonUnencoded());
 	}
 }
 
 class Nachrichten {
-	public $jsElemVarDef = "";
-	public $jsElemVarName = "";
+	public $jsElemQuery = "";
 	public $nachrichtenListe = array();
 	
 	public function __construct($jselem,$path="../") {
-		$this->jsElemVarName = "__$jselem";
-		$this->jsElemVarDef = "var " . $this->jsElemVarName . " = document.getElementById('$jselem');";
+		$this->jsElemQuery = $jselem;
 		$this->path = $path;
 	}
 	
 	public function nachricht($art, $nachricht) {
-		array_push($this->nachrichtenListe, new Nachricht($nachricht, $art,$this->path));
+		array_push($this->nachrichtenListe, new Nachricht($nachricht, $art, $this->path));
 	}
 	
 	public function okay($nachricht) {
@@ -155,13 +157,24 @@ class Nachrichten {
 		$this->nachricht("fehler", $nachricht);
 	}
 	
-	public function toJsCode() {
-		$code = $this->jsElemVarDef . "\n";
+	public function toJsonUnencoded() {
 		$nachrichten = $this->nachrichtenListe;
+		
+		$jsonNrtArray = array();
 		foreach ($nachrichten as $nachricht) {
-			$code .= $nachricht->toJsCall($this->jsElemVarName) . "\n";
+			array_push($jsonNrtArray, $nachricht->toJsonUnencoded());
 		}
-		return $code;
+		return array("liste" => $jsonNrtArray, "path" => $this->path);
+	}
+	
+	public function toJson() {
+		return json_encode($this->toJsonUnencoded());
+	}
+	
+	public function toJsCode() {
+		$elem = $this->jsElemQuery;
+		$json = $this->toJson();
+		return "fehlerNachrichten(\$('$elem'), $json);";
 	}
 	
 	public function genJsCode() {

@@ -14,7 +14,7 @@ include_once "../securimage/securimage.php";
 debugModus();
 
 $data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
+$nrt = new Nachrichten("#fehlerListe");
 $securimage = new Securimage();
 if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
 	$emaila = strtolower($_POST["eanmeld"]);

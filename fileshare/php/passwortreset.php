@@ -56,7 +56,7 @@
 <?php
 debugModus();
 $data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
+$nrt = new Nachrichten("#fehlerListe");
 if (alleSchluesselGesetzt($data, "resetID", "NPw", "NPwb")){
 	$db = oeffneBenutzerDB($nrt);
 	$resetID=$db->real_escape_string($data["resetID"]);

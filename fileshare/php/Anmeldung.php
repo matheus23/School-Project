@@ -1,19 +1,28 @@
 <?php
 	session_start();
-	include "../php/utilities.php";
-	include "generate.php";
-	include "websiteFunktionen/anmeldung.php";
-	
+	include_once dirname(__FILE__) . "/utilities.php";
 	debugModus();
+	include_once "frontend/frontendUtilities.php";
+	include_once "generate.php";
+	include_once "websiteFunktionen/anmeldung.php";
+	
+	function zumDashboard() {
+		// Umleitung auf Dashboard:
+		header("Location: http://".host.dirname($_SERVER["REQUEST_URI"])."/frontend/dashboard.php");
+	}
+	
+	if (istAngemeldet()){
+		zumDashboard();
+	}
 	
 	$data = $_POST;
-	$nrt = new Nachrichten("fehlerListe");
+	$nrt = new Nachrichten("#fehlerListe");
 
 	if (alleSchluesselGesetzt($data, "eanmeld", "pwanmeld")) {
-		verarbeiteAnmeldung($nrt, $data["eanmeld"], isset($data["merken"]), $data["pwanmeld"]);
-	}
-	if ((isset($_SESSION["semail"]))&&($_SESSION["semail"]!="")){//angemeldet
-		header("Location: http://".host.dirname($_SERVER["REQUEST_URI"])."/frontend/dashboard.php");//Umleitung auf Dashboard
+		$anmeldungErfolgreich = verarbeiteAnmeldung($nrt, $data["eanmeld"], isset($data["merken"]), $data["pwanmeld"]);
+		if ($anmeldungErfolgreich) {
+			zumDashboard();
+		}
 	}
 ?>
 <!DOCTYPE html>
@@ -22,6 +31,7 @@
 	<meta charset="UTF-8" />
 	<link href="../css/style.css" rel="stylesheet" type="text/css" />
 	<script src="../js/jsUtilities.js" type="text/javascript"></script>
+	<script src="../js/jquery-1.10.2.min.js"></script>
 	<title>Anmeldeseite</title>
 </head>
 <body>

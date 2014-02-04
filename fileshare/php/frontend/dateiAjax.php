@@ -2,12 +2,14 @@
 //Diese Datei braucht kein HTML, wird nur für AJAX-Anfrage benutzt
 session_start();
 include "../utilities.php";
-include_once "frontendUtilities.php";
 debugModus();
+include_once "frontendUtilities.php";
+
 $data = $_POST;
 $nrt = new Nachrichten("fehlerListe","../../");
 $nrtGruppe = new Nachrichten("fehlerListeGruppe","../../");
-if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){
+
+if(!istAngemeldet()){
 	session_destroy();
 	echo "interner Fehler";
 	die();
@@ -56,7 +58,7 @@ function benutzerInformation(){
 				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
 			}
 		);
-		echo json_encode(array("info"=>$info,"nrt"=>$nrt->toJsCode()));
+		echo json_encode(array("info"=>$info,"nrt"=>$nrt->toJsonUnencoded()));
 	}
 }
 function ladeHoch(){
@@ -87,7 +89,7 @@ function ladeHoch(){
 				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
 			}
 		);
-		echo json_encode(array("nrt"=>$nrt->toJsCode()));
+		echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 	}
 }
 
@@ -111,7 +113,7 @@ function holeDateien(){
 			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
 		}
 	);
-	echo json_encode(array("dateien"=>$dateiArray,"nrt"=>$nrt->toJsCode()));
+	echo json_encode(array("dateien"=>$dateiArray,"nrt"=>$nrt->toJsonUnencoded()));
 }
 
 function frageNachURL(){
@@ -143,7 +145,7 @@ function frageNachURL(){
 				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
 			}
 		);
-		echo json_encode(array("url"=>$url,"nrt"=>$nrt->toJsCode()));
+		echo json_encode(array("url"=>$url,"nrt"=>$nrt->toJsonUnencoded()));
 	}
 }
 function holeSignaturschluessel(){
@@ -161,17 +163,17 @@ function holeSignaturschluessel(){
 				$schluessel = $ergebnis->fetch_array(MYSQLI_ASSOC);
 				if(!$schluessel){
 					$nrt->fehler("Keinen Signaturschlüssel gefunden");
-					echo json_encode(array("nrt"=>$nrt->toJsCode()));
+					echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 					die();
 				}
 			},
 			function($fehlerNachricht) use (&$nrt) {
 				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 				die();
 			}
 		);
-		echo json_encode(array("schluessel"=>$schluessel,"nrt"=>$nrt->toJsCode()));
+		echo json_encode(array("schluessel"=>$schluessel,"nrt"=>$nrt->toJsonUnencoded()));
 	}
 }
 ?>
