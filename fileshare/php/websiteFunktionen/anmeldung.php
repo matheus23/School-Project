@@ -1,12 +1,6 @@
 <?php
-<<<<<<< HEAD
-	include "../../php/utilities.php";
 	include_once dirname(__FILE__)."/../frontend/frontendUtilities.php";
-	
-=======
-	include_once dirname(__FILE__) . "/../utilities.php";
-
->>>>>>> 9788e11c2490ab45b500de76bf05bd89cda78de9
+	include_once dirname(__FILE__)."/../utilities.php";
 	function verarbeiteAnmeldung($nrt, $emailUnescaped, $merken, $passwort) {
 		$db = oeffneBenutzerDB($nrt);
 		
