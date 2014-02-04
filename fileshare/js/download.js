@@ -7,6 +7,8 @@ var ausgewaehltID;
 var ausgewaehlt;
 var dateischluesselUnverschluesselt;
 
+var pfadZuOrdnerFileshare = "../../";
+
 updateDateiListe();
 $("#dateiListe > .listenelement").click(function(){
 	$("#editor > .label").text("Download: "+$(this).text());
@@ -38,12 +40,7 @@ function updateDateiListe(){
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			dateiliste=antwortObjekt.dateien;
 			$.each(dateiliste,function(index,datei){
 				var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
@@ -59,21 +56,11 @@ function updateDateiListe(){
 $("#runterladen").click(function(){
 	var passwort = $("#dateischluesselPasswort").val();
 	if (passwort.length==0){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Du musst ein Passwort angeben","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Du musst ein Passwort angeben", pfadZuOrdnerFileshare);
 		return;
 	}
 	if (!schluesselVorhanden){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Du kannst diese Datei nicht entschlüsseln","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Du kannst diese Datei nicht entschlüsseln", pfadZuOrdnerFileshare);
 		return;
 	}
 	var dateiURL = frageNachURL();
@@ -92,12 +79,7 @@ function frageNachURL(){
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			if (!antwortObjekt.url) return;
 			url = antwortObjekt.url;
 		}
@@ -108,13 +90,8 @@ function frageNachURL(){
 function holeUndEntschluesseleDatei(dateiURL,passwort){
 	$.get(dateiURL, function(datei){
 		//Entschlüssele lokalen Schlüssel
-		if(!bereiteDateischluesselVor(passwort)){
-			$("#fehlerListe").show();
-			fehlerNachricht($("#fehlerListe")[0],"Falsches Passwort oder beschädigter Schlüssel","fehler","../../");
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+		if(!bereiteDateischluesselVor(passwort)) {
+			fehlerNachricht("#fehlerListe", "fehler", "Falsches Passwort oder beschädigter Schlüssel", pfadZuOrdnerFileshare);
 			return;
 		}
 		
@@ -187,12 +164,7 @@ function holeVerifizierungsSchluessel(){
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			if (!antwortObjekt.schluessel) return;
 			schluessel = antwortObjekt.schluessel.Schluessel;
 		}

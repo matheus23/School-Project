@@ -9,7 +9,7 @@ include_once "Menu.php";
 session_start();
 leiteUmWennNichtAngemeldet();
 
-$nrt = new Nachrichten("fehlerListeGruppe","../../");
+$nrt = new Nachrichten("#fehlerListeGruppe","../../");
 $db = oeffneBenutzerDB($nrt);
 $menu = new Menu($frontendMenu, "gruppen");
 ?>

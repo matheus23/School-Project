@@ -5,14 +5,15 @@ include "../utilities.php";
 include_once "frontendUtilities.php";
 debugModus();
 $data = $_POST;
-$nrt = new Nachrichten("fehlerListe","../../");
-$nrtGruppe = new Nachrichten("fehlerListeGruppe","../../");
+$nrt = new Nachrichten("#fehlerListe","../../");
+$nrtGruppe = new Nachrichten("#fehlerListeGruppe","../../");
 if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){
 	session_destroy();
 	echo "interner Fehler";
 	die();
 }
-if(!(new CSRFSchutz())->post()->pruefe()){//Übernimmt den CSRFToken aus den Post-Daten und überprüft ihn mit dem Token in der Session
+//Übernimmt den CSRFToken aus den Post-Daten und überprüft ihn mit dem Token in der Session
+if(!(new CSRFSchutz())->post()->pruefe()){
 	session_destroy();
 	echo "interner Fehler";
 	die();
@@ -60,7 +61,7 @@ function schickeNutzerEmail(){
 		if(count($ergebnisArray)==0){
 			$nrt->fehler("Keinen Nutzer mit der Email/dem Nutzernamen '$nameemail' gefunden.");
 		}
-		echo json_encode(array("nutzer"=>$ergebnisArray,"nrt"=>$nrt->toJsCode()));
+		echo json_encode(array("nutzer"=>$ergebnisArray,"nrt"=>$nrt->toJsonUnencoded()));
 	}
 }
 
@@ -85,13 +86,13 @@ function fertigGruppe(){
 			function ($ergebnis) use (&$nrt){
 				if($ergebnis->num_rows>0){
 					$nrt->fehler("Es gibt bereits eine Gruppe mit diesem Namen.");
-					echo json_encode(array("nrt"=>$nrt->toJsCode()));
+					echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 					die();
 				}
 			},
 			function($fehlerNachricht) use (&$nrt) {
 				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrt->toJsCode()));
+				echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 				die();
 			}
 		);
@@ -154,7 +155,7 @@ function fertigGruppe(){
 	if ($erfolg){
 		$nrt->okay("Liste gespeichert");
 	}
-	echo json_encode(array("nrt"=>$nrt->toJsCode()));
+	echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
 }
 
 function neueGruppe(){
@@ -165,7 +166,7 @@ function neueGruppe(){
 		$gruppenname=$db->real_escape_string($data["gruppenname"]);
 		if(strlen($gruppenname)==0){
 			$nrtGruppe->fehler("Kein Gruppenname angegeben");
-			echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+			echo json_encode(array("nrt"=>$nrtGruppe->toJsonUnencoded()));
 			die();
 		}
 		$moderatorID=EmailZuNutzerID($semail,$nrtGruppe);
@@ -174,13 +175,13 @@ function neueGruppe(){
 			function ($ergebnis) use (&$nrtGruppe){
 				if($ergebnis->num_rows>0){
 					$nrtGruppe->fehler("Es gibt bereits eine Gruppe mit diesem Namen.");
-					echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+					echo json_encode(array("nrt"=>$nrtGruppe->toJsonUnencoded()));
 					die();
 				}
 			},
 			function($fehlerNachricht) use (&$nrtGruppe) {
 				$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsonUnencoded()));
 				die();
 			}
 		);
@@ -191,12 +192,12 @@ function neueGruppe(){
 		$db->query($sql)->fold(
 			function ($ergebnis) use(&$nrtGruppe,$db){
 				$nrtGruppe->okay("Gruppe erfolgreich hinzugefügt.");
-				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode(),"gruppenHTML"=>generateHTMLGruppen($db)));
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsonUnencoded(),"gruppenHTML"=>generateHTMLGruppen($db)));
 				die();
 			},
 			function($fehlerNachricht) use (&$nrtGruppe) {
 				$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsonUnencoded()));
 				die();
 			}
 		);
@@ -231,7 +232,7 @@ function loescheGruppe(){
 			},
 			function($fehlerNachricht) use (&$nrtGruppe) {
 				$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsonUnencoded()));
 				die();
 			}
 		);
@@ -242,11 +243,11 @@ function loescheGruppe(){
 			},
 			function($fehlerNachricht) use (&$nrtGruppe) {
 				$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+				echo json_encode(array("nrt"=>$nrtGruppe->toJsonUnencoded()));
 				die();
 			}
 		);
-		echo json_encode(array("nrt"=>$nrtGruppe->toJsCode()));
+		echo json_encode(array("nrt"=>$nrtGruppe->toJsonUnencoded()));
 	}		
 }
 ?>

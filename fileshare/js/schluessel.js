@@ -3,6 +3,8 @@ var signaturschluessel;
 updateDateischluesselListe();
 updateSignaturschluessel();
 
+var pfadZuOrdnerFileshare = "../../";
+
 //Dateischlüssel
 $("#editor > .fenster").hide(0);
 $("#dateischluesselButton").click(function(){
@@ -14,12 +16,7 @@ $("#dateischluesselButton").click(function(){
 $("#dateischluesselGenerieren").click(function(){
 	var passwort = $("#dateischluesselPasswort").val();
 	if (passwort.length==0){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Du musst ein Passwort angeben","warnung","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "warnung", "Du musst ein Passwort angeben", pfadZuOrdnerFileshare);
 		return;
 	}
 	generiereSchluessel(passwort);
@@ -72,12 +69,7 @@ function schickeSchluessel(publicPem,versionID){
 		success: function(antwort){
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 		}
 	});
 	updateDateischluesselListe();
@@ -94,12 +86,7 @@ function updateDateischluesselListe(){
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			$("#aktuellerDateischluessel").text("Kein Schlüssel gefunden, bitte generieren!").css("color","red");
 			$.each(dateischluessel,function(index,schluessel){
 				if (schluessel.versionID === antwortObjekt.versionID){
@@ -142,12 +129,7 @@ $("#signaturschluesselButton").click(function(){
 $("#signaturschluesselGenerieren").click(function(){
 	var passwort = $("#signaturschluesselPasswort").val();
 	if (passwort.length==0){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Du musst ein Passwort angeben","warnung","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "warnung", "Du musst ein Passwort angeben", pfadZuOrdnerFileshare);
 		return;
 	}
 	generiereSignaturschluessel(passwort);
@@ -216,12 +198,7 @@ function updateSignaturschluessel(){
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			$("#aktuellerSignaturschluessel").text("Kein Schlüssel gefunden, bitte generieren!").css("color","red");
 			if (signaturschluessel.versionID === antwortObjekt.versionID){
 				$("#aktuellerSignaturschluessel").text(signaturschluessel.versionID).css("color","green");

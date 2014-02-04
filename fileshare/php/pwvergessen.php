@@ -63,7 +63,7 @@ include "utilities.php";
 debugModus();
 
 $data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
+$nrt = new Nachrichten("#fehlerListe");
 
 if (alleSchluesselGesetzt($data, "email")) {
 	$db = oeffneBenutzerDB($nrt);

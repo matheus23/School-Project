@@ -2,6 +2,7 @@
 //Sollte mit etwas css gut verständlich sein
 
 var gruppeEditiertID;
+var pfadZuOrdnerFileshare = "../../";
 
 $("#neuesmitglied").click(function(){
 	$("#auswahlliste").html("");
@@ -18,12 +19,7 @@ $("#neuesmitglied").click(function(){
 			if (fehlerBehandlung(antwort)) return;
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwortObjekt);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-					$(this).html("");
-					$(this).dequeue();
-				});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			$("#nameemail").val("");
 			if(antwortObjekt.nutzer.length===1){//Wenn nur ein Nutzer gefunden wurde:
 				mitgliedZurListe(antwortObjekt.nutzer[0]);
@@ -38,12 +34,7 @@ $("#neuesmitglied").click(function(){
 
 function mitgliedZurListe(nutzer){
 	if(mitgliedSchonInListe(nutzer)){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Der Nutzer ist schon in der Liste.","warnung","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Der Nutzer ist schon in der Liste.", pfadZuOrdnerFileshare);
 		return;
 	}
 	var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
@@ -95,12 +86,7 @@ $("#neuegruppe").click(function(){
 $("#editFertig").click(function(){
 	var gruppenname = $("#gruppenname").val();
 	if(gruppenname.length===0){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Gruppenname ausfüllen.","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+		fehlerNachricht("#fehlerListe", "fehler", "Gruppenname ausfüllen.", pfadZuOrdnerFileshare);
 		return;
 	}
 	var emails = [];
@@ -108,12 +94,7 @@ $("#editFertig").click(function(){
 		emails.push($(listenelement).data("email"));
 	});
 	if(emails.length===0){
-		$("#fehlerListe").show();
-		fehlerNachricht($("#fehlerListe")[0],"Die Gruppe muss Mitglieder enthalten.","fehler","../../");
-		$("#fehlerListe").delay(5000).hide(500).queue(function(){
-			$(this).html("");
-			$(this).dequeue();
-		});
+		fehlerNachricht("#fehlerListe", "fehler", "Die Gruppe muss Mitglieder enthalten.", pfadZuOrdnerFileshare);
 		return;
 	}
 	$.ajax({
@@ -125,13 +106,8 @@ $("#editFertig").click(function(){
 			console.log(antwort);
 			if (fehlerBehandlung(antwort)) return;
 			var antwortObjekt = JSON.parse(antwort);
-			eval(antwortObjekt.nrt);
 			console.log(antwortObjekt);
-			$("#fehlerListe").show();
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-					$(this).html("");
-					$(this).dequeue();
-				});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			aktualisiereGruppen();
 		}
 	});
@@ -165,12 +141,7 @@ function hinzuguegenGruppe(){
 				console.log(antwort);
 				if (fehlerBehandlung(antwort)) return;
 				var antwortObjekt = JSON.parse(antwort);
-				$("#fehlerListeGruppe").show();
-				eval(antwortObjekt.nrt);
-				$("#fehlerListeGruppe").delay(5000).hide(500).queue(function(){
-					$(this).html("");
-					$(this).dequeue();
-				});
+				fehlerNachrichten("#fehlerListeGruppe", antwortObjekt.nrt);
 			}
 		});
 		aktualisiereGruppen();
@@ -220,12 +191,7 @@ function loescheGruppe(zuLoeschen){
 			console.log(antwort);
 			if (fehlerBehandlung(antwort)) return;
 			antwortObjekt = JSON.parse(antwort);
-			$("#fehlerListeGruppe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListeGruppe").delay(5000).hide(500).queue(function(){
-					$(this).html("");
-					$(this).dequeue();
-				});
+			fehlerNachrichten("#fehlerListeGruppe", antwortObjekt.nrt);
 		}
 	});
 	aktualisiereGruppen();

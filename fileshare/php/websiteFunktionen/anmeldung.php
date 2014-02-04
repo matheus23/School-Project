@@ -1,5 +1,5 @@
 <?php
-	include "../../php/utilities.php";
+	include_once dirname(__FILE__) . "/../utilities.php";
 
 	function verarbeiteAnmeldung($nrt, $emailUnescaped, $merken, $passwort) {
 		$db = oeffneBenutzerDB($nrt);
@@ -9,8 +9,10 @@
 		
 		if ($pwTest == WRONG_EMAIL) {
 			$nrt->fehler("Falsche Email");
+			return false;
 		} elseif ($pwTest == WRONG_COMBINATION) {
 			$nrt->fehler("Falsches Passwort");
+			return false;
 		} elseif ($pwTest == PASSWORD_PASS) {
 			$nrt->okay("Anmeldung erfolgreich");
 			$_SESSION["semail"] = $email;
@@ -21,6 +23,7 @@
 				setcookie("email",null,-1,"/");
 			}
 			session_regenerate_id(true);//Session wird neu gestartet
+			return true;
 		}
 	}
 ?>

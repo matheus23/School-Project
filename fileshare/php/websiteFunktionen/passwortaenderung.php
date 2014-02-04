@@ -1,5 +1,5 @@
 <?php
-	include "../../php/utilities.php";
+	include "../utilities.php";
 
 	function verarbeitePasswortaenderung($nrt, $emailUnencoded, $pw, $neuesPw, $neuesPwWiederholung) {
 		$db = oeffneBenutzerDB($nrt);

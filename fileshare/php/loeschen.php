@@ -8,7 +8,7 @@ include_once("benutzerEmail.php");
 debugModus();
 
 $data = $_POST;
-$nrt = new Nachrichten("fehlerListe");
+$nrt = new Nachrichten("#fehlerListe");
 
 if (alleSchluesselGesetzt($data, "mail", "Pw")) {
 	verarbeiteLoeschung($nrt, $data["mail"], $data["Pw"]);
