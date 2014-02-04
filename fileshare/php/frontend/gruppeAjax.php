@@ -20,8 +20,8 @@ if(!(new CSRFSchutz())->post()->pruefe()){//Übernimmt den CSRFToken aus den Pos
 
 if (alleSchluesselGesetzt($data, "aktion")) {
 	switch ($data["aktion"]){
-		case "schickeNutzerEmail":
-			schickeNutzerEmail();
+		case "schickeNutzerID":
+			schickeNutzerID();
 			break;
 		case "fertigGruppe":
 			fertigGruppe();
@@ -41,7 +41,7 @@ if (alleSchluesselGesetzt($data, "aktion")) {
 	}
 }
 
-function schickeNutzerEmail(){
+function schickeNutzerID(){
 	global $data, $nrt;
 	if (alleSchluesselGesetzt($data, "nameemail")) {
 		$db = oeffneBenutzerDB($nrt);
@@ -68,10 +68,11 @@ function schickeNutzerEmail(){
 function fertigGruppe(){
 	global $data, $nrt;
 	$semail = $_SESSION["semail"];
+	$seid = $_SESSION["seid"];
 	$erfolg=false;
-	if (alleSchluesselGesetzt($data, "emails","gruppenname","GruppenID")){
+	if (alleSchluesselGesetzt($data, "nutzerIDs","gruppenname","GruppenID")){
 		$db = oeffneBenutzerDB($nrt);
-		$emails=json_decode($data["emails"]);
+		$nutzerIDs=json_decode($data["nutzerIDs"]);
 		$gruppenname=$db->real_escape_string($data["gruppenname"]);
 		$gruppenID=$db->real_escape_string($data["GruppenID"]);
 		
@@ -80,7 +81,7 @@ function fertigGruppe(){
 			echo json_encode(array("nrt"=>$nrt->toJsCode()));
 			die();
 		}
-		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorEmail='$semail' AND ID!='$gruppenID'";
+		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorID='$seid' AND ID!='$gruppenID'";
 		$db->query($sql)->fold(
 			function ($ergebnis) use (&$nrt){
 				if($ergebnis->num_rows>0){
@@ -105,15 +106,15 @@ function fertigGruppe(){
 				$erfolg=false;
 			}
 		);
-		foreach($emails as &$email){
-			$email = $db->real_escape_string($email);
+		foreach($nutzerIDs as &$nutzerID){
+			$nutzerID = $db->real_escape_string($nutzerID);
 		}
-		$sql="SELECT NutzerEmail FROM Gruppenmitglieder WHERE GruppenID='$gruppenID'";	
+		$sql="SELECT NutzerID FROM Gruppenmitglieder WHERE GruppenID='$gruppenID'";	
 		$bisherigeMitglieder=array();
 		$db->query($sql)->fold(
 			function ($ergebnis) use (&$bisherigeMitglieder){
 				while($nutzer = $ergebnis->fetch_array(MYSQLI_ASSOC)){
-					array_push($bisherigeMitglieder,$nutzer["NutzerEmail"]);
+					array_push($bisherigeMitglieder,$nutzer["NutzerID"]);
 				}
 			},
 			function($fehlerNachricht) use (&$nrt,&$erfolg){
@@ -121,11 +122,11 @@ function fertigGruppe(){
 				$erfolg=false;
 			}
 		);
-		$loeschen = array_diff($bisherigeMitglieder,$emails);
-		$hinzufuegen = array_diff($emails,$bisherigeMitglieder);
+		$loeschen = array_diff($bisherigeMitglieder,$nutzerIDs);
+		$hinzufuegen = array_diff($nutzerIDs,$bisherigeMitglieder);
 		
 		foreach($loeschen as $loeschMitglied){
-			$sql="DELETE FROM Gruppenmitglieder WHERE GruppenID='$gruppenID' AND NutzerEmail='$loeschMitglied'";	
+			$sql="DELETE FROM Gruppenmitglieder WHERE GruppenID='$gruppenID' AND NutzerID='$loeschMitglied'";	
 			$db->query($sql)->fold(
 				function ($ergebnis){
 				},
@@ -138,7 +139,7 @@ function fertigGruppe(){
 		foreach($hinzufuegen as $hinzufuegenMitglied){
 			$sql=
 				"INSERT INTO ".
-				"`Gruppenmitglieder`(`GruppenID`, `NutzerEmail`) ".
+				"`Gruppenmitglieder`(`GruppenID`, `NutzerID`) ".
 				"VALUES ('$gruppenID', '$hinzufuegenMitglied')";
 			$db->query($sql)->fold(
 				function ($ergebnis){
@@ -169,7 +170,7 @@ function neueGruppe(){
 			die();
 		}
 		$moderatorID=EmailZuNutzerID($semail,$nrtGruppe);
-		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorID='$moderatorID";
+		$sql="SELECT ID FROM Gruppe WHERE Name='$gruppenname' AND ModeratorID='$moderatorID'";
 		$db->query($sql)->fold(
 			function ($ergebnis) use (&$nrtGruppe){
 				if($ergebnis->num_rows>0){

@@ -53,6 +53,7 @@ $menu = new Menu($frontendMenu, "gruppen");
 			</div>
 		</div>
 	</div>
+	
 </div>
 </body>
 <?=(new CSRFSchutz())->neu()->genJS()?>

@@ -1,6 +1,7 @@
 <?php
 	include "../../php/utilities.php";
-
+	include_once dirname(__FILE__)."/../frontend/frontendUtilities.php";
+	
 	function verarbeiteAnmeldung($nrt, $emailUnescaped, $merken, $passwort) {
 		$db = oeffneBenutzerDB($nrt);
 		
@@ -14,6 +15,7 @@
 		} elseif ($pwTest == PASSWORD_PASS) {
 			$nrt->okay("Anmeldung erfolgreich");
 			$_SESSION["semail"] = $email;
+			$_SESSION["seid"] = EmailZuNutzerID($email,$nrt);
 			if ($merken) {
 				setcookie("email",$email,time()+1*60*60*24*7,"/");//email cookie wird gesetzt (1 Woche)
 			}

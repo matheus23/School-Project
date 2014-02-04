@@ -13,7 +13,7 @@ $("#neuesmitglied").click(function(){
 	$.ajax({//Frage an den Server, ob Name/Email existiert bzw. mehrere Treffer
 		type: "POST",//Schicke mit POST
 		url: "gruppeAjax.php",//Anfrage an gruppeAjax.php
-		data: {nameemail:nameemail,aktion:"schickeNutzerEmail",CSRFToken:CSRFToken},//Sende nutzername/Email mit
+		data: {nameemail:nameemail,aktion:"schickeNutzerID",CSRFToken:CSRFToken},//Sende nutzername/Email mit
 		success: function(antwort){//Weiter gehts mit der Antwort
 			if (fehlerBehandlung(antwort)) return;
 			var antwortObjekt = JSON.parse(antwort);
@@ -54,7 +54,7 @@ function mitgliedZurListe(nutzer){
 	});
 	listenelement.append(label);//Label wird auf Listenelement gepackt
 	listenelement.append(muell);//Muellicon wird auf Listenelement gepackt
-	listenelement.data("email",nutzer.Email);//belege Element mit Daten: Email (JS->HTML-Element)
+	listenelement.data("nutzerid",nutzer.ID);//belege Element mit Daten: ID (JS->HTML-Element)
 	$("#mitgliederliste").append(listenelement);//Listenelement wird zur Liste hinzugefügt
 }
 
@@ -63,7 +63,7 @@ function mitgliederZurAuswahlListe(nutzer){
 		var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
 		var label = $("<span>").addClass("listenlabel").text(nutzer.Nutzername + " - " + nutzer.Email);//Nutzername/Email auf Listenlabel
 		listenelement.append(label);//Label wird auf Listenelement gepackt
-		listenelement.data("email",nutzer.Email);//belege Element mit Daten: Email (JS->HTML-Element)
+		listenelement.data("nutzerid",nutzer.ID);//belege Element mit Daten: ID (JS->HTML-Element)
 		listenelement.click(function(event){//Bei Auswahl klont sich das Listenelement in die Mitgliederliste, trennt den click-Listener und löscht die Auswahl
 			mitgliedZurListe(nutzer);
 			$("#auswahlliste").html("");
@@ -76,7 +76,7 @@ function mitgliederZurAuswahlListe(nutzer){
 function mitgliedSchonInListe(nutzer){//Prüft, ob Nutzer schon in Mitgliederliste steht
 	var existiertSchon = false;
 	$("#mitgliederliste > .listenelement").each(function(index,listenelement){
-		if($(listenelement).data("email")===nutzer.Email){
+		if($(listenelement).data("nutzerid")===nutzer.ID){
 			existiertSchon = true;
 			return false;
 		}
@@ -89,7 +89,7 @@ $("#neuegruppe").click(function(){
 	$("#gruppenname").val("");
 	$("#nameemail").val("");
 	$("#mitgliederliste > .listenelement").remove();
-	hinzuguegenGruppe();
+	hinzufuegenGruppe();
 });
 
 $("#editFertig").click(function(){
@@ -103,11 +103,11 @@ $("#editFertig").click(function(){
 			});
 		return;
 	}
-	var emails = [];
+	var nutzerIDs = [];
 	$("#mitgliederliste > .listenelement").each(function(index,listenelement){
-		emails.push($(listenelement).data("email"));
+		nutzerIDs.push($(listenelement).data("nutzerid"));
 	});
-	if(emails.length===0){
+	if(nutzerIDs.length===0){
 		$("#fehlerListe").show();
 		fehlerNachricht($("#fehlerListe")[0],"Die Gruppe muss Mitglieder enthalten.","fehler","../../");
 		$("#fehlerListe").delay(5000).hide(500).queue(function(){
@@ -119,7 +119,7 @@ $("#editFertig").click(function(){
 	$.ajax({
 		type: "POST",
 		url: "gruppeAjax.php",
-		data: {emails:JSON.stringify(emails),aktion:"fertigGruppe",gruppenname:gruppenname,GruppenID:gruppeEditiertID,CSRFToken:CSRFToken},
+		data: {nutzerIDs:JSON.stringify(nutzerIDs),aktion:"fertigGruppe",gruppenname:gruppenname,GruppenID:gruppeEditiertID,CSRFToken:CSRFToken},
 		async:false,
 		success: function(antwort){
 			console.log(antwort);
@@ -139,11 +139,11 @@ $("#editFertig").click(function(){
 
 /*
 $("#neuegruppe").click(function(){
-	hinzuguegenGruppe();
+	hinzufuegenGruppe();
 });
 */
 
-function hinzuguegenGruppe(){
+function hinzufuegenGruppe(){
 	$("#neuegruppe").unbind("click");//Entfernt das Klick-Event
 	var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
 	var nameFeld = $("<input>").attr("type","text");//Input für Gruppennamen wird erstellt
@@ -153,7 +153,7 @@ function hinzuguegenGruppe(){
 		event.stopPropagation();//Verhindert das Klick-Event des dahinterliegenden Listenelements
 		$(this).parent().remove();
 		$("#neuegruppe").click(function(){
-			hinzuguegenGruppe();
+			hinzufuegenGruppe();
 		});
 		var gruppenname = $(this).parent().children("input").val();
 		$.ajax({//Frage an den Server, ob Name/Email existiert bzw. mehrere Treffer

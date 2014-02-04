@@ -3,9 +3,9 @@ include_once "../utilities.php";
 include_once "Menu.php";
 
 function generateHTMLGruppen($db){
-	$semail = $_SESSION["semail"];
+	$seid = $_SESSION["seid"];
 	$gruppenHTML="";
-	$sql="SELECT ID,Name FROM Gruppe WHERE ModeratorEmail='$semail'";
+	$sql="SELECT ID,Name FROM Gruppe WHERE ModeratorID='$seid'";
 	$db->query($sql)->fold(
 		function ($ergebnis) use (&$gruppenHTML){
 			while($gruppe = $ergebnis->fetch_array(MYSQLI_ASSOC)){
@@ -20,14 +20,15 @@ function generateHTMLGruppen($db){
 	return $gruppenHTML;
 }
 function generateHTMLMitglieder($db,$GruppenID){
-	$semail = $_SESSION["semail"];
+	$seid = $_SESSION["seid"];
 	$mitgliederHTML="";
-	$sql="SELECT Gruppenmitglieder.NutzerEmail FROM Gruppe,Gruppenmitglieder WHERE Gruppe.ModeratorEmail='$semail' AND Gruppe.ID='$GruppenID' AND Gruppe.ID = Gruppenmitglieder.GruppenID";
+	$sql="SELECT Gruppenmitglieder.NutzerID FROM Gruppe,Gruppenmitglieder WHERE Gruppe.ModeratorID='$seid' AND Gruppe.ID='$GruppenID' AND Gruppe.ID = Gruppenmitglieder.GruppenID";
 	$db->query($sql)->fold(
 		function ($ergebnis) use(&$mitgliederHTML,$db){
 			while($mitglied = $ergebnis->fetch_array(MYSQLI_ASSOC)){
-				$email = $mitglied["NutzerEmail"];
-				$sql="SELECT Nutzername FROM Benutzer WHERE Email='$email'";
+				$nutzerID = $mitglied["NutzerID"];
+				$email = NutzerIDZuEmail($nutzerID,null);
+				$sql="SELECT Nutzername FROM Benutzer WHERE ID='$nutzerID'";
 				$nutzername = "";
 				$db->query($sql)->fold(
 					function ($ergebnis) use(&$nutzername){
@@ -38,7 +39,7 @@ function generateHTMLMitglieder($db,$GruppenID){
 					function($fehlerNachricht){
 					}
 				);
-				$mitgliederHTML .= "<div class='listenelement' data-email='$email'><span class='listenlabel'>$nutzername - $email</span></div>";
+				$mitgliederHTML .= "<div class='listenelement' data-nutzerid='$nutzerID'><span class='listenlabel'>$nutzername - $email</span></div>";
 			}
 		},
 		function($fehlerNachricht){
@@ -97,6 +98,7 @@ class CSRFSchutz{
 }
 
 function NutzerIDZuEmail($nutzerID,$nrt){
+	if(!isset($nrt)) $nrt = new Nachrichten("","");//Nachrichten-dummy, falls intern ohne Fehlerbehandlung benutzt
 	$db = oeffneBenutzerDB($nrt);
 	$sql="SELECT Email FROM Benutzer  WHERE ID='$nutzerID'";
 	$email;
@@ -104,16 +106,15 @@ function NutzerIDZuEmail($nutzerID,$nrt){
 		function ($ergebnis) use (&$email){
 			$email = $ergebnis->fetch_array()[0];
 		},
-		function($fehlerNachricht) use (&$nrtGruppe) {
-			$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-			echo json_encode(array("nrt"=>$nrt->toJsCode()));
-			die();
+		function($fehlerNachricht) use (&$nrt) {
+			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
 		}
 	);
 	return $email;
 }
 
-function EmailZuNutzerID($email,$nrt){
+function EmailZuNutzerID($email){//Nachrichten-dummy, falls intern ohne Fehlerbehandlung benutzt
+	if(!isset($nrt)) $nrt = new Nachrichten("","");//Nachrichten-dummy, falls intern ohne Fehlerbehandlung benutzt
 	$db = oeffneBenutzerDB($nrt);
 	$sql="SELECT ID FROM Benutzer WHERE Email='$email'";
 	$id;
@@ -121,10 +122,8 @@ function EmailZuNutzerID($email,$nrt){
 		function ($ergebnis) use (&$id){
 			$id = $ergebnis->fetch_array()[0];
 		},
-		function($fehlerNachricht) use (&$nrtGruppe) {
-			$nrtGruppe->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-			echo json_encode(array("nrt"=>$nrt->toJsCode()));
-			die();
+		function($fehlerNachricht) use (&$nrt) {
+			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
 		}
 	);
 	return $id;
