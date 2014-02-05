@@ -1,7 +1,7 @@
 <?php
 
 function generateBanner() {
-	return "<i><h1 id='banner'>Secureshare</h1></i>";
+	return "<i><h1 id='banner'>Mangoshare</h1></i>";
 }
 
 function generateHeader($content) {
