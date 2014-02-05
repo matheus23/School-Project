@@ -15,18 +15,4 @@ function generateHeaderBanner() {
 function generateHeaderBannerLogout() {
 	return generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden</a>");
 }
-
-function generateFrontendContentStart($menu) {
-	return 
-		"<table id='frontendContentTable'>".
-			"<tr>".
-				"<td><div id='menu'>".$menu->toHTML()."</div></td>".
-				"<td><div id='panel'>";
-}
-
-function generateFrontendContentEnd() {
-	return "</div></td>".
-			"</tr>".
-		"</table>";
-}
 ?>
