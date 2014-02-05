@@ -130,12 +130,12 @@ function EmailZuNutzerID($email){//Nachrichten-dummy, falls intern ohne Fehlerbe
 }
 
 $frontendMenu = array(
-  new Menupunkt("dashboard","Dashboard","dashboard.php"),
-  new Menupunkt("download","Download","download.php"),
-  new Menupunkt("upload","Upload","upload.php"),
-  new Menupunkt("gruppen","Gruppen","gruppen.php"),
-  new Menupunkt("konto","Benutzerkonto","benutzerkonto.php"),
-  new Menupunkt("schluesselverwaltung","Schlüsselverwaltung","schluesselverwaltung.php")
+  new Menupunkt("dashboard","Dashboard","dashboard.php", "img/house.png"),
+  new Menupunkt("download","Download","download.php", "img/application_put.png"),
+  new Menupunkt("upload","Upload","upload.php", "img/application_get.png"),
+  new Menupunkt("gruppen","Gruppen","gruppen.php", "img/group.png"),
+  new Menupunkt("konto","Benutzerkonto","benutzerkonto.php", "img/user.png"),
+  new Menupunkt("schluesselverwaltung","Schlüsselverwaltung","schluesselverwaltung.php", "img/key.png")
 );
 
 function istAngemeldet() {

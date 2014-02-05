@@ -11,7 +11,7 @@ leiteUmWennNichtAngemeldet();
 
 $nrt = new Nachrichten("#fehlerListeGruppe","../../");
 $db = oeffneBenutzerDB($nrt);
-$menu = new Menu($frontendMenu, "gruppen");
+$menu = new Menu($frontendMenu, "gruppen", "../../");
 ?>
 <html>
 <head>

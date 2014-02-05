@@ -3,10 +3,12 @@ class Menupunkt{
 	public $titel;
 	public $seite;
 	public $id;
-	public function __construct($id,$titel, $seite) {
+	public $icon;
+	public function __construct($id,$titel, $seite, $icon="none") {
 		$this->titel = $titel;
 		$this->seite = $seite;
 		$this->id = $id;
+		$this->icon = $icon;
 	}
 }
 //Zum Bauen des Seitenmenüs
@@ -20,9 +22,11 @@ class Menupunkt{
 class Menu {
 	public $menupunkte;
 	public $aktiverMenupunkt;
-	public function __construct($menupunkte=array(), $aktiverMenupunkt) {
+	public $pathZuStammordner;
+	public function __construct($menupunkte=array(), $aktiverMenupunkt, $pathZuStammordner) {
 		$this->menupunkte = $menupunkte;
 		$this->aktiverMenupunkt = $aktiverMenupunkt;
+		$this->pathZuStammordner = $pathZuStammordner;
 	}
 	public function add($menupunkt) {
 		array_push($this->menupunkte,$menupunkt);
@@ -32,7 +36,16 @@ class Menu {
 		foreach($this->menupunkte as $menupunkt){
 			$class = "menupunkt";
 			$class .=  ($menupunkt->id == $this->aktiverMenupunkt) ? " aktiv" : "";
-			$html.="<div class='$class' id='$menupunkt->id'><span>$menupunkt->titel</span><a href='$menupunkt->seite'></a></div>\n";
+			$path = $this->pathZuStammordner . $menupunkt->icon;
+			$html.=
+				"<div class='$class' id='$menupunkt->id'>".
+					"<a href='$menupunkt->seite'>".
+						"<span>".
+							($menupunkt->icon == "none" ? "" : "<img class='menuIcon' src='$path' />").
+							$menupunkt->titel.
+						"</span>".
+					"</a>".
+				"</div>\n";
 		}
 		return $html;
 	}
