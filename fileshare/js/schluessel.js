@@ -177,12 +177,7 @@ function schickeSignaturschluessel(publicPem,versionID){
 		success: function(antwort){
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
-			$("#fehlerListe").show();
-			eval(antwortObjekt.nrt);
-			$("#fehlerListe").delay(5000).hide(500).queue(function(){
-				$(this).html("");
-				$(this).dequeue();
-			});
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 		}
 	});
 	updateSignaturschluessel();
