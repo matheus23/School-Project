@@ -25,6 +25,7 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 	<meta charset="UTF-8" />
 	<link href="../css/style.css" rel="stylesheet" type="text/css" />
 	<script src="../js/jsUtilities.js" type="text/javascript"></script>
+	<script src="../js/jquery-1.10.2.min.js"></script>
 	<title>Anmeldung LGÖ - Datenbank</title>
 </head>
 <body>
