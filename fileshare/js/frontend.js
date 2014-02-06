@@ -25,6 +25,6 @@ window.addEventListener("load",function(){
 });
 
 function groesseAnpassen(){
-	contentWrapper.style.height=window.innerHeight-header.offsetHeight-15+"px";
-	panel.style.width=window.innerWidth-menu.offsetWidth-25+"px";
+	contentWrapper.style.height=window.innerHeight-header.offsetHeight+"px";
+	panel.style.width=window.innerWidth-menu.offsetWidth+"px";
 }

@@ -1,0 +1,116 @@
+body {
+    font-family: Sans-Serif;
+	padding: 0;
+	margin: 0;
+	background-color: #eeeeec;
+	top: 0;
+}
+
+a {
+	color: #204a87;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#captcha {
+	border: 1px solid #d3d7cf;
+}
+
+#header {
+	margin: 0;
+    background-color: #dbdbdb;
+    border-bottom: 1px solid #aaa;
+    /* Generated with http://www.colorzilla.com/gradient-editor/ */
+    background: #f2f2f2; /* Old browsers */
+    background: -moz-linear-gradient(top, #f2f2f2 0%, #dbdbdb 89%, #cccccc 99%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f2f2), color-stop(89%,#dbdbdb), color-stop(99%,#cccccc)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f2f2f2 0%,#dbdbdb 89%,#cccccc 99%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f2f2f2 0%,#dbdbdb 89%,#cccccc 99%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f2f2f2 0%,#dbdbdb 89%,#cccccc 99%); /* IE10+ */
+    background: linear-gradient(to bottom, #f2f2f2 0%,#dbdbdb 89%,#cccccc 99%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f2f2', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+    /* End of generated gradient. */
+
+}
+
+#banner {
+    font-size: 3.5em;
+    padding-left: 2em;
+    margin-bottom: 1px;
+	margin-top: 0px; /* Buxfix für falsches anzeigen einer webpage -.- */
+    color: #aaa;
+    text-shadow: 0 -1px 1px #444, 0 1px 1px #fff;
+}
+
+.infobox {
+    font-family: monospace;
+    color: #d3d7cf;
+    font-weight: bold;
+    padding: 2px;
+    border-radius: 6px;
+	margin-bottom: 4px;
+}
+
+.fehler {
+    background-color: #ef2929;
+    border: 1px solid #cc0000;
+}
+
+.warnung {
+    background-color: #F90;
+    border: 1px solid #F60;
+	color: #555753;
+}
+
+.okay {
+	background-color: #8ae234;
+	border: 1px solid #4e9a06;
+	color: #555753;
+}
+
+.verticalMid {
+	vertical-align: middle;
+}
+
+.rightAlign {
+	text-align: right;
+}
+
+form {
+    padding: 10px;
+    background-color: #eeeeec;
+    border: 1px solid #d3d7cf;
+    border-radius: 10px;
+	box-shadow: 2px 2px 8px #888;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid gray;
+    box-shadow: 1px 1px 2px #babdb6;
+}
+
+input[type="submit"], input[type="button"], input[type="reset"] {
+    font-size: 1em;
+    color: #2e3436;
+    padding: 5px;
+    background-color: #d3d7cf;
+    border: 1px solid #babdb6;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #73d216;
+    border-color: #4e9a06;
+}
+.bottom_fix_right{
+	position: absolute;
+    bottom: 10px;
+	right: 10px;
+}
+.bottom_fix_left{
+	position: absolute;
+    bottom: 10px;
+	left: 10px;
+}

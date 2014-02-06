@@ -13,6 +13,6 @@ function generateHeaderBanner() {
 }
 
 function generateHeaderBannerLogout() {
-	return generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden</a>");
+	return generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden <img src='../../img/door_in.png' /></a>");
 }
 ?>

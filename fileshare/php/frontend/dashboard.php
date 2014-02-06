@@ -16,6 +16,8 @@ $menu = new Menu($frontendMenu, "dashboard", "../../");
 	<title>Dashboard</title>
 	<link type="text/css" rel="stylesheet" href="../../css/style.css">
 	<link type="text/css" rel="stylesheet" href="../../css/frontendStyle.css">
+	<link rel="SHORTCUT ICON" type="image/x-icon" href="../../../../favicon.ico"/>
+	<link rel="icon" type="image/x-icon" href="../../../../favicon.ico" />
 	<script src="../../js/frontend.js"></script>
 </head>
 <body>
