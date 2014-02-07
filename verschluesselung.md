@@ -2,8 +2,10 @@
 ##Verschlüsselung
 ###NEU
 * private Schlüssel werden AES-Verschlüsselt auf dem Server, statt verschlüsselt im localStorage gespeichert. Das ermöglicht den geräteübergreifenden Zugriff auf den Service.
+
 ###Der Dateischlüssel
 Der Dateischlüssel ist ein __RSA-Schlüsselpaar__, das heißt er besteht aus einem privaten und einem öffentlichen Schlüssel. Der öffentliche Schlüssel wird an den Server übergeben, sodass andere Nutzer Dateien mit ihm verschlüsseln können. Der private Schlüssel wird mit einem Passwort verschlüsselt (symmetrische Verschlüsselung, __AES-256__) und anschließend ebenfalls zum Server geschickt.
+
 ###Der Signaturschlüssel
 Der Signaturschlüssel ist ebenfalls ein __RSA-Schlüsselppar__, mit dem genauso verfahren wird, wie mit dem Dateischlüssel. Der Signaturschlüssel ist dazu da, die Prüfsumme der Datei zu signieren, sodass beim Empfänger mit dem öffentlichen Schlüssel verifiziert werden kann, ob es sich tatsächlich um den vermeintlichen Sender handelt. Der öffentliche Teil wird zum Server geschickt der private Schlüssel wird wieder mit einem Passwort verschlüsselt (symmetrische Verschlüsselung, __AES-256__) und anschließend ebenfalls zum Server geschickt.
 
