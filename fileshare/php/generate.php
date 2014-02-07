@@ -1,7 +1,7 @@
 <?php
 
 function generateBanner() {
-	return "<i><h1 id='banner'>Mangoshare</h1></i>";
+	return "<i><h1 id='banner'><span id='bannerLeft'>Mango</span><span id='bannerRight'>share</span></h1></i>";
 }
 
 function generateHeader($content) {
@@ -13,6 +13,6 @@ function generateHeaderBanner() {
 }
 
 function generateHeaderBannerLogout() {
-	return generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden</a>");
+	return generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden <img src='../../img/door_in.png' /></a>");
 }
 ?>

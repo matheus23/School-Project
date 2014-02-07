@@ -8,7 +8,7 @@ include_once "Menu.php";
 
 session_start();
 leiteUmWennNichtAngemeldet();
-$menu = new Menu($frontendMenu, "schluesselverwaltung");
+$menu = new Menu($frontendMenu, "schluesselverwaltung", "../../");
 ?>
 <html>
 <head>

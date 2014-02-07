@@ -8,7 +8,7 @@ include_once "Menu.php";
 
 session_start();
 leiteUmWennNichtAngemeldet();
-$menu = new Menu($frontendMenu, "upload");
+$menu = new Menu($frontendMenu, "upload", "../../");
 ?>
 <html>
 <head>
