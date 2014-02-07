@@ -57,6 +57,7 @@ $menu = new Menu($frontendMenu, "upload");
 	});
 </script>
 <?=(new CSRFSchutz())->neu()->genJS()?>
+<?=aktuelleNutzerIDJavaScript()?>
 <script src="../../js/upload.js"></script>
 </body>
 </html>

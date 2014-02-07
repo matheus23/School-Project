@@ -42,6 +42,7 @@ $menu = new Menu($frontendMenu, "download");
         </div>
 	</div>
 <?=(new CSRFSchutz())->neu()->genJS()?>
+<?=aktuelleNutzerIDJavaScript()?>
 <script src="../../js/download.js"></script>
 </body>
 </html>

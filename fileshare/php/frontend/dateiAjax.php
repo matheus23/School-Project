@@ -34,9 +34,6 @@ if (alleSchluesselGesetzt($data, "aktion")) {
 		case "frageNachURL":
 			frageNachURL();
 			break;
-		case "holeSignaturschluessel":
-			holeSignaturschluessel();
-			break;
 	}
 }
 
@@ -48,8 +45,8 @@ function benutzerInformation(){
 		$info;
 		$sql =
 			"SELECT Benutzer.ID,Dateischluessel.Schluessel,Dateischluessel.VersionID ".
-			"FROM Benutzer,Dateischluessel ".
-			"WHERE Benutzer.Email='$email' AND Benutzer.ID=Dateischluessel.NutzerID";
+			"FROM Benutzer,Dateischluessel,aktuellerDateischluessel ".
+			"WHERE Benutzer.Email='$email' AND Benutzer.ID=Dateischluessel.NutzerID AND Dateischluessel.NutzerID=aktuellerDateischluessel.NutzerID AND Dateischluessel.VersionID=aktuellerDateischluessel.VersionID";
 		$db->query($sql)->fold(
 			function ($ergebnis) use (&$info){
 				$info = $ergebnis->fetch_array(MYSQLI_ASSOC);
@@ -146,34 +143,6 @@ function frageNachURL(){
 			}
 		);
 		echo json_encode(array("url"=>$url,"nrt"=>$nrt->toJsonUnencoded()));
-	}
-}
-function holeSignaturschluessel(){
-	global $data, $nrt;
-	if (alleSchluesselGesetzt($data, "nutzerID")) {
-		$db = oeffneBenutzerDB($nrt);
-		$nutzerID = $db->real_escape_string($data["nutzerID"]);
-		$schluessel;
-		$sql =
-			"SELECT Schluessel ".
-			"FROM Signaturschluessel ".
-			"WHERE NutzerID='$nutzerID'";
-		$db->query($sql)->fold(
-			function ($ergebnis) use (&$schluessel){
-				$schluessel = $ergebnis->fetch_array(MYSQLI_ASSOC);
-				if(!$schluessel){
-					$nrt->fehler("Keinen Signaturschlüssel gefunden");
-					echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
-					die();
-				}
-			},
-			function($fehlerNachricht) use (&$nrt) {
-				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-				echo json_encode(array("nrt"=>$nrt->toJsonUnencoded()));
-				die();
-			}
-		);
-		echo json_encode(array("schluessel"=>$schluessel,"nrt"=>$nrt->toJsonUnencoded()));
 	}
 }
 ?>

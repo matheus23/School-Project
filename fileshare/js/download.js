@@ -1,6 +1,6 @@
 $("#editor > .fenster").hide(0);
 var dateiliste;
-var dateischluessel = JSON.parse(localStorage.dateischluessel || "[]");
+var dateischluessel;
 var schluesselVorhanden = false;
 var aktuellerSchluessel;
 var ausgewaehltID;
@@ -9,7 +9,27 @@ var dateischluesselUnverschluesselt;
 
 var pfadZuOrdnerFileshare = "../../";
 
+updateDateiSchluessel();
 updateDateiListe();
+
+function updateDateiSchluessel(){
+	$.ajax({
+		type: "POST",
+		url: "schluesselAjax.php",
+		data: {aktion:"schickeDateischluesselListe",CSRFToken:CSRFToken},
+		async:false,
+		success: function(antwort){
+			
+			console.log(antwort);
+			var antwortObjekt = JSON.parse(antwort);
+			console.log(antwort);
+			
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
+			dateischluessel = antwortObjekt.schluesselArray;
+		}
+	});	
+}
+
 $("#dateiListe > .listenelement").click(function(){
 	$("#editor > .label").text("Download: "+$(this).text());
 	$("#editor").show(0);
@@ -21,10 +41,10 @@ $("#dateiListe > .listenelement").click(function(){
 	schluesselVorhanden = false;
 	$("#schluessel").text("Du hast keinen Schluessel für diese Datei").css("color","red");
 	$.each(dateischluessel,function(index,schluessel){
-		if (ausgewaehlt.SchluesselID==schluessel.versionID){
+		if (ausgewaehlt.SchluesselID==schluessel.VersionID){
 			schluesselVorhanden = true;
 			aktuellerSchluessel = schluessel;
-			$("#schluessel").text(schluessel.versionID).css("color","green");
+			$("#schluessel").text(schluessel.VersionID).css("color","green");
 		}
 	});
 });
@@ -133,6 +153,24 @@ function holeUndEntschluesseleDatei(dateiURL,passwort){
 }
 
 function bereiteDateischluesselVor(passwort){
+	$.ajax({
+		type: "POST",
+		url: "schluesselAjax.php",
+		data: {aktion:"holePrivaterDateischluessel",versionID:aktuellerSchluessel.VersionID,CSRFToken:CSRFToken},
+		async:false,
+		success: function(antwort){
+			
+			console.log(antwort);
+			var antwortObjekt = JSON.parse(antwort);
+			console.log(antwort);
+			
+			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
+			aktuellerSchluessel.privatePemVerschluesselt = atob(antwortObjekt.schluesselContainer.privaterSchluessel.slice(0,2284));
+			aktuellerSchluessel.salt = atob(antwortObjekt.schluesselContainer.privaterSchluessel.slice(2284,2628));
+			aktuellerSchluessel.AESKeyIv = atob(antwortObjekt.schluesselContainer.privaterSchluessel.slice(2628,2652));
+		}
+	});
+	
 	try{
 		var salt = aktuellerSchluessel.salt;
 		var AESKey = forge.pkcs5.pbkdf2(passwort,salt, 8, 32);
@@ -157,7 +195,7 @@ function holeVerifizierungsSchluessel(){
 	var schluessel=false;
 	$.ajax({
 		type: "POST",
-		url: "dateiAjax.php",
+		url: "schluesselAjax.php",
 		async:false,
 		data: {aktion:"holeSignaturschluessel",nutzerID:ausgewaehlt.nutzerID,CSRFToken:CSRFToken},
 		success: function(antwort){

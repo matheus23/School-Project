@@ -1,30 +1,37 @@
 var signaturschluesselVorhanden = false;
-var signaturschluessel;
+var signaturschluessel={};
 var signaturschluesselUnverschluesselt;
 
 var pfadZuOrdnerFileshare = "../../";
 
 updateSignaturschluessel();
 function updateSignaturschluessel(){//Fast gleich wie Funktion in schluessel.js... Funktionen müssen vereinfacht werden/zusammengelegt werden
-	signaturschluessel = JSON.parse(localStorage.signaturschluessel || "{}");
 	$.ajax({
 		type: "POST",
 		url: "schluesselAjax.php",
-		data: {aktion:"aktuellerSignaturschluessel",CSRFToken:CSRFToken},
+		data: {aktion:"aktuellerSignaturschluesselContainer",CSRFToken:CSRFToken},
+		async:false,
 		success: function(antwort){
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
 			console.log(antwort);
 			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
-			$("#aktuellerSignaturschluessel").text("Kein Signaturschlüssel gefunden, bitte in der Schlüsselverwaltung generieren!").css("color","red");
-			if (signaturschluessel.versionID === antwortObjekt.versionID){
-				$("#aktuellerSignaturschluessel").text(signaturschluessel.versionID).css("color","green");
+			if(antwortObjekt.schluesselContainer===null){
+				$("#aktuellerSignaturschluessel").text("Kein Signaturschlüssel gefunden, bitte in der Schlüsselverwaltung generieren!").css("color","red");
+			}
+			else{
+				signaturschluessel.privatePemVerschluesselt = atob(antwortObjekt.schluesselContainer.privaterSchluessel.slice(0,2284));
+				signaturschluessel.salt = atob(antwortObjekt.schluesselContainer.privaterSchluessel.slice(2284,2628));
+				signaturschluessel.AESKeyIv = atob(antwortObjekt.schluesselContainer.privaterSchluessel.slice(2628,2652));
+				signaturschluessel.VersionID = antwortObjekt.schluesselContainer.VersionID
+				$("#aktuellerSignaturschluessel").text(signaturschluessel.VersionID).css("color","green");
 				signaturschluesselVorhanden=true;
 			}
 		}
 	});
 }
 $("#hochladen").click(function(){
+	updateSignaturschluessel();
 	var passwort = $("#signaturschluesselPasswort").val();
 	var email = $("#emailEmpfaenger").val();
 	

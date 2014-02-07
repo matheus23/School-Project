@@ -62,6 +62,7 @@ $menu = new Menu($frontendMenu, "schluesselverwaltung");
 		Du wirst weitergeleitet und musst deine Daten betsätigen.-->
 	</div>
 <?=(new CSRFSchutz())->neu()->genJS()?>
+<?=aktuelleNutzerIDJavaScript()?>
 <script src="../../js/schluessel.js"></script>
 </body>
 </html>

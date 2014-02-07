@@ -48,6 +48,11 @@ function generateHTMLMitglieder($db,$GruppenID){
 	return $mitgliederHTML;
 }
 
+function aktuelleNutzerIDJavaScript(){
+	$seid = $_SESSION["seid"];
+	return "<script>var seid='$seid';</script>";
+}
+
 //Token gegen das ungewollte abschicken von formulardaten durch fremde Seiten
 //Benötigt eine offene Session
 class CSRFSchutz{
