@@ -68,13 +68,20 @@ body,html{
 #panel h1{
 	text-align: center;
 }
-#abmelden{
+#abmelden {
 	color: #AAA294;
 	position: absolute;
-	right:10px;
-	top:10px;
+	right:4px;
+	top:0px;
 }
-#abmelden:hover {
+#abmelden span{
+	font-size: 0.7em;
+}
+#abmeldenLink {
+	color: #AAA294;
+	float: right;
+}
+#abmeldenLink:hover {
 	color: #ccc7be;
 }
 /* gruppen.php START */

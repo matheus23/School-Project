@@ -15,8 +15,12 @@ $("#dateischluesselButton").click(function(){
 });
 $("#dateischluesselGenerieren").click(function(){
 	var passwort = $("#dateischluesselPasswort").val();
+	var passwortWdh = $("#dateischluesselPasswortWdh").val();
 	if (passwort.length==0){
 		fehlerNachricht("#fehlerListe", "warnung", "Du musst ein Passwort angeben", pfadZuOrdnerFileshare);
+		return;
+	} else if (passwort !== passwortWdh) {
+		fehlerNachricht("#fehlerListe", "fehler", "Die Passwörter stimmen nicht überein.", pfadZuOrdnerFileshare);
 		return;
 	}
 	generiereSchluessel(passwort);
@@ -157,8 +161,12 @@ $("#signaturschluesselButton").click(function(){
 });
 $("#signaturschluesselGenerieren").click(function(){
 	var passwort = $("#signaturschluesselPasswort").val();
+	var passwortWdh = $("#signaturschluesselPasswortWdh").val();
 	if (passwort.length==0){
 		fehlerNachricht("#fehlerListe", "warnung", "Du musst ein Passwort angeben", pfadZuOrdnerFileshare);
+		return;
+	} else if (passwort !== passwortWdh) {
+		fehlerNachricht("#fehlerListe", "fehler", "Die Passwörter stimmen nicht überein.", pfadZuOrdnerFileshare);
 		return;
 	}
 	generiereSignaturschluessel(passwort);

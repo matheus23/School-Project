@@ -13,6 +13,14 @@ function generateHeaderBanner() {
 }
 
 function generateHeaderBannerLogout() {
-	return generateHeader(generateBanner()."<a href='../abmelden.php' id='abmelden'>abmelden <img src='../../img/door_in.png' /></a>");
+	return generateHeader(generateBanner().generateLogout());
+}
+
+function generateLogout() {
+	return 
+		"<div id='abmelden'>".
+			(isset($_SESSION["semail"]) ? "<span>Angemeldet als: ".$_SESSION["semail"]."</span>" : "").
+			"<br/><a href='../abmelden.php' id='abmeldenLink'>abmelden <img src='../../img/door_in.png' /></a>".
+		"</div>";
 }
 ?>

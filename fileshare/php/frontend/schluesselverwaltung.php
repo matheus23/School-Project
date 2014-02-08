@@ -40,20 +40,24 @@ $menu = new Menu($frontendMenu, "schluesselverwaltung", "../../");
 			<div id="dateischluessel" class="fenster">
             	<p>Dateischlüssel bestehen aus zwei "Hälften". Eine Schlüsselhälfte wird zum Server geschickt. Erstelle einen neuen Schlüssel nur gelegentlich. Du kannst immer nur einen aktiven Schlüssel haben. Die anderen Schlüssel bleiben erhalten bis du sie manuell löschst.</p>
                 <p>Bei jedem Entschlüsseln musst du das Passwort des Dateischlüssels angeben.</p>
-                Passwort:
-                <input type="password" id="dateischluesselPasswort"/>
-                <input type="button" value="Schlüssel generieren" id="dateischluesselGenerieren"/>
-                <p>aktueller Schlüssel: <span id="aktuellerDateischluessel"></span></p>
-                <p>alte Schlüssel - Du erhälst keine weiteren Dateien, die mit diesen Schlüsseln entschlüsselt werden können. Noch vorhandene, kannst du allerdings weiterhin entschlüsseln:</p>
+                <table>
+                	<tr><td class="rightAlign">Passwort:</td><td><input type="password" id="dateischluesselPasswort"/></td></tr>
+	                <tr><td class="rightAlign">Wiederholung:</td><td><input type="password" id="dateischluesselPasswortWdh"/></td></tr>
+	                <tr><td></td><td><input type="button" value="Schlüssel generieren" id="dateischluesselGenerieren"/></td></tr>
+                </table>
+                <p>Aktueller Schlüssel: <span id="aktuellerDateischluessel"></span></p>
+                <p>Alte Schlüssel - Du erhälst keine weiteren Dateien, die mit diesen Schlüsseln entschlüsselt werden können. Noch vorhandene, kannst du allerdings weiterhin entschlüsseln:</p>
             	<div class="liste nofloat" id="dateischluesselListe"></div>
             </div>
             <div id="signaturschluessel" class="fenster">
             	<p>Signaturschlüssel verifizieren dich als den Absender einer Datei. Folglich werden sie beim Senden benötigt.</p>
                 <p>Bei jedem Verschlüsseln musst du das Passwort des Dateischlüssels angeben.</p>
-                Passwort:
-                <input type="password" id="signaturschluesselPasswort"/>
-                <input type="button" value="Schlüssel generieren" id="signaturschluesselGenerieren"/>
-                <p>aktueller Schlüssel: <span id="aktuellerSignaturschluessel"></span></p>
+                <table>
+	                <tr><td class="rightAlign">Passwort:</td><td><input type="password" id="signaturschluesselPasswort"/></td></tr>
+	                <tr><td class="rightAlign">Wiederholung:</td><td><input type="password" id="signaturschluesselPasswortWdh"/></td></tr>
+	                <tr><td></td><td><input type="button" value="Schlüssel generieren" id="signaturschluesselGenerieren"/></td></tr>
+                </table>
+                <p>Aktueller Schlüssel: <span id="aktuellerSignaturschluessel"></span></p>
                 <p>Achtung: Du kannst immer nur einen Signaturschlüssel benutzen, wenn du diesen neu generierst, kann deine Identität bei bereits Verschlüsselten Dateien nicht mehr verifiziert werden.</p>
             </div>
 		</div>
