@@ -147,8 +147,8 @@ body,html{
 .liste .listenlabel{
 	position: relative;
 	margin-right: 20px;
-	text-overflow: ellipsis;
-	white-space:nowrap;
+	/*text-overflow: ellipsis;*/
+	/*white-space:nowrap;*/
 	overflow: hidden;
 }
 #editor{

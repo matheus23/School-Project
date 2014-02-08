@@ -148,7 +148,7 @@ function updateDateischluesselListe() {
 				else{
 					var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
 					var label = $("<span>").addClass("listenlabel").text(schluessel.VersionID);
-					var muell = $("<div>").addClass("loeschen").addClass("rightfloat");
+					var muell = $("<span>").addClass("loeschen").addClass("rightfloat");
 					muell.click(function(event){
 						loescheDateischluessel($(this).parent().text());
 					});

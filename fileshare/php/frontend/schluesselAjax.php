@@ -1,9 +1,9 @@
 <?php
 //Diese Datei braucht kein HTML, wird nur für AJAX-Anfrage benutzt
 session_start();
-include "../utilities.php";
-include_once "frontendUtilities.php";
+include_once "../utilities.php";
 debugModus();
+include_once "frontendUtilities.php";
 $data = $_POST;
 $nrt = new Nachrichten("#fehlerListe","../../");
 if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){

@@ -41,7 +41,8 @@ $menu = new Menu($frontendMenu, "gruppen", "../../");
 				<div class="bottommargin">Gruppenname:<input type='text' id="gruppenname" name="gruppenname"/></div>
 				<div class="liste" id="mitgliederliste">
 					<div class="label">Mitglieder:</div>
-					<div>Neues Mitglied (Benutzername oder Email):<input type='text' id="nameemail"/><div id="neuesmitglied" class="hinzufuegen"></div></div>
+					<p> Neues Mitglied (Benutzername oder Email): <input type='text' id="nameemail"/> <span id="neuesmitglied" class="hinzufuegen"></span>
+					</p>
 					<div id="fehlerListe"></div>
 					<div id="hinzufuegenAuswahl">
 						<p>Welchen Nutzer meinst du?</p>
