@@ -5,36 +5,67 @@ updateSignaturschluessel();
 
 var pfadZuOrdnerFileshare = "../../";
 
-//Dateischlüssel
-$("#editor > .fenster").hide(0);
-$("#dateischluesselButton").click(function(){
-	$("#editor > .label").text($(this).text());
-	$("#editor > .fenster").hide(0);
-	$("#editor").show(0);
-	$("#dateischluessel").show(0);
-});
-$("#dateischluesselGenerieren").click(function(){
-	var passwort = $("#dateischluesselPasswort").val();
-	var passwortWdh = $("#dateischluesselPasswortWdh").val();
-	if (passwort.length==0){
-		fehlerNachricht("#fehlerListe", "warnung", "Du musst ein Passwort angeben", pfadZuOrdnerFileshare);
-		return;
-	} else if (passwort !== passwortWdh) {
-		fehlerNachricht("#fehlerListe", "fehler", "Die Passwörter stimmen nicht überein.", pfadZuOrdnerFileshare);
-		return;
+var dateischluessel = {
+	name: "Dateischluessel",
+	
+	fensterQuery: "#dateischluessel",
+	fensterButtonQuery: "#dateischluesselButton",
+	buttonGenerierenQuery: "#dateischluesselGenerieren",
+	passwortInputQuery: "#dateischluesselPasswort",
+	passwortWdhInputQuery: "#dateischluesselPasswortWdh",
+	schluesselListeQuery: "#dateischluesselListe",
+	aktuellerSchluesselQuery: "#aktuellerDateischluessel",
+	
+	neuAktionAjax: "neuerDateischluessel",
+	
+	callIf: function(ifDateischluessel, ifSignaturschluessel) {
+		return ifDateischluessel();
 	}
-	generiereSchluessel(passwort);
-});
-
-function fehlerBehandlung(antwort){
-	if (antwort==="interner Fehler"){
-		alert("Etwas stimmt mit deiner Authentifizierung nicht, bitte melde dich erneut an.");
-		window.location.href = "../Anmeldung.php";
-	}
-	return false;
 }
 
-function generiereSchluessel(passwort){
+var signaturschluessel = {
+	name: "Signaturschluessel",
+	
+	fensterQuery: "#signaturschluessel",
+	fensterButtonQuery: "#signaturschluesselButton",
+	buttonGenerierenQuery: "#signaturschluesselGenerieren",
+	passwortInputQuery: "#signaturschluesselPasswort",
+	passwortWdhInputQuery: "#signaturschluesselPasswortWdh",
+	schluesselListeQuery: "#signaturschluesselListe",
+	aktuellerSchluesselQuery: "#aktuellerSignaturschluessel",
+	
+	neuAktionAjax: "neuerSignaturschluessel",
+	
+	callIf: function(ifDateischluessel, ifSignaturschluessel) {
+		return ifSignaturschluessel();
+	}
+}
+
+registriereCallbacks(dateischluessel);
+registriereCallbacks(signaturschluessel);
+
+function registriereCallbacks(schluesselArt) {
+	$(schluesselArt.fensterButtonQuery).click(function() {
+		$("#editor > .label").text($(this).text());
+		$("#editor > .fenster").hide(0);
+		$("#editor").show(0);
+		$(schluesselArt.fensterQuery).show(0);
+	});
+	$(schluesselArt.buttonGenerierenQuery).click(function(){
+		var passwort = $(schluesselArt.passwortInputQuery).val();
+		var passwortWdh = $(schluesselArt.passwortWdhInputQuery).val();
+		if (passwort.length==0){
+			fehlerNachricht("#fehlerListe", "warnung", "Du musst ein Passwort angeben.", pfadZuOrdnerFileshare);
+			return;
+		} else if (passwort !== passwortWdh) {
+			fehlerNachricht("#fehlerListe", "fehler", "Die Passwörter stimmen nicht überein.", pfadZuOrdnerFileshare);
+			return;
+		}
+		generiereSchluessel(schluesselArt, passwort);
+	});
+}
+
+function generiereSchluessel(schluesselArt, passwort){
 	//AES-Schluessel wird generiert
 	var salt = forge.random.getBytesSync(256);//Wird für die Schlüsselerzeugung benötigt und kann mit dem Verschlüsseltem gespeichert werden
 	var AESKey = forge.pkcs5.pbkdf2(passwort,salt, 8, 32);
@@ -64,40 +95,50 @@ function generiereSchluessel(passwort){
 			btoa(privatePemVerschluesselt)+	//2284-Zeichen lang
 			btoa(salt)+						//344-Zeichen lang
 			btoa(AESKeyIv);					//24-Zeichen lang
-		//dateischluessel.push({"versionID":versionID,"privatePemVerschluesselt":privatePemVerschluesselt64,"salt":salt,"AESKeyIv":AESKeyIv});
-		//localStorage.dateischluessel = JSON.stringify(dateischluessel);//speichert Schlüssel lokal
-		schickeSchluessel(publicPem,privaterSchluesselContainer,versionID);
+		
+		schickeSchluessel(schluesselArt, {
+			publicPem: publicPem, 
+			privaterSchluesselContainer: privaterSchluesselContainer, 
+			versionID: versionID
+		});
+		schluesselArt.callIf(
+			updateDateischluesselListe, 
+			updateSignaturschluessel);
 	});
 }
 
-function schickeSchluessel(publicPem,privaterSchluesselContainer,versionID){
+function schickeSchluessel(schluesselArt, schluessel){
 	$.ajax({
 		type: "POST",
 		url: "schluesselAjax.php",
-		async:false,
-		data: {aktion:"neuerDateischluessel",versionID:versionID,schluessel:publicPem,privaterSchluessel:privaterSchluesselContainer,CSRFToken:CSRFToken},
+		async: false,
+		data: {
+			aktion: schluesselArt.neuAktionAjax,
+			versionID: schluessel.versionID,
+			schluessel: schluessel.publicPem,
+			privaterSchluessel: schluessel.privaterSchluesselContainer,
+			CSRFToken: CSRFToken
+		},
 		success: function(antwort){
-			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
+			console.log("schickeSchluessel (" + schluesselArt.name + "):");
+			console.log(antwortObjekt);
 			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 		}
 	});
-	updateDateischluesselListe();
 }
 
-function updateDateischluesselListe(){
+function updateDateischluesselListe() {
 	$("#dateischluesselListe > .listenelement").remove();
-	//dateischluessel = JSON.parse(localStorage.dateischluessel || "[]");
 	$.ajax({
 		type: "POST",
 		url: "schluesselAjax.php",
 		data: {aktion:"schickeDateischluesselListe",CSRFToken:CSRFToken},
 		async:false,
 		success: function(antwort){
-			
-			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
-			console.log(antwort);
+			console.log("updateDateischluesselListe:");
+			console.log(antwortObjekt);
 			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			$("#aktuellerDateischluessel").text("Kein Schlüssel gefunden, bitte generieren!").css("color","red");
 			$.each(antwortObjekt.schluesselArray,function(index,schluessel){
@@ -115,22 +156,6 @@ function updateDateischluesselListe(){
 					$("#dateischluesselListe").append(listenelement);
 				}
 			});
-			/*$.each(dateischluessel,function(index,schluessel){
-				if (schluessel.versionID === antwortObjekt.versionID){
-					$("#aktuellerDateischluessel").text(schluessel.versionID).css("color","green");
-				}
-				else{
-					var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
-					var label = $("<span>").addClass("listenlabel").text(schluessel.versionID);
-					var muell = $("<div>").addClass("loeschen").addClass("rightfloat");
-					muell.click(function(event){
-						loescheDateischluessel($(this).parent().text());
-					});
-					listenelement.append(label).append(muell);
-					$("#dateischluesselListe").append(listenelement);
-				}
-				
-			});*/
 		}
 	});
 }
@@ -142,7 +167,7 @@ function loescheDateischluessel(versionID){
 		type: "POST",
 		url: "schluesselAjax.php",
 		async:false,
-		data: {aktion:"loescheDateischluessel",versionID:versionID,CSRFToken:CSRFToken},
+		data: {aktion: "loescheDateischluessel",versionID:versionID,CSRFToken:CSRFToken},
 		success: function(antwort){
 			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
@@ -152,91 +177,15 @@ function loescheDateischluessel(versionID){
 	updateDateischluesselListe();
 }
 
-//Signaturschlüssel
-$("#signaturschluesselButton").click(function(){
-	$("#editor > .label").text($(this).text());
-	$("#editor > .fenster").hide(0);
-	$("#editor").show(0);
-	$("#signaturschluessel").show(0);
-});
-$("#signaturschluesselGenerieren").click(function(){
-	var passwort = $("#signaturschluesselPasswort").val();
-	var passwortWdh = $("#signaturschluesselPasswortWdh").val();
-	if (passwort.length==0){
-		fehlerNachricht("#fehlerListe", "warnung", "Du musst ein Passwort angeben", pfadZuOrdnerFileshare);
-		return;
-	} else if (passwort !== passwortWdh) {
-		fehlerNachricht("#fehlerListe", "fehler", "Die Passwörter stimmen nicht überein.", pfadZuOrdnerFileshare);
-		return;
-	}
-	generiereSignaturschluessel(passwort);
-});
-
-function generiereSignaturschluessel(passwort){
-	//AES-Schluessel wird generiert
-	
-	var salt = forge.random.getBytesSync(256);//Wird für die Schlüsselerzeugung benötigt und kann mit dem Verschlüsseltem gespeichert werden
-	var AESKey = forge.pkcs5.pbkdf2(passwort,salt, 8, 32);
-	var AESKeyIv=forge.random.getBytesSync(16);//Wird für Verschlüsselung benötigt und kann mit dem Verschlüsseltem gespeichert werden
-	//String, der eindeutig pro Nutzer sein soll
-	var versionID = (""+new Date().valueOf()+Math.random()).replace("0.","");
-	
-	//Folgendes läuft ab wie oben, nur dass der private Schlüssel verschickt wird und der öffentliche verschlüsselt lokal bleibt.
-	var rsa = forge.pki.rsa;
-	var RSAPrivateKey;
-	var privatePem;
-	var privatePemVerschluesselt;
-	var privatePemVerschluesselt64;
-	var RSAPublicKey;
-	var publicPem;
-	var publicPemVerschluesselt;
-	
-	//RSA-Schlüsselpaar wird generiert
-	rsa.generateKeyPair({bits: 2048, workers: 2, workerScript:"../../js/forge/prime.worker.js"}, function(err, keypair) {
-		RSAPrivateKey = keypair.privateKey;
-		RSAPublicKey = keypair.publicKey;
-		publicPem = forge.pki.publicKeyToPem(RSAPublicKey);
-		privatePem = forge.pki.privateKeyToPem(RSAPrivateKey);
-		verschluesseler = forge.aes.createEncryptionCipher(AESKey, 'CBC');
-		verschluesseler.start(AESKeyIv);
-		verschluesseler.update(forge.util.createBuffer(privatePem));//Verschlüsselt den öffentlichen RSA-Schlüssel
-		verschluesseler.finish();
-		privatePemVerschluesselt = verschluesseler.output.data;
-		privaterSchluesselContainer =
-			btoa(privatePemVerschluesselt)+	//2284-Zeichen lang
-			btoa(salt)+						//344-Zeichen lang
-			btoa(AESKeyIv);					//24-Zeichen lang
-		//signaturschluessel = {"versionID":versionID,"privatePemVerschluesselt":privatePemVerschluesselt,"salt":salt,"AESKeyIv":AESKeyIv};
-		//localStorage.signaturschluessel = JSON.stringify(signaturschluessel);//speichert Schlüssel lokal
-		schickeSignaturschluessel(publicPem,privaterSchluesselContainer,versionID);
-	});
-}
-
-function schickeSignaturschluessel(publicPem,privaterSchluesselContainer,versionID){
-	$.ajax({
-		type: "POST",
-		url: "schluesselAjax.php",
-		async:false,
-		data: {aktion:"neuerSignaturschluessel",versionID:versionID,schluessel:publicPem,privaterSchluessel:privaterSchluesselContainer,CSRFToken:CSRFToken},
-		success: function(antwort){
-			console.log(antwort);
-			var antwortObjekt = JSON.parse(antwort);
-			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
-		}
-	});
-	updateSignaturschluessel();
-}
-
-function updateSignaturschluessel(){
-	//signaturschluessel = JSON.parse(localStorage.signaturschluessel || "{}");
+function updateSignaturschluessel() {
 	$.ajax({
 		type: "POST",
 		url: "schluesselAjax.php",
 		data: {aktion:"aktuellerSignaturschluessel",CSRFToken:CSRFToken},
 		success: function(antwort){
-			console.log(antwort);
 			var antwortObjekt = JSON.parse(antwort);
-			console.log(antwort);
+			console.log("updateSignaturschluessel:");
+			console.log(antwortObjekt);
 			fehlerNachrichten("#fehlerListe", antwortObjekt.nrt);
 			$("#aktuellerSignaturschluessel").text("Kein Schlüssel gefunden, bitte generieren!").css("color","red");
 			if (antwortObjekt.versionID){
@@ -245,22 +194,3 @@ function updateSignaturschluessel(){
 		}
 	});
 }
-/*
-function schluesselSpeicher(){
-	var schluesselContainer;
-	this.leseSchluessel = function(){
-		var schluesselContainer = JSON.parse(localStorage.schluesselContainer || "{}");
-		schluesselContainerBenutzer = $.grep(schluesselContainer,function(schluesselBenutzer,index){
-			if (schluesselContainer.nutzerid != seid) return false;
-			return true;
-		})[0];
-		dateischluessel = schluesselContainerBenutzer.dateischluessel;
-		signaturschluessel = schluesselContainerBenutzer.signaturschluessel;
-	};
-	this.schreibeSchlüssel = function(schluessel){
-		schluesselContainerAndereBenutzer = $.grep(schluesselContainer,function(schluesselBenutzer,index){
-			if (schluesselContainer.nutzerid == seid) return false;
-			return true;
-		})[0];
-	};
-}*/
