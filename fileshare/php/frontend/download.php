@@ -32,7 +32,9 @@ $menu = new Menu($frontendMenu, "download", "../../");
 		<h1>Download</h1>
         <div id="uiWrapper">
         	<div id="fehlerListe"></div>
-            <div class="liste" id="dateiListe"></div>
+            <div class="liste" id="dateiListe">
+            	<div class="label">Dateien:</div>
+            </div>
             <div id="editor">
 				<div class="label">Download</div>
                 <p>Schlüssel: <span id="schluessel"></span></p>
