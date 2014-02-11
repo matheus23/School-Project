@@ -1,6 +1,6 @@
 <?php
-require_once '../PHPMailer/PHPMailerAutoload.php';
-require_once '../../../EmailPasswort.php';
+require_once dirname(__FILE__) . '/../PHPMailer/PHPMailerAutoload.php';
+require_once dirname(__FILE__) . '/../../../EmailPasswort.php';
 
 #####################################################################
 #							WICHTIG:								#
