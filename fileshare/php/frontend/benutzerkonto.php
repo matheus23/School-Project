@@ -5,10 +5,34 @@ debugModus();
 include_once "../generate.php";
 include_once "frontendUtilities.php"; // Definiert auch $frontendMenu
 include_once "Menu.php";
+include_once "../websiteFunktionen/loeschung.php";
+include_once "../websiteFunktionen/emailaenderung.php";
+
 
 session_start();
 leiteUmWennNichtAngemeldet();
+$data = $_POST;
 $menu = new Menu($frontendMenu, "konto", "../../");
+$nrt = new Nachrichten("#fehlerListe", "../../");
+
+if (isset($data["accloeschen"])) {
+	if (alleSchluesselGesetzt($data, "mail", "pw", "check")) {
+		verarbeiteLoeschung($nrt, $data["mail"], $data["pw"]);
+		session_destroy();
+		umleitenZuAnmeldung();
+	}
+	else { echo "Geht Nicht Penner"; }
+}
+
+if (isset($data["emaila"])) {
+	if (alleSchluesselGesetzt($data, "mailae", "pwae", "nmailea")) {
+		verarbeiteEmailaenderung($nrt, $data["maila"], $data["pw"], $data["nmailea"]);
+		session_destroy();
+		umleitenZuAnmeldung(); 
+	}
+	else { echo "Geht Nicht Penner"; }
+}
+
 ?>
 <html>
 <head>
@@ -36,6 +60,7 @@ $menu = new Menu($frontendMenu, "konto", "../../");
 		</div>
 		<div id="editor">
 			<div class="label">Einstellungen</div>
+			<div id="fehlerListe"></div>
 			<form method="POST" action="" id="nameAendern">
 				<table>
 					<tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
@@ -46,8 +71,8 @@ $menu = new Menu($frontendMenu, "konto", "../../");
 			</form>
 			<form method="POST" action="" id="emailAendern">
 				<table>
-				    <tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
-				    <tr><td>Neue Email:</td><td><input type="password" name="pwa" id="pwa"></td></tr>
+				    <tr><td>Email:</td><td><input type="text" name="mailae" id="mail"></td></tr>
+				    <tr><td>Neue Email:</td><td><input type="password" name="pwae" id="pwa"></td></tr>
 				    <tr><td colspan="2"><input type="submit" value="Email ändern" name="emaila"></td></tr>
 				</table>
 			</form>
@@ -64,8 +89,8 @@ $menu = new Menu($frontendMenu, "konto", "../../");
 				<table>
 					<tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
 					<tr><td>Passwort:</td><td><input type="password" name="pw" id="pw"></td></tr>
-					<tr><td colspan="2">Account wirklich löschen: <input type="checkbox"></td></tr>
-					<tr><td colspan="2"><input type="submit" value="Account Löschen" name="acclöschen"></tr>
+					<tr><td colspan="2">Account wirklich löschen: <input type="checkbox" name="check"></td></tr>
+					<tr><td colspan="2"><input type="submit" value="Account Löschen" name="accloeschen"></tr>
 				</table>
 			</form>
 		</div>

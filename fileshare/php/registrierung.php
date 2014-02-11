@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <?php session_start();
-include "generate.php";
-include "../php/utilities.php";
-include "websiteFunktionen/registrierung.php";
-include_once "../securimage/securimage.php";
-include_once("benutzerEmail.php");
-
+include_once "../php/utilities.php";
 debugModus();
+include_once "generate.php";
+include_once "websiteFunktionen/registrierung.php";
+include_once "../securimage/securimage.php";
+include_once "benutzerEmail.php";
+include_once "frontend/frontendUtilities.php";
 
 $data = $_POST;
 $nrt = new Nachrichten("#fehlerListe");
@@ -17,6 +17,7 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 		$nrt->fehler("Das eingegebene Captcha ist falsch.");
 	} else {
 		verarbeiteRegistrierung($nrt, $data["Bn"], $data["Pw"], $data["Pwb"], $data["email"]);
+		umleitenZuAnmeldung();
 	}
 }
 ?>

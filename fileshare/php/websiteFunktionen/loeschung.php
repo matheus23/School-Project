@@ -1,4 +1,5 @@
 <?php
+	include_once "../benutzerEmail.php";
 	function verarbeiteLoeschung($nrt, $email, $passwort) {
 		$db = oeffneBenutzerDB($nrt);
 		$emailEscaped = $db->real_escape_string(strtolower($email));
