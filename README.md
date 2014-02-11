@@ -8,7 +8,11 @@ Luca Leitzbach,
 Yannick Herrling und
 Philipp Krüger
 
-Verwendetes Iconset: [http://led24.de/iconset/]
+##Verwendete Resourcen:
+* Verwendetes Iconset: [http://led24.de/iconset/]
+* Verwendete Schriftarten:
+	* Dosis [OFL License](/fileshare/css/fonts/Dosis/OFL.txt)
+	* Source Sans Pro [OFL License](/fileshare/css/fonts/Source_Sans_Pro/OFL.txt)
 
 ##Verwendete Libraries:
 ###Securimage 3.5.1
