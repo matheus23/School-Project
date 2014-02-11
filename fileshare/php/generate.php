@@ -1,7 +1,7 @@
 <?php
 
 function generateBanner() {
-	return "<i><h1 id='banner'><span id='bannerLeft'>Mango</span><span id='bannerRight'>share</span></h1></i>";
+	return "<h1 id='banner'><span id='bannerLeft'>Mango</span><span id='bannerRight'>share</span></h1>";
 }
 
 function generateHeader($content) {

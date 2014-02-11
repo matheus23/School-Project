@@ -16,7 +16,9 @@ $menu = new Menu($frontendMenu, "dashboard", "../../");
 	<title>Dashboard</title>
 	<link type="text/css" rel="stylesheet" href="../../css/style.css">
 	<link type="text/css" rel="stylesheet" href="../../css/frontendStyle.css">
+	<script type="text/javascript" src="../../js/jquery-1.10.2.min.js"></script>
 	<script src="../../js/frontend.js"></script>
+    <script src="../../js/jsUtilities.js"></script>
 </head>
 <body>
 <?=generateHeaderBannerLogout();?>

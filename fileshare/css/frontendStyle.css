@@ -84,6 +84,40 @@ body,html{
 #abmeldenLink:hover {
 	color: #ccc7be;
 }
+#fortschritt{
+	position:relative;
+	width:200px;
+	height:20px;
+}
+
+@-webkit-keyframes fortschrittAnimation{
+	0%{background-position: 0px 0px;}
+	100%{background-position: 16px 0px;}
+}
+@-moz-keyframes fortschrittAnimation{
+	0%{background-position: 0px 0px;}
+	100%{background-position: 16px 0px;}
+}
+@-o-keyframes fortschrittAnimation{
+	0%{background-position: 0px 0px;}
+	100%{background-position: 16px 0px;}
+}
+@keyframes fortschrittAnimation{
+	0%{background-position: 0px 0px;}
+	100%{background-position: 16px 0px;}
+}
+
+.fortschritt{
+	position:relative;
+	width:0%;
+	height:100%;
+	background-image: url('../img/stripesGreen.png');
+	background-repeat: repeat;
+	-webkit-animation: fortschrittAnimation 0.5s linear infinite; /* Safari 4+ */
+	-moz-animation:    fortschrittAnimation 0.5s linear infinite; /* Fx 5+ */
+	-o-animation:      fortschrittAnimation 0.5s linear infinite; /* Opera 12+ */
+	animation:         fortschrittAnimation 0.5s linear infinite; /* IE 10+ */
+}
 /* gruppen.php START */
 #uiWrapper{
 	min-width: 490px;

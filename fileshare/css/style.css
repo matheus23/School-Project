@@ -1,5 +1,7 @@
+@import url('schriftarten.css');
+
 body {
-    font-family: Sans-Serif;
+    font-family: 'source_sans_pro', Sans-Serif;
 	padding: 0;
 	margin: 0;
 	background-color: #eeeeec;
@@ -30,6 +32,8 @@ a {
     padding-left: 2em;
     margin-bottom: 1px;
 	margin-top: 0px; /* Buxfix für falsches anzeigen einer webpage -.- */
+	font-family: 'Dosis', Sans-Serif;
+	font-weight: 800;
 }
 
 #bannerLeft {
@@ -83,6 +87,7 @@ form {
 }
 
 input[type="text"], input[type="password"], input[type="email"] {
+	font-family: 'source_sans_pro', Sans-Serif;
     height: 20px;
     border-radius: 4px;
     border: 1px solid gray;
@@ -90,6 +95,7 @@ input[type="text"], input[type="password"], input[type="email"] {
 }
 
 input[type="submit"], input[type="button"], input[type="reset"] {
+	font-family: 'source_sans_pro', Sans-Serif;
     font-size: 1em;
     color: #2e3436;
     padding: 5px;

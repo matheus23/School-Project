@@ -81,15 +81,19 @@ function generiereSchluessel(schluesselArt, passwort){
 	var publicPem;//pem (base64) kodierter öffentlicher Schlüssel, wird zum Server geschickt
 	
 	//RSA-Schlüsselpaar wird generiert
+	console.time("Schlüsselgenerierung");
 	rsa.generateKeyPair({bits: 2048, workers: 2, workerScript:"../../js/forge/prime.worker.js"}, function(err, keypair) {
+		console.timeEnd("Schlüsselgenerierung");
 		RSAPrivateKey = keypair.privateKey;
 		RSAPublicKey = keypair.publicKey;
 		publicPem = forge.pki.publicKeyToPem(RSAPublicKey);
 		privatePem = forge.pki.privateKeyToPem(RSAPrivateKey);
+		console.time("AES-Verschlüsselung");
 		verschluesseler = forge.aes.createEncryptionCipher(AESKey, 'CBC');
 		verschluesseler.start(AESKeyIv);
 		verschluesseler.update(forge.util.createBuffer(privatePem));//Verschlüsselt den privaten RSA-Schlüssel
 		verschluesseler.finish();
+		console.timeEnd("AES-Verschlüsselung");
 		privatePemVerschluesselt = verschluesseler.output.data;
 		privaterSchluesselContainer =
 			btoa(privatePemVerschluesselt)+	//2284-Zeichen lang
@@ -194,3 +198,7 @@ function updateSignaturschluessel() {
 		}
 	});
 }
+
+//UI-Funktionen
+$(document).ready(function() {
+});
