@@ -148,7 +148,7 @@ function istAngemeldet() {
 }
 
 function umleitenZuAnmeldung() {
-	header("Location: http://".host.dirname(dirname($_SERVER["REQUEST_URI"]))."/Anmeldung.php");
+	header("Location: http://".host."/".githubdir."/fileshare/php/Anmeldung.php");
 }
 
 function leiteUmWennNichtAngemeldet() {
