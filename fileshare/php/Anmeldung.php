@@ -39,7 +39,7 @@
 <table width="100%" height="95%">
 	<tr><td colspan="2">
 		<table align="center">
-			<tr><td><h1>Anmeldung</h1></td></tr>
+			<tr><td align="center"><h1>Anmeldung</h1></td></tr>
 			<tr>
 				<td>
 					<form method="post" id="formular" action="">
