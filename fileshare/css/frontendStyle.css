@@ -89,26 +89,13 @@ body,html{
 	width:200px;
 	height:20px;
 }
-
-@-webkit-keyframes fortschrittAnimation{
-	0%{background-position: 0px 0px;}
-	100%{background-position: 16px 0px;}
-}
-@-moz-keyframes fortschrittAnimation{
-	0%{background-position: 0px 0px;}
-	100%{background-position: 16px 0px;}
-}
-@-o-keyframes fortschrittAnimation{
-	0%{background-position: 0px 0px;}
-	100%{background-position: 16px 0px;}
-}
-@keyframes fortschrittAnimation{
-	0%{background-position: 0px 0px;}
-	100%{background-position: 16px 0px;}
-}
-
-.fortschritt{
+#kreis{
 	position:relative;
+	width:64px;
+	height:64px;
+}
+.fortschritt{
+	position: absolute;
 	width:0%;
 	height:100%;
 	background-image: url('../img/stripesGreen.png');
@@ -117,6 +104,34 @@ body,html{
 	-moz-animation:    fortschrittAnimation 0.5s linear infinite; /* Fx 5+ */
 	-o-animation:      fortschrittAnimation 0.5s linear infinite; /* Opera 12+ */
 	animation:         fortschrittAnimation 0.5s linear infinite; /* IE 10+ */
+}
+.fortschrittContainer{
+	background-color: rgb(48, 42, 45);
+	text-align: center;
+}
+.fortschrittAnzeige{
+	font-weight: bold;
+	position:absolute;
+	background-color: rgba(48, 42, 45,0.9);
+	color: #92AF24;
+}
+.ewigerKreisContainer{
+	position:relative;
+	width:100%;
+	height:100%;
+	background-image: url('../img/ewigerKreisContainer.png');
+	background-size: contain;
+}
+.ewigerKreis{
+	position:relative;
+	width:100%;
+	height:100%;
+	background-image: url('../img/ewigerKreis.png');
+	background-size: contain;
+	-webkit-animation: ewigerKreisAnimation 0.8s linear infinite; /* Safari 4+ */
+	-moz-animation:    ewigerKreisAnimation 0.8s linear infinite; /* Fx 5+ */
+	-o-animation:      ewigerKreisAnimation 0.8s linear infinite; /* Opera 12+ */
+	animation:         ewigerKreisAnimation 0.8s linear infinite; /* IE 10+ */
 }
 /* gruppen.php START */
 #uiWrapper{
@@ -219,3 +234,86 @@ body,html{
 	background-color: #949494;
 }
 /* gruppen.php ENDE */
+
+/* Animationen START*/
+@-webkit-keyframes fortschrittAnimation{
+	0%{background-position: 0px 0px;}
+	100%{background-position: 16px 0px;}
+}
+@-moz-keyframes fortschrittAnimation{
+	0%{background-position: 0px 0px;}
+	100%{background-position: 16px 0px;}
+}
+@-o-keyframes fortschrittAnimation{
+	0%{background-position: 0px 0px;}
+	100%{background-position: 16px 0px;}
+}
+@keyframes fortschrittAnimation{
+	0%{background-position: 0px 0px;}
+	100%{background-position: 16px 0px;}
+}
+@-webkit-keyframes ewigerKreisAnimation{
+	0%{
+		-webkit-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100%{
+		-webkit-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		-ms-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@-moz-keyframes ewigerKreisAnimation{
+	0%{
+		-webkit-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100%{
+		-webkit-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		-ms-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@-o-keyframes ewigerKreisAnimation{
+	0%{
+		-webkit-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100%{
+		-webkit-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		-ms-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes ewigerKreisAnimation{
+	0%{
+		-webkit-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100%{
+		-webkit-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		-ms-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+/* Animationen ENDE*/

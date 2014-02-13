@@ -29,35 +29,57 @@ function groesseAnpassen(){
 	panel.style.width=window.innerWidth-menu.offsetWidth+"px";
 }
 
-function fortschrittHandler(element, status, limit){
-	var _this = this;
+function fortschrittHandler(element,fortschrittObjekt){
+	$(element).html("");
+	$(element).addClass("fortschrittContainer");
+	
+	this.status = (typeof fortschrittObjekt.status !== 'undefined') ? fortschrittObjekt.status : 0;
+	this.limit = (typeof fortschrittObjekt.limit !== 'undefined') ? fortschrittObjekt.limit : 100;
+	
 	var balken = $("<div>");
 	balken.addClass("fortschritt");
-	$(element).html("");
 	$(element).append(balken);
-	var update = function(){
-		var prozent = _this.status/_this.limit * 100 + "%";
-		balken.css("width",prozent);
+	var anzeige = $("<span>");
+	anzeige.addClass("fortschrittAnzeige");
+	$(element).append(anzeige);
+	this.update = function(){
+		var prozent = this.status/this.limit * 100;
+		balken.css("width",prozent + "%");
+		anzeige.text(Math.round(prozent)+ "%");
 	}
-	this.status=status;
 	this.getStatus = function(){
 		return this.status;
 	}
 	this.setStatus = function(status){
 		this.status=status;
-		update();
+		this.update();
 	}
-	this.limit=limit;
 	this.getLimit = function(){
 		return this.limit;
 	}
 	this.setLimit = function(limit){
 		this.limit=limit;
-		update();
+		this.update();
 	}
-	update();
+	this.update();
 }
 
-jQuery.prototype.fortschritt = function(status, limit){
-	return new fortschrittHandler(this, status, limit);
+jQuery.prototype.fortschritt = function(fortschrittObjekt){
+	return new fortschrittHandler(this,fortschrittObjekt);
+	/*
+	das fortschrittObjekt sieht z.B so aus:
+	{
+		status: 0,
+		limit: 100
+	}
+	*/
 }
+
+jQuery.prototype.ewigerKreis = function(fortschrittObjekt){
+	var ewigerKreisContainer = $("<div>");
+	ewigerKreisContainer.addClass("ewigerKreisContainer");
+	var ewigerKreis = $("<div>");
+	ewigerKreis.addClass("ewigerKreis");
+	ewigerKreisContainer.append(ewigerKreis);
+	$(this).append(ewigerKreisContainer);
+};

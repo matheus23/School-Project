@@ -21,7 +21,7 @@ var dateischluessel = {
 	callIf: function(ifDateischluessel, ifSignaturschluessel) {
 		return ifDateischluessel();
 	}
-}
+};
 
 var signaturschluessel = {
 	name: "Signaturschluessel",
@@ -39,7 +39,7 @@ var signaturschluessel = {
 	callIf: function(ifDateischluessel, ifSignaturschluessel) {
 		return ifSignaturschluessel();
 	}
-}
+};
 
 registriereCallbacks(dateischluessel);
 registriereCallbacks(signaturschluessel);
@@ -54,11 +54,24 @@ function registriereCallbacks(schluesselArt) {
 	$(schluesselArt.buttonGenerierenQuery).click(function(){
 		var passwort = $(schluesselArt.passwortInputQuery).val();
 		var passwortWdh = $(schluesselArt.passwortWdhInputQuery).val();
-		if (passwort.length==0){
+		var regexp = /(?=.{8})(?!.{65})(?=.*([A-Z]|Ä|Ö|Ü){1}.*)(?=.*([a-z]|ä|ö|ü|ß){1}.*)(?=.*((\W|_|\d).*){2}).*/g;
+		var treffer = passwort.match(regexp);
+		/*	Ein regulärer Ausdruck wird verwendet, um Passwörter auf ihre Anforderungen zu prüfen
+			Der Ausdruck trifft vereinfacht auf folgendes zu (alle Bedingungen müssen erfüllt sein):
+			(?=.{8})					-> Passwörter, die >=8 Zeichen lang sind 
+			(?!.{65})					-> Passwörter, die <65 Zeichen lang sind
+			(?=.*([A-Z]|Ä|Ö|Ü){1}.*)	-> Passwörter, die einen Großbuchstaben enthalten
+			(?=.*([a-z]|ä|ö|ü|ß){1}.*)	-> Passwörter, die einen Kleinbuchstaben enthalten
+			(?=.*((\W|_|\d).*){2})		-> Passwörter, die zwei Sonderzeichen oder zwei Ziffern (oder eine Ziffer und ein Sonderzeichen) enthalten
+		*/
+		if (passwort.length===0){//Eigentlich unnötig, da der regexp nochmals die Länge prüft, aber besser wegen spezifischer Fehlermeldung
 			fehlerNachricht("#fehlerListe", "warnung", "Du musst ein Passwort angeben.", pfadZuOrdnerFileshare);
 			return;
 		} else if (passwort !== passwortWdh) {
 			fehlerNachricht("#fehlerListe", "fehler", "Die Passwörter stimmen nicht überein.", pfadZuOrdnerFileshare);
+			return;
+		} else if ((treffer === null)||(treffer[0]!==passwort)){
+			fehlerNachricht("#fehlerListe", "fehler", "Das Passwort entspricht nicht den Anforderungen.", pfadZuOrdnerFileshare);
 			return;
 		}
 		generiereSchluessel(schluesselArt, passwort);
@@ -82,7 +95,7 @@ function generiereSchluessel(schluesselArt, passwort){
 	
 	//RSA-Schlüsselpaar wird generiert
 	console.time("Schlüsselgenerierung");
-	rsa.generateKeyPair({bits: 2048, workers: 2, workerScript:"../../js/forge/prime.worker.js"}, function(err, keypair) {
+	rsa.generateKeyPair({bits: 2048, workers: 8, workerScript:"../../js/forge/prime.worker.js"}, function(err, keypair) {
 		console.timeEnd("Schlüsselgenerierung");
 		RSAPrivateKey = keypair.privateKey;
 		RSAPublicKey = keypair.publicKey;

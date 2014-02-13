@@ -45,6 +45,14 @@ $menu = new Menu($frontendMenu, "schluesselverwaltung", "../../");
 	                <tr><td class="rightAlign">Wiederholung:</td><td><input type="password" id="dateischluesselPasswortWdh"/></td></tr>
 	                <tr><td></td><td><input type="button" value="Schlüssel generieren" id="dateischluesselGenerieren"/></td></tr>
                 </table>
+                <div class="infobox warnung">
+            		<table border="0">
+            			<tr><td><img src="../../img/warning.png" width="16" height="16">
+            			</td><td>
+            				Dein Passwort muss 8-64 Zeichen lang sein, Groß- und Kleinschreibung beinhalten sowie zwei Sonderzeichen oder Ziffern beinhalten
+            			</td></tr>
+            		</table>
+            	</div>
                 <p>Aktueller Schlüssel: <span id="aktuellerDateischluessel"></span></p>
                 <p>Alte Schlüssel - Du erhälst keine weiteren Dateien, die mit diesen Schlüsseln entschlüsselt werden können. Noch vorhandene, kannst du allerdings weiterhin entschlüsseln:</p>
             	<div class="liste nofloat" id="dateischluesselListe"></div>
@@ -57,6 +65,14 @@ $menu = new Menu($frontendMenu, "schluesselverwaltung", "../../");
 	                <tr><td class="rightAlign">Wiederholung:</td><td><input type="password" id="signaturschluesselPasswortWdh"/></td></tr>
 	                <tr><td></td><td><input type="button" value="Schlüssel generieren" id="signaturschluesselGenerieren"/></td></tr>
                 </table>
+                <div class="infobox warnung">
+            		<table border="0">
+            			<tr><td><img src="../../img/warning.png" width="16" height="16">
+            			</td><td>
+            				Dein Passwort muss 8-64 Zeichen lang sein, Groß- und Kleinschreibung beinhalten sowie zwei Sonderzeichen oder Ziffern beinhalten
+            			</td></tr>
+            		</table>
+            	</div>
                 <p>Aktueller Schlüssel: <span id="aktuellerSignaturschluessel"></span></p>
                 <p>Achtung: Du kannst immer nur einen Signaturschlüssel benutzen, wenn du diesen neu generierst, kann deine Identität bei bereits Verschlüsselten Dateien nicht mehr verifiziert werden.</p>
             </div>

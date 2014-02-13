@@ -25,11 +25,11 @@ class ExtPHPMailer extends PHPMailer {
 		$this->Hostname='limond.de';//Wichtig für Backtrace (Spam-Erkennung)
 		$this->XMailer=' ';//Wichtig für Spam-Erkennung (Der Default-Wert "PHPMailer..." wird fast überall als Spam erkannt
 		$this->SMTPAuth=true;
-		$this->Username = 'secureshare@limond.de';
+		$this->Username = 'mangoshare@limond.de';
 		$this->Password = EMAIL_PASSWORT;
 		$this->SMTPSecure = 'tls';
-		$this->From = 'secureshare@limond.de';
-		$this->FromName = 'Secureshare';
+		$this->From = 'mangoshare@limond.de';
+		$this->FromName = 'Mangoshare';
 		$this->CharSet = 'utf-8';
 		parent::isHTML(true);
 		
