@@ -1,6 +1,27 @@
 Dokumentation
 ============================
 
+**Inhaltsverzeichnis**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Datenbankstruktur](#datenbankstruktur)
+	- [Benutzer](#benutzer)
+	- [Gruppe](#gruppe)
+	- [Gruppenmitglieder](#gruppenmitglieder)
+	- [Passwortreset](#passwortreset)
+	- [Signaturschluessel](#signaturschluessel)
+	- [Dateischluessel](#dateischluessel)
+	- [aktuellerDateischluessel](#aktuellerdateischluessel)
+	- [Datei](#datei)
+- [Das Uploadsystem](#das-uploadsystem)
+	- [Verschlüsselung](#verschl%C3%BCsselung)
+		- [NEU](#neu)
+		- [Der Dateischlüssel](#der-dateischl%C3%BCssel)
+		- [Der Signaturschlüssel](#der-signaturschl%C3%BCssel)
+		- [Beispiel](#beispiel)
+		- [Dateiverarbeitung](#dateiverarbeitung)
+	- [aktuelle Probleme](#aktuelle-probleme)
+		- [Lösungsmöglichkeiten](#l%C3%B6sungsm%C3%B6glichkeiten)
+
 ##Datenbankstruktur
 kursiv geschriebene Schlüssel sind Primärschlüssel in der Tabelle
 
