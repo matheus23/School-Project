@@ -5,7 +5,7 @@ Dokumentation
 kursiv geschriebene Schlüssel sind Primärschlüssel in der Tabelle
 
 ###Benutzer
-|---|---|
+|Schlüssel|Beschreibung|
 |---|---|
 |***ID***|eine einzigartige ID, die einem Nutzer eindeutig zuordenbar ist *auto increment*|
 |**Nutzername**| frei vom Nutzer wählbarer Name *kann vom Nutzer jederzeit geändert werden*|
@@ -15,7 +15,7 @@ kursiv geschriebene Schlüssel sind Primärschlüssel in der Tabelle
 |**Bestaetigt**| gibt an, ob der Nutzer bestätigt wurde|
 
 ###Gruppe
-|---|---|
+|Schlüssel|Beschreibung|
 |---|---|
 |***ID***|eine einzigartige ID, die einer Gruppe eindeutig zuordenbar ist *auto increment*|
 |**Name**| frei vom Nutzer wählbarer Gruppenname *kann vom Nutzer jederzeit geändert werden*|
@@ -23,28 +23,29 @@ kursiv geschriebene Schlüssel sind Primärschlüssel in der Tabelle
 
 ###Gruppenmitglieder
 Die Tabelle gibt an, welche Mitglieder zu welcher Gruppe gehören (n:m-Beziehung)
-|---|---|
+
+|Schlüssel|Beschreibung|
 |---|---|
 |**GruppenID**|eine einzigartige ID, die einer Gruppe eindeutig zuordenbar ist|
 |**NutzerID**|eine einzigartige ID, die einem Nutzer eindeutig zuordenbar ist|
 
 ###Passwortreset
-|---|---|
+|Schlüssel|Beschreibung|
 |---|---|
 |**Email**|E-Mail des Kontos dessen Passwort zurückgesetzt werden soll|
 |**ID**|zufällige und einzigartige ID, die im Link für den Passwortreset steht, um nur den Inhaber der E-Mail-Adresse Zugang zu gewähren|
 |**Verfalldatum**|gibt an, ab wann der Link in der Email nicht mehr gültig ist (1 Tag nach Anforderung)|
 
 ###Signaturschluessel
+|Schlüssel|Beschreibung|
 |---|---|
-|---|---|
-|**NutzerID**|eine einzigartige ID, die einem Nutzer eindeutig zuordenbar ist|
+|***NutzerID***|eine einzigartige ID, die einem Nutzer eindeutig zuordenbar ist|
 |**Schluessel**|öffentlicher Schlüssel, der für jeden Nutzer frei abrufbar ist, um die Signatur zu bestätigen|
 |**privaterSchluessel**|base64-kodierter AES-Verschlüsselter privater RSA-Schlüssel, der nur vom zugehörigen Nutzer abrufbar ist|
 |**VersionID**|ID für einen Schlüssel, die pro Nutzer eindeutig und einzigartig ist|
 
 ###Dateischluessel
-|---|---|
+|Schlüssel|Beschreibung|
 |---|---|
 |**NutzerID**|eine einzigartige ID, die einem Nutzer eindeutig zuordenbar ist|
 |**Schluessel**|öffentlicher Schlüssel, der für jeden Nutzer frei abrufbar ist, um die Signatur zu bestätigen|
@@ -54,15 +55,16 @@ Die Tabelle gibt an, welche Mitglieder zu welcher Gruppe gehören (n:m-Beziehung
 
 ###aktuellerDateischluessel
 Tabelle ordnet einem Nutzer den aktuellsten Dateischlüssel zu.
+
+|Schlüssel|Beschreibung|
 |---|---|
-|---|---|
-|**NutzerID**|eine einzigartige ID, die einem Nutzer eindeutig zuordenbar ist|
+|***NutzerID***|eine einzigartige ID, die einem Nutzer eindeutig zuordenbar ist|
 |**VersionID**|ID für einen Schlüssel, die pro Nutzer eindeutig und einzigartig ist|
 
 ###Datei
+|Schlüssel|Beschreibung|
 |---|---|
-|---|---|
-|**ID**|eine einzigartige ID, die einer Datei eindeutig zuordenbar ist *auto increment*|
+|***ID***|eine einzigartige ID, die einer Datei eindeutig zuordenbar ist *auto increment*|
 |**Name**|Dateiname|
 |**SchluesselID**|VersionID des verwendeten Schlüssels, der zum Verschlüsseln der Datei verwendet wurde|
 |**Ersteller**|ID des Nutzers, der die Datei hochgeladen hat|
