@@ -19,6 +19,7 @@ Dokumentation
 		- [Der Signaturschlüssel](#der-signaturschl%C3%BCssel)
 		- [Beispiel](#beispiel)
 		- [Dateiverarbeitung](#dateiverarbeitung)
+	- [Dateigröße](#dateigr%C3%B6%C3%9Fe)
 	- [aktuelle Probleme](#aktuelle-probleme)
 		- [Lösungsmöglichkeiten](#l%C3%B6sungsm%C3%B6glichkeiten)
 
@@ -139,7 +140,7 @@ Hochgeladen werden soll eine Datei mit einer Größe von 2360764 Byte (ca. 2,4 M
 Dabei werden folgende Schritte durchlaufen:
 
 |Nr.|Schritt|Dateigröße (in Byte)|Änderung zum voherigen Schritt|Allgemeine Änderung|Grund der Änderung|
-|---|---|---|---|---|
+|---|---|---|---|---|---|
 |1|Vor dem Einlesen (fileSize-Eigenschaft)|2360764|keine|keine|-|
 |2|Nach dem Einlesen (ArrayBuffer/BinaryString)|2360764|keine|keine|-|
 |3|Nach dem AES-Verschlüsseln|2360768|+4 Byte|+0-15 Byte|CBC-Padding *siehe unten*|
@@ -166,8 +167,10 @@ Daher stammt auch der Codeteil
 ```
 
 Hier ein Schaubild des CBC-Modus:
+
 !["CBC-Modus"](http://upload.wikimedia.org/wikipedia/commons/8/80/CBC_encryption.svg)
-[By WhiteTimberwolf (SVG version) (PNG version) [Public domain], via Wikimedia Commons](http://commons.wikimedia.org/wiki/File:CBC_encryption.svg)
+
+[By WhiteTimberwolf (SVG version) (PNG version) [Public domain], via Wikimedia Commons](http://upload.wikimedia.org/wikipedia/commons/thumb/8/80/CBC_encryption.svg/1000px-CBC_encryption.svg.png)
 
 ###aktuelle Probleme
 * Noch kein Gruppenupload
