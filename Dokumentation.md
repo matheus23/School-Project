@@ -132,6 +132,43 @@ Eine Vorstellung der Funktionsweise bekommt man durch folgendes Bild, oder einfa
 
 [von MathiasRav at da.wikipedia [Public domain], via Wikimedia Commons](http://commons.wikimedia.org/wiki/File%3ABase64-da.png)
 
+###Dateigröße
+Die Bestimmung der Dateigröße ist auf den ersten Blick verwirrend. Diese muss allerdings ermittelt werden, um den Nutzer vor dem Upload zu großer Dateien zu warnen.
+Am besten lässt sich das an einem Beispiel nachvollziehen.
+Hochgeladen werden soll eine Datei mit einer Größe von 2360764 Byte (ca. 2,4 MB)
+Dabei werden folgende Schritte durchlaufen:
+
+|Nr.|Schritt|Dateigröße (in Byte)|Änderung zum voherigen Schritt|Allgemeine Änderung|Grund der Änderung|
+|---|---|---|---|---|
+|1|Vor dem Einlesen (fileSize-Eigenschaft)|2360764|keine|keine|-|
+|2|Nach dem Einlesen (ArrayBuffer/BinaryString)|2360764|keine|keine|-|
+|3|Nach dem AES-Verschlüsseln|2360768|+4 Byte|+0-15 Byte|CBC-Padding *siehe unten*|
+|4|Nach der Base64-Kodierung|3147692|+786924 Byte|neueGröße = aufrunden(alteGröße/3)\*4|base64 *siehe oben*|
+|5|Nach Anhängen der Zusatzinformationen|3148404|+344+344+24 Byte|+344+344+24 Byte|Schlüsselinformationen *siehe oben*|
+
+Die Berechnung der finalen Größe kann so erfolgen:
+```
+//Die meisten Klammern dienen nur dem Verständnis
+(aufrunden((aufrunden(originalGroesse/16)*16)/3)*4)+344+344+24
+```
+oder in richtigem JavaScript:
+```
+(Math.ceil((Math.ceil(originalGroesse/16)*16)/3)*4)+344+344+24
+```
+
+Das in der Tabelle bereits genannte **CBC-Padding** ist eine Eigenschaft des CBC-Modus der AES-Verschlüsselung. In AES werden die zu verschlüsselnden Daten in Blöcke geteilt (eigentlich immer 128 Bit = 16 Byte pro Block). Es gibt allerdings verschiedene Modi, wie die Blöcke vor der Verschlüsselung "aufbereitet" werden.
+Statt jeden Block wie er ist zu verschlüsseln (ECB-Modus = Electronic Codebook), wird im CBC-Modus (Cipher-Block Chaining) jeder unverschlüsselte Block mit einer XOR-Verknüpfung mit dem letzten verschlüsselten Block verknüpft, bevor er selbst verschlüsselt wird. Die erste XOR-Verknüpfung wird mit dem 128 Bit langen Initialisierungsvektor begonnen. Das erhöht die Sicherheit, da gleiche Klartextblöcke unterschiedliche verschlüsselte Blöcke ergeben.
+Jetzt der eigentliche Punkt: Bei diesem Modus muss jeder Block die gleiche Größe haben (sonst würde das mit dem XOR schwierig werden). Da das pro Block 128 Bit sind, wird die Datei auf ein vielfaches von 16 Byte aufgefüllt.
+
+Daher stammt auch der Codeteil
+```
+(Math.ceil(originalGroesse/16)*16)
+```
+
+Hier ein Schaubild des CBC-Modus:
+!["CBC-Modus"](http://upload.wikimedia.org/wikipedia/commons/8/80/CBC_encryption.svg)
+[By WhiteTimberwolf (SVG version) (PNG version) [Public domain], via Wikimedia Commons](http://commons.wikimedia.org/wiki/File:CBC_encryption.svg)
+
 ###aktuelle Probleme
 * Noch kein Gruppenupload
 * Kein wirkliches Uploadlimit, bis auf das Standartlimit von php, das bei Überschreitung zu Fehlern führt.
