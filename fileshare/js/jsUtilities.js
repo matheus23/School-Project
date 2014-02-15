@@ -43,3 +43,11 @@ var fehlerNachricht = function(elementQuery, typ, nachricht, path) {
 	nachricht.delay(10000).hide(500);
 	$(elementQuery).append(nachricht);
 }
+
+//base64 Fallback, falls von browser nicht unterstützt
+if((!!forge)&&(!atob)){
+	atob = forge.util.decode64;
+}
+if((!!forge)&&(!btoa)){
+	btoa = forge.util.encode64;
+}

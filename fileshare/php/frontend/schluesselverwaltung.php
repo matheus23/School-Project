@@ -17,9 +17,9 @@ $menu = new Menu($frontendMenu, "schluesselverwaltung", "../../");
 	<link type="text/css" rel="stylesheet" href="../../css/style.css">
 	<link type="text/css" rel="stylesheet" href="../../css/frontendStyle.css">
 	<script src="../../js/jquery-1.10.2.min.js"></script>
+	<script src="../../js/forge/forge.bundle.js"></script>
 	<script src="../../js/frontend.js"></script>
     <script src="../../js/jsUtilities.js" type="text/javascript"></script>
-    <script src="../../js/forge/forge.bundle.js"></script>
 </head>
 <body>
 <?=generateHeaderBannerLogout();?>
