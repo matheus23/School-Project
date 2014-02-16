@@ -32,7 +32,7 @@ $menu = new Menu($frontendMenu, "upload", "../../");
 		<div id="uiWrapper">
 			<table width="100%">
 				<tr><td>
-					<table align="center">
+					<table align="center" id="uploadForm">
 						<form method="post" enctype="multipart/form-data">
 							<tr><td align="center"><h4>Datei für Upload auswählen<h4></td></tr>
                             <tr><td align="center"><div id="fehlerListe"></div></td></tr>

@@ -84,6 +84,12 @@ body,html{
 #abmeldenLink:hover {
 	color: #ccc7be;
 }
+.gruen{
+	color:green;
+}
+.rot{
+	color:red;
+}
 #fortschritt{
 	position:relative;
 	width:200px;
@@ -132,6 +138,17 @@ body,html{
 	-moz-animation:    ewigerKreisAnimation 0.8s linear infinite; /* Fx 5+ */
 	-o-animation:      ewigerKreisAnimation 0.8s linear infinite; /* Opera 12+ */
 	animation:         ewigerKreisAnimation 0.8s linear infinite; /* IE 10+ */
+}
+.fortschrittBox{
+	display: inline-block;
+	width: 50%;
+	margin: 20px;
+}
+.fortschrittBox > .anzeige{
+	position: relative;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 /* gruppen.php START */
 #uiWrapper{

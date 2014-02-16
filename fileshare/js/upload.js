@@ -109,40 +109,63 @@ function holeBenutzerInfo(email){
 function leseUndVerschluesseleDatei(infoObject){
 	var fremderSchluessel=forge.pki.publicKeyFromPem(infoObject.Schluessel);
 	var datei = $("#file")[0].files[0];
+	
+	var AESKeyZufall = forge.random.getBytesSync(32);//zufälliger 256Bit-Schlüssel
+	var AESKeyIv=forge.random.getBytesSync(16);
+	var aesWorkerVerschluesseln = new Worker("../../js/aesWorkerVerschluesseln.js");
+			
 	var reader = new FileReader();
 	reader.onload = (function(datei) {
 		return function(dateiInhalt) {
-			var byteString = "";//Eigene Implementierung von FileReader.readAsBinaryString weil deprecated
+			var dateiGroesse = datei.size;
+			var position = 0;
+			var blockGroesse = 32768;//128*256
+			var dateiVerschluesselt="";//Die AES-verschluesselte/base64 kodierte Datei
+			
+			var byteString;//Eigene Implementierung von FileReader.readAsBinaryString weil deprecated
 			var byteArray = new Uint8Array(dateiInhalt.target.result);
-			for (var i = 0; i<byteArray.length;i++){
-				byteString += String.fromCharCode(byteArray[i]);
-			}
-			
-			var AESKeyZufall = forge.random.getBytesSync(32);//zufälliger 256Bit-Schlüssel
-			verschluesseler = forge.aes.createEncryptionCipher(AESKeyZufall, 'CBC');
-			AESKeyIv=forge.random.getBytesSync(16);
-			
-			verschluesseler.start(AESKeyIv);
-			verschluesseler.update(forge.util.createBuffer(byteString));
-			verschluesseler.finish();
-			
-			
-			AESKeyVerschluesselt=btoa(fremderSchluessel.encrypt(AESKeyZufall));//AESKey wird asymmetrisch verschluesselt und base64 kodiert (344-Zeichen)
-			AESKeyZufall = null;
-			dateiVerschluesselt = btoa(verschluesseler.output.data); //Die AES-verschluesselte/base64 kodierte Datei
-			verschluesseler = null;
-			
-			var hasher = forge.md.sha256.create();
-			hasher.update(dateiVerschluesselt);
-			var signatur = signaturschluesselUnverschluesselt.sign(hasher);//256-Bit Signatur
-			var AESKeyIv64 = btoa(AESKeyIv);
-			var signatur64 = btoa(signatur);//344-Zeichen langer base64 String der Signatur
-			/*Da der (verschlüsselte )Schlüssel und die Signatur jeweils 256-Bit lang sind
-			benötigen sie 344-Zeichen als base64-String - Diese können den eigentlichen Daten wegen ihrer
-			fixen Größe vorausgestellt mit in der Datei gespeichert werden. AESKeyIv64 ist 24-Zeichen lang
-			*/
-			dateiVerschluesselt=AESKeyVerschluesselt+AESKeyIv64+signatur64+dateiVerschluesselt;
-			hochladen(dateiVerschluesselt,datei.name,infoObject);
+			aesWorkerVerschluesseln.addEventListener('message', function(event){
+				console.log(event.data);
+				switch(event.data.aktion){
+					case "weiter":
+						dateiVerschluesselt+=event.data.output;
+						if (position+blockGroesse<dateiGroesse){
+							byteString="";
+							for (var i = position; i<position+blockGroesse;i++){
+								byteString += String.fromCharCode(byteArray[i]);
+							}
+							position+=blockGroesse;
+							aesWorkerVerschluesseln.postMessage({aktion:"update",byteString:byteString});
+						}
+						else{
+							byteString="";
+							for (var i = position; i<dateiGroesse;i++){
+								byteString += String.fromCharCode(byteArray[i]);
+							}
+							aesWorkerVerschluesseln.postMessage({aktion:"finish",byteString:byteString});
+						}
+						break;
+					case "fertig":
+						dateiVerschluesselt+=event.data.output;
+						dateiVerschluesselt=btoa(dateiVerschluesselt);
+						var AESKeyVerschluesselt=btoa(fremderSchluessel.encrypt(AESKeyZufall));//AESKey wird asymmetrisch verschluesselt und base64 kodiert (344-Zeichen)
+						AESKeyZufall = null;
+						
+						var hasher = forge.md.sha256.create();
+						hasher.update(dateiVerschluesselt);
+						var signatur = signaturschluesselUnverschluesselt.sign(hasher);//256-Bit Signatur
+						var AESKeyIv64 = btoa(AESKeyIv);
+						var signatur64 = btoa(signatur);//344-Zeichen langer base64 String der Signatur
+						/*Da der (verschlüsselte )Schlüssel und die Signatur jeweils 256-Bit lang sind
+						benötigen sie 344-Zeichen als base64-String - Diese können den eigentlichen Daten wegen ihrer
+						fixen Größe vorausgestellt mit in der Datei gespeichert werden. AESKeyIv64 ist 24-Zeichen lang
+						*/
+						dateiVerschluesselt=AESKeyVerschluesselt+AESKeyIv64+signatur64+dateiVerschluesselt;
+						hochladen(dateiVerschluesselt,datei.name,infoObject);
+						break;
+				}
+			});
+			aesWorkerVerschluesseln.postMessage({aktion:"start",AESKeyZufall:AESKeyZufall,AESKeyIv:AESKeyIv});
 			console.log(datei);
 		};
 	})(datei);

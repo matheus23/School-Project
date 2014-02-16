@@ -45,9 +45,9 @@ var fehlerNachricht = function(elementQuery, typ, nachricht, path) {
 }
 
 //base64 Fallback, falls von browser nicht unterstützt
-if((!!forge)&&(!atob)){
+if((typeof forge !=="undefined")&&(!!forge)&&(!atob)){
 	atob = forge.util.decode64;
 }
-if((!!forge)&&(!btoa)){
+if((typeof forge !=="undefined")&&(!!forge)&&(!btoa)){
 	btoa = forge.util.encode64;
 }

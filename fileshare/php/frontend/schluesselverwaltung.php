@@ -40,11 +40,12 @@ $menu = new Menu($frontendMenu, "schluesselverwaltung", "../../");
 			<div id="dateischluessel" class="fenster">
             	<p>Dateischlüssel bestehen aus zwei "Hälften". Eine Schlüsselhälfte wird zum Server geschickt. Erstelle einen neuen Schlüssel nur gelegentlich. Du kannst immer nur einen aktiven Schlüssel haben. Die anderen Schlüssel bleiben erhalten bis du sie manuell löschst.</p>
                 <p>Bei jedem Entschlüsseln musst du das Passwort des Dateischlüssels angeben.</p>
-                <table>
+                <table class="passwortEingabe">
                 	<tr><td class="rightAlign">Passwort:</td><td><input type="password" id="dateischluesselPasswort"/></td></tr>
 	                <tr><td class="rightAlign">Wiederholung:</td><td><input type="password" id="dateischluesselPasswortWdh"/></td></tr>
 	                <tr><td></td><td><input type="button" value="Schlüssel generieren" id="dateischluesselGenerieren"/></td></tr>
                 </table>
+                <div class="schluesselFortschritt"></div>
                 <div class="infobox warnung">
             		<table border="0">
             			<tr><td><img src="../../img/warning.png" width="16" height="16">
@@ -60,11 +61,12 @@ $menu = new Menu($frontendMenu, "schluesselverwaltung", "../../");
             <div id="signaturschluessel" class="fenster">
             	<p>Signaturschlüssel verifizieren dich als den Absender einer Datei. Folglich werden sie beim Senden benötigt.</p>
                 <p>Bei jedem Verschlüsseln musst du das Passwort des Dateischlüssels angeben.</p>
-                <table>
+                <table class="passwortEingabe">
 	                <tr><td class="rightAlign">Passwort:</td><td><input type="password" id="signaturschluesselPasswort"/></td></tr>
 	                <tr><td class="rightAlign">Wiederholung:</td><td><input type="password" id="signaturschluesselPasswortWdh"/></td></tr>
 	                <tr><td></td><td><input type="button" value="Schlüssel generieren" id="signaturschluesselGenerieren"/></td></tr>
                 </table>
+                <div class="schluesselFortschritt"></div>
                 <div class="infobox warnung">
             		<table border="0">
             			<tr><td><img src="../../img/warning.png" width="16" height="16">

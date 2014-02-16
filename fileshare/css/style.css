@@ -78,7 +78,7 @@ a {
 	text-align: right;
 }
 
-form {
+form, .boxMitRand {
     padding: 10px;
     background-color: #eeeeec;
     border: 1px solid #d3d7cf;

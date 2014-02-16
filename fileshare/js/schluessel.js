@@ -46,6 +46,8 @@ registriereCallbacks(signaturschluessel);
 
 function registriereCallbacks(schluesselArt) {
 	$(schluesselArt.fensterButtonQuery).click(function() {
+		$(".fenster > .schluesselFortschritt").hide();
+		$(".fenster > .passwortEingabe").show();
 		$("#editor > .label").text($(this).text());
 		$("#editor > .fenster").hide(0);
 		$("#editor").show(0);
@@ -74,6 +76,10 @@ function registriereCallbacks(schluesselArt) {
 			fehlerNachricht("#fehlerListe", "fehler", "Das Passwort entspricht nicht den Anforderungen.", pfadZuOrdnerFileshare);
 			return;
 		}
+		$(schluesselArt.fensterQuery).children(".passwortEingabe").hide();
+		$(schluesselArt.passwortInputQuery).val("");
+		$(schluesselArt.passwortWdhInputQuery).val("");
+		$(schluesselArt.fensterQuery).children(".schluesselFortschritt").show();
 		generiereSchluessel(schluesselArt, passwort);
 	});
 }
@@ -120,7 +126,10 @@ function generiereSchluessel(schluesselArt, passwort){
 		});
 		schluesselArt.callIf(
 			updateDateischluesselListe, 
-			updateSignaturschluessel);
+			updateSignaturschluessel
+		);
+		$(schluesselArt.fensterQuery).children(".passwortEingabe").show();
+		$(schluesselArt.fensterQuery).children(".schluesselFortschritt").hide();
 	});
 }
 
@@ -214,4 +223,12 @@ function updateSignaturschluessel() {
 
 //UI-Funktionen
 $(document).ready(function() {
+	$(".schluesselFortschritt").each(function(index,element){
+		$(element).fortschrittBox(
+			{
+				label: "Schlüssel wird generiert. Je nach Leistung des PCs kann dieser Vorgang etwas dauern.",
+				typ: "ewigerKreis"
+			}
+		);
+	});
 });

@@ -28,7 +28,13 @@ $menu = new Menu($frontendMenu, "dashboard", "../../");
 	</div>
 	<div id="panel">
 		<h1>Dashboard</h1>
+		<div id="kompatibilitaet" class="boxMitRand">
+			<p>Browser-Status:</p>
+			<ul>
+			</ul>
+		</div>
 	</div>
 </div>
+<script src="../../js/dashboard.js"></script>
 </body>
 </html>
