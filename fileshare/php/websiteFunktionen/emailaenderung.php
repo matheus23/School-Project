@@ -10,17 +10,21 @@
 		if (userExestiertBereits($db, $email)) {
 			$passwortTest = benutzerPwTest($db, $email, $pw);
 			if ($passwortTest == PASSWORD_PASS)  {
-				$db->query("UPDATE `Benutzer` SET Email='$neueemail' WHERE Email='$email'")->fold(
+				return $db->query("UPDATE `Benutzer` SET Email='$neueemail' WHERE Email='$email'")->fold(
 					function($ergebnis) use (&$nrt) {
 						$nrt->okay("Email erfolgreich geändert");
 						//Bestätigungs Email, dass das Pw geändert wurde
+						return true;
 					}, function($fehlerNachricht) use (&$nrt) {
 						$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+						return false;
 					}
 				);
 			} else {
 				$nrt->fehler("Email-Passwort Kombination passt nicht.");
+				return false;
 			}	
 		}
+		return true;
 	}
 ?>
