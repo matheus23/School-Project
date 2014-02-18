@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <?php session_start();
-include "generate.php";
-include "websiteFunktionen/passwortaenderung.php";
-
-include "../php/utilities.php";
-
+require_once "../php/utilities.php";
 debugModus();
+require_once(rootdir."fileshare/php/generate.php");
+require_once(rootdir."fileshare/php/websiteFunktionen/passwortaenderung.php");
+
 
 $data = $_POST;
 $nrt = new Nachrichten("#fehlerListe");

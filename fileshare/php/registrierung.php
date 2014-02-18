@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <?php session_start();
-include_once "../php/utilities.php";
+require_once "../php/utilities.php";
 debugModus();
-include_once "generate.php";
-include_once "websiteFunktionen/registrierung.php";
-include_once "../securimage/securimage.php";
-include_once "benutzerEmail.php";
-include_once "frontend/frontendUtilities.php";
+require_once(rootdir."fileshare/php/generate.php");
+require_once(rootdir."fileshare/php/websiteFunktionen/registrierung.php");
+require_once(rootdir."fileshare/securimage/securimage.php");
+require_once(rootdir."fileshare/php/benutzerEmail.php");
+require_once(rootdir."fileshare/php/frontend/frontendUtilities.php");
 
 $data = $_POST;
 $nrt = new Nachrichten("#fehlerListe");

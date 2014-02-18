@@ -3,7 +3,8 @@
 session_start();
 include_once "../utilities.php";
 debugModus();
-include_once "frontendUtilities.php";
+require_once(rootdir."fileshare/php/frontend/frontendUtilities.php");
+
 $data = $_POST;
 $nrt = new Nachrichten("#fehlerListe","../../");
 if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){

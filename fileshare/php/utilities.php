@@ -1,11 +1,12 @@
 <?php
-include "ExtSQL.php";
+require_once "ExtSQL.php";
 
 #Serverweite Variablen START
 define("host", $_SERVER["HTTP_HOST"]);//Sollte später durch hardcoded ersetzt werden
 $url_folder = substr(substr($_SERVER["REQUEST_URI"],1), 0,
 	strpos(substr($_SERVER["REQUEST_URI"],1), "/"));
 define("githubdir", $url_folder);
+define("rootdir", $_SERVER["DOCUMENT_ROOT"] . "/" . githubdir . "/");
 #Serverweite Variablen ENDE
 
 // Im debugModus gibt php Alle fehler an den Client weiter.
