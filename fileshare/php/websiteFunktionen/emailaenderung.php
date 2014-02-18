@@ -1,5 +1,6 @@
 <?php
 	include_once "../utilities.php";
+	debugModus();
 
 	function verarbeiteEmailaenderung($nrt, $emailUnencoded, $pw, $neueEmailUnencoded) {
 		$db = oeffneBenutzerDB($nrt);

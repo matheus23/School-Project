@@ -1,6 +1,7 @@
 <?php
 include_once dirname(__FILE__) . "/../utilities.php";
-include_once dirname(__FILE__) . "/Menu.php";
+//include_once dirname(__FILE__) . "/Menu.php";
+require_once(rootdir."fileshare/php/frontend/Menu.php");
 
 function generateHTMLGruppen($db){
 	$seid = $_SESSION["seid"];
