@@ -143,12 +143,21 @@ body,html{
 	display: inline-block;
 	width: 50%;
 	margin: 20px;
+	position: relative;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 .fortschrittBox > .anzeige{
 	position: relative;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+.nutzerlabel{
+	color:gray;
+	font-size:12px;
+	
 }
 /* gruppen.php START */
 #uiWrapper{
@@ -213,8 +222,7 @@ body,html{
 .liste .listenlabel{
 	position: relative;
 	margin-right: 20px;
-	/*text-overflow: ellipsis;*/
-	/*white-space:nowrap;*/
+	word-wrap:break-word;
 	overflow: hidden;
 }
 #editor{
@@ -238,13 +246,7 @@ body,html{
 .bottommargin{
 	margin-bottom: 20px;
 }
-#mitgliederliste > .listenelement{
-	cursor: default;
-}
-#auswahlliste > .listenelement{
-	cursor: pointer;
-}
-#gruppenliste,#verwaltungsliste > .listenelement{
+#dateiListe > .listenelement, #mitgliederliste > .listenelement, #auswahlliste > .listenelement, #gruppenliste, #verwaltungsliste > .listenelement{
 	cursor: pointer;
 }
 .gruppeEditiert{
