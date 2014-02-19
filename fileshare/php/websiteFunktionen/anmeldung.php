@@ -1,5 +1,5 @@
 <?php
-/*	include_once dirname(__FILE__)."/../utilities.php";
+	include_once dirname(__FILE__)."/../utilities.php";
 	debugModus();
 	require_once(rootdir."fileshare/php/frontend/frontendUtilities.php");
 	require_once(rootdir."fileshare/php/benutzerEmail.php");
