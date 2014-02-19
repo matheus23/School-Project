@@ -1,11 +1,12 @@
 <?php
-include "ExtSQL.php";
+require_once "ExtSQL.php";
 
 #Serverweite Variablen START
 define("host", $_SERVER["HTTP_HOST"]);//Sollte später durch hardcoded ersetzt werden
 $url_folder = substr(substr($_SERVER["REQUEST_URI"],1), 0,
 	strpos(substr($_SERVER["REQUEST_URI"],1), "/"));
 define("githubdir", $url_folder);
+define("rootdir", $_SERVER["DOCUMENT_ROOT"] . "/" . githubdir . "/");
 #Serverweite Variablen ENDE
 
 // Im debugModus gibt php Alle fehler an den Client weiter.
@@ -138,6 +139,7 @@ class Nachricht {
 class Nachrichten {
 	public $jsElemQuery = "";
 	public $nachrichtenListe = array();
+	public $fehlerAufgetreten = false;
 	
 	public function __construct($jselem,$path="../") {
 		$this->jsElemQuery = $jselem;
@@ -146,6 +148,8 @@ class Nachrichten {
 	
 	public function nachricht($art, $nachricht) {
 		array_push($this->nachrichtenListe, new Nachricht($nachricht, $art, $this->path));
+		if ($art == "fehler") 
+			$this->fehlerAufgetreten = true;
 	}
 	
 	public function okay($nachricht) {
@@ -158,6 +162,10 @@ class Nachrichten {
 	
 	public function fehler($nachricht) {
 		$this->nachricht("fehler", $nachricht);
+	}
+	
+	public function istFehlerAufgetreten() {
+		return $this->fehlerAufgetreten;
 	}
 	
 	public function toJsonUnencoded() {

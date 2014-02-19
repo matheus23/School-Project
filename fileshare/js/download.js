@@ -65,8 +65,10 @@ function updateDateiListe(){
 			$.each(dateiliste,function(index,datei){
 				var listenelement = $("<div>").addClass("listenelement"); //Neues Listenelement
 				listenelement.data("ID",datei.ID);
-				var label = $("<span>").addClass("listenlabel").text(datei.Name + " - von " + datei.Nutzername);//Nutzername/Email auf Listenlabel
+				var label = $("<span>").addClass("listenlabel").text(datei.Name);//Nutzername/Email auf Listenlabel
+				var username = $("<div>").addClass("nutzerlabel").text(" - von " + datei.Nutzername);
 				listenelement.append(label);
+				listenelement.append(username);
 				$("#dateiListe").append(listenelement);
 			});
 		}

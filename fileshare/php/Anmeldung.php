@@ -2,9 +2,9 @@
 	session_start();
 	include_once dirname(__FILE__) . "/utilities.php";
 	debugModus();
-	include_once "frontend/frontendUtilities.php";
-	include_once "generate.php";
-	include_once "websiteFunktionen/anmeldung.php";
+	require_once(rootdir."fileshare/php/frontend/frontendUtilities.php");
+	require_once(rootdir."fileshare/php/generate.php");
+	require_once(rootdir."fileshare/php/websiteFunktionen/anmeldung.php");
 	
 	function zumDashboard() {
 		// Umleitung auf Dashboard:

@@ -1,7 +1,8 @@
 <?php
-	include_once dirname(__FILE__)."/../frontend/frontendUtilities.php";
 	include_once dirname(__FILE__)."/../utilities.php";
-	require_once dirname(__FILE__)."/../benutzerEmail.php";
+	debugModus();
+	require_once(rootdir."fileshare/php/frontend/frontendUtilities.php");
+	
 	function verarbeiteAnmeldung($nrt, $emailUnescaped, $merken, $passwort) {
 		$db = oeffneBenutzerDB($nrt);
 		

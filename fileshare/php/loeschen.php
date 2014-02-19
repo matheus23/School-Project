@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <?php
-include "generate.php";	
-include "../php/utilities.php";
-include "websiteFunktionen/loeschung.php";
-include_once("benutzerEmail.php");
-
+include_once "../php/utilities.php";
 debugModus();
+require_once(rootdir."fileshare/php/generate.php");
+require_once(rootdir."fileshare/php/websiteFunktionen/loeschung.php");
+require_once(rootdir."fileshare/php/benutzerEmail.php");
 
 $data = $_POST;
 $nrt = new Nachrichten("#fehlerListe");

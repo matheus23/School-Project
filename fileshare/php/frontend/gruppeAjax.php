@@ -2,8 +2,9 @@
 //Diese Datei braucht kein HTML, wird nur für AJAX-Anfrage benutzt
 session_start();
 include "../utilities.php";
-include_once "frontendUtilities.php";
 debugModus();
+require_once(rootdir."fileshare/php/frontend/frontendUtilities.php");
+
 $data = $_POST;
 $nrt = new Nachrichten("#fehlerListe","../../");
 $nrtGruppe = new Nachrichten("#fehlerListeGruppe","../../");
