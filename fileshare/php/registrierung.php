@@ -45,14 +45,14 @@ if (alleSchluesselGesetzt($data, "Bn", "Pw", "Pwb", "email")) {
 						<tr><td class="rightAlign">Passwort bestätigen:</td><td><input type="password" name="Pwb" id="Pwb" required></td></tr>
 						<tr><td class="rightAlign">Email Adresse:</td><td><input type="email" name="email" id="email" required></td></tr>
 						<tr><td colspan="2"><h2>Captcha:</h2></td></tr>
-						<tr><td colspan="2">
+						<tr><td colspan="2" align="center">
 							<img id="captcha" src="../securimage/securimage_show.php" alt="CAPTCHA Image" />
 						</td></tr>
-						<tr><td colspan="2">
+						<tr><td colspan="2" align="center">
 							<input type="text" name="captcha_code" size="10" maxlength="6" />
 							<a href="#" onclick="document.getElementById('captcha').src = '../securimage/securimage_show.php?' + Math.random(); return false">[ Different Image ]</a>
 						</td></tr>
-						<tr><td colspan="2"><input type="submit" value="Registrieren" id="button"><input type="reset" name="Löschen"></td></tr>
+						<tr><td colspan="2" align="center"><input type="submit" value="Registrieren" id="button"><input type="reset" name="Löschen"></td></tr>
 					</table>
 				</form>
 			</td>
