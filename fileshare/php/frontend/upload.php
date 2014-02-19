@@ -39,9 +39,13 @@ $menu = new Menu($frontendMenu, "upload", "../../");
                             <tr><td align="center">Signieren mit: <span id="aktuellerSignaturschluessel"></span></td></tr>
                             <tr><td align="center">Passwort für den Signaturschlüssel:<input type="password" id="signaturschluesselPasswort"></td></tr>
 							<tr><td align="center"><input type="file" id="file"></td></tr>
+							<tr><td align="center">Die Dateigröße ist auf 20 Megabyte begrenzt</td></tr>
                             <tr><td align="center">Email des Empfängers:<input type="text" id="emailEmpfaenger"></td></tr>
 							<tr><td align="center"><br><input type="button" value="Hochladen" id="hochladen"></td></tr>
 						</form>
+						<div id="verschluesselnAnzeige" class="anzeigeUpload"></div>
+						<div id="signierenAnzeige" class="anzeigeUpload"></div>
+						<div id="uploadAnzeige" class="anzeigeUpload"></div>
 					</table>
 				</td></tr>
 			</table>
