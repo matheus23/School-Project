@@ -2,13 +2,12 @@
 <?php
 include_once "../utilities.php";
 debugModus();
-include_once "../generate.php";
-include_once "frontendUtilities.php"; // Definiert auch $frontendMenu
-include_once "Menu.php";
-include_once "../websiteFunktionen/loeschung.php";
-include_once "../websiteFunktionen/emailaenderung.php";
-include_once "../websiteFunktionen/passwortaenderung.php";
-
+require_once(rootdir."fileshare/php/generate.php");
+require_once(rootdir."fileshare/php/frontend/frontendUtilities.php"); // Definiert auch $frontendMenu
+require_once(rootdir."fileshare/php/frontend/Menu.php");
+require_once(rootdir."fileshare/php/websiteFunktionen/loeschung.php");
+require_once(rootdir."fileshare/php/websiteFunktionen/emailaenderung.php");
+require_once(rootdir."fileshare/php/websiteFunktionen/passwortaenderung.php");
 
 session_start();
 leiteUmWennNichtAngemeldet();

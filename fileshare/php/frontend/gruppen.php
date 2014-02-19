@@ -2,9 +2,9 @@
 <?php
 include_once "../utilities.php";
 debugModus();
-include_once "../generate.php";
-include_once "frontendUtilities.php";
-include_once "Menu.php";
+require_once(rootdir."fileshare/php/generate.php");
+require_once(rootdir."fileshare/php/frontend/frontendUtilities.php");
+require_once(rootdir."fileshare/php/frontend/Menu.php");
 
 session_start();
 leiteUmWennNichtAngemeldet();
