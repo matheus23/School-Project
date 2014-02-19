@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../PHPMailer/PHPMailerAutoload.php';
 require_once dirname(__FILE__) . '/../../../EmailPasswort.php';
+require_once dirname(__FILE__) . '/frontend/frontendUtilities.php';
 
 #####################################################################
 #							WICHTIG:								#
@@ -152,6 +153,25 @@ function resetPasswortEmail($resetID,$passwordHash,$db,$nrt){
 		},
 		function($fehlerNachricht)use (&$nrt){
 			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+		}
+	);
+}
+
+function istNutzerBestaetigt($nutzerID,$db){
+	return $db->query("SELECT Bestaetigt from Benutzer where ID='$nutzerID'")->fold(
+		function($ergebnis) use (&$nrt,$nutzerID,$db){
+			$nutzer=$ergebnis->fetch_array(MYSQLI_ASSOC);
+			if($nutzer["Bestaetigt"]==1){
+				return true;
+			}
+			if($nutzer["Bestaetigt"]==0){
+				#$nrt->fehler("Nutzer nicht bestätigt");
+				return false;
+			}
+		},
+		function($fehlerNachricht)use (&$nrt){
+			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+			return false;
 		}
 	);
 }
