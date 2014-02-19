@@ -16,8 +16,8 @@ $menu = new Menu($frontendMenu, "konto", "../../");
 $nrt = new Nachrichten("#fehlerListe", "../../");
 
 if (isset($data["accloeschen"])) {
-	if (alleSchluesselGesetzt($data, "mail", "pw", "check")
-		&& verarbeiteLoeschung($nrt, $data["mail"], $data["pw"])) {
+	if (alleSchluesselGesetzt($data, "email", "passwort", "check")
+		&& verarbeiteLoeschung($nrt, $data["email"], $data["passwort"])) {
 		session_destroy();
 		echo "ich kann";
 		umleitenZuAnmeldung();
@@ -25,22 +25,30 @@ if (isset($data["accloeschen"])) {
 	else { echo "Geht Nicht"; print_r($data); }
 }
 
-if (isset($data["emaila"])) {
-	if (alleSchluesselGesetzt($data, "mailae", "pwae", "nmailae")
-		&& verarbeiteEmailaenderung($nrt, $data["mailae"], $data["pwae"], $data["nmailae"])) {
+if (isset($data["emailaendern"])) {
+	if (alleSchluesselGesetzt($data, "email", "passwort", "neueemail")
+		&& verarbeiteEmailaenderung($nrt, $data["email"], $data["passwort"], $data["neueemail"])) {
 		session_destroy();
 		umleitenZuAnmeldung(); 
 	}
 	else { echo "Geht Nicht2"; }
 }
 
-if(isset($data["passworta"])) {
-	if (alleSchluesselGesetzt($data, "mail", "pwa", "pwn", "pwn2") 
-		&& verarbeitePasswortaenderung($nrt, $data["mail"], $data["pwa"], $data["pwn"], $data["pwn2"])) {
+if(isset($data["passwortaendern"])) {
+	if (alleSchluesselGesetzt($data, "email", "aktuellespasswort", "neuespasswort", "neuespasswort2") 
+		&& verarbeitePasswortaenderung($nrt, $data["email"], $data["aktuellespasswort"], $data["neuespasswort"], $data["neuespasswort2"])) {
 		session_destroy();
 		umleitenZuAnmeldung();
 	}
 	else { echo "Geht Nicht3"; }
+}
+
+if(isset($data["nameaendern"])) {
+	if (alleSchluesselGesetzt($data, "email", "passwort", "neuername")
+		&& verarbeiteNamensaenderung($nrt, $data["email"], $data["passwort"], $data["neuername"])) {
+		session_destroy();
+		umleitenZuAnmeldung();
+	}
 }
 ?>
 <html>
@@ -73,33 +81,33 @@ if(isset($data["passworta"])) {
 			<div class="label">Einstellungen</div>
 			<form method="POST" action="" id="nameAendern">
 				<table>
-					<tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
-					<tr><td>Aktuelles Passwort:</td><td><input type="password" name="pwa" id="pwa"></td></tr>
-					<tr><td>Neuer Nutzername:</td><td><input type="password" name="pwn" id="pwn"><td></tr>
-					<tr><td colspan="2"><input type="submit" value="Nutzername ändern" name="namea"></td></tr>
+					<tr><td>Email:</td><td><input type="text" name="email" id="mail"></td></tr>
+					<tr><td>Aktuelles Passwort:</td><td><input type="password" name="aktuellespasswort" id="pwa"></td></tr>
+					<tr><td>Neuer Nutzername:</td><td><input type="password" name="neuername" id="nname"><td></tr>
+					<tr><td colspan="2"><input type="submit" value="Nutzername ändern" name="nameaendern"></td></tr>
 				</table>
 			</form>
 			<form method="POST" action="" id="emailAendern">
 				<table>
-				    <tr><td>Email:</td><td><input type="text" name="mailae" id="mail"></td></tr>
-				    <tr><td>Passwort:</td><td><input type="password" name="pwae" id="pwae"></td></tr>
-				    <tr><td>Neue Email:</td><td><input type="text" name="nmailae" id="nmail"></td></tr>
-				    <tr><td colspan="2"><input type="submit" value="Email ändern" name="emaila"></td></tr>
+				    <tr><td>Email:</td><td><input type="text" name="email" id="mail"></td></tr>
+				    <tr><td>Passwort:</td><td><input type="password" name="passwort" id="pwae"></td></tr>
+				    <tr><td>Neue Email:</td><td><input type="text" name="neueemail" id="nmail"></td></tr>
+				    <tr><td colspan="2"><input type="submit" value="Email ändern" name="emailaendern"></td></tr>
 				</table>
 			</form>
 			<form method="POST" action="" id="passwortAendern">
 				<table>
-					<tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
-					<tr><td>Aktuelles Passowort:</td><td><input type="password" name="pwa" id="pwa"></tr></td>
-					<tr><td>Neues Passwort:</td><td><input type="password" name="pwn" id="pwn"></td></tr>
-					<tr><td>Passwort wiederholen:</td><td><input type="password" name="pwn2" id="pwn2"></td></tr> 
-					<tr><td colspan="2"><input type="submit" value="Passwort ändern" name="passworta"></td></tr>
+					<tr><td>Email:</td><td><input type="text" name="email" id="mail"></td></tr>
+					<tr><td>Aktuelles Passowort:</td><td><input type="password" name="aktuellespasswort" id="pwa"></tr></td>
+					<tr><td>Neues Passwort:</td><td><input type="password" name="neuespasswort" id="neuespasswort"></td></tr>
+					<tr><td>Passwort wiederholen:</td><td><input type="password" name="neuespasswort2" id="pwn"></td></tr> 
+					<tr><td colspan="2"><input type="submit" value="Passwort ändern" name="passwortaendern"></td></tr>
 				</table>
 			</form>
 			<form method="POST" action="" id="accountLoeschen">
 				<table>
-					<tr><td>Email:</td><td><input type="text" name="mail" id="mail"></td></tr>
-					<tr><td>Passwort:</td><td><input type="password" name="pw" id="pw"></td></tr>
+					<tr><td>Email:</td><td><input type="text" name="email" id="mail"></td></tr>
+					<tr><td>Passwort:</td><td><input type="password" name="passwort" id="pw"></td></tr>
 					<tr><td colspan="2">Account wirklich löschen: <input type="checkbox" name="check"></td></tr>
 					<tr><td colspan="2"><input type="submit" value="Account Löschen" name="accloeschen"></tr>
 				</table>
