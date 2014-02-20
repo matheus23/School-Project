@@ -7,6 +7,9 @@ var ausgewaehltID;
 var ausgewaehlt;
 var dateischluesselUnverschluesselt;
 
+var downloadAnzeige;
+var entschluesselnAnzeige;
+
 var pfadZuOrdnerFileshare = "../../";
 
 updateDateiSchluessel();
@@ -31,6 +34,7 @@ function updateDateiSchluessel(){
 }
 
 $("#dateiListe > .listenelement").click(function(){
+	$("#panel").scrollTop(0);
 	$("#editor > .label").text("Download: "+$(this).text());
 	$("#editor").show(0);
 	ausgewaehltID = $(this).data("ID");
@@ -87,7 +91,7 @@ $("#runterladen").click(function(){
 	}
 	var dateiURL = frageNachURL();
 	if (!dateiURL) return;
-	holeUndEntschluesseleDatei(dateiURL,passwort);
+	holeDatei(dateiURL,passwort);
 });
 
 function frageNachURL(){
@@ -109,49 +113,125 @@ function frageNachURL(){
 	return url;
 }
 
-function holeUndEntschluesseleDatei(dateiURL,passwort){
-	$.get(dateiURL, function(datei){
-		//Entschlüssele lokalen Schlüssel
-		if(!bereiteDateischluesselVor(passwort)) {
-			fehlerNachricht("#fehlerListe", "fehler", "Falsches Passwort oder beschädigter Schlüssel", pfadZuOrdnerFileshare);
+function holeDatei(dateiURL,passwort){
+	if(!bereiteDateischluesselVor(passwort)) {
+		fehlerNachricht("#fehlerListe", "fehler", "Falsches Passwort oder beschädigter Schlüssel", pfadZuOrdnerFileshare);
+		return;
+	}
+	$("#editorcontent").hide();
+	$("#downloadAnzeige").show();
+	$.ajax({
+		xhr: function(){
+			var xhr = new window.XMLHttpRequest();
+			xhr.addEventListener("progress", function(event){
+				if (event.lengthComputable) {
+					downloadAnzeige.anzeige.setLimit(event.total);
+					downloadAnzeige.anzeige.setStatus(event.loaded);
+				}
+			}, false);
+			return xhr;
+		},
+		type: "GET",
+		url:dateiURL,
+		data: {},
+		async:true,
+		success: function(antwort){
+			$("#downloadAnzeige").hide();
+			bereiteDateiVor(antwort,passwort);
+		}
+	});
+}
+
+function bereiteDateiVor(datei,passwort){//Übernimmt auch die Signaturprüfung
+	
+	$("#signaturpruefenAnzeige").show();
+	//Liest die notwendigen Informationen wieder ein, die an festen Stellen in der Datei gespeichert sind
+	var AESKeyVerschluesselt = atob(datei.substring(0,344));
+	var AESKeyIv = atob(datei.substring(344,368));
+	var signatur = atob(datei.substring(368,712));
+	var dateiVerschluesselt64 = datei.substring(712);//Nach 712 Byte fängt die Datei an
+	
+	var verifizierungsSchluessel = holeVerifizierungsSchluessel()
+	if(!verifizierungsSchluessel){
+		if(!confirm("Die Herkunft der Datei konnte nicht verifiziert werden. Dennoch behalten?")){
+			$("#signaturpruefenAnzeige").hide();
+			$("#editorcontent").show();
 			return;
 		}
-		
-		//Liest die notwendigen Informationen wieder ein, die an festen Stellen in der Datei gespeichert sind
-		var AESKeyVerschluesselt = atob(datei.substring(0,344));
-		var AESKeyIv = atob(datei.substring(344,368));
-		var signatur = atob(datei.substring(368,712));
-		var dateiVerschluesselt = datei.substring(712);//Nach 712 Byte fängt die Datei an
-		
-		var verifizierunsSchluessel = holeVerifizierungsSchluessel()
-		if(!verifizierunsSchluessel){
-			if(!confirm("Die Herkunft der Datei konnte nicht verifiziert werden. Dennoch behalten?")) return;
-		}
-		else{
-			RSAVerifizierunsSchluessel = forge.pki.publicKeyFromPem(verifizierunsSchluessel);
-			var hasher = forge.md.sha256.create();
-			hasher.update(dateiVerschluesselt);
-			var verifiziert = RSAVerifizierunsSchluessel.verify(hasher.digest().bytes(), signatur);
-			if(!verifiziert){
-				if(!confirm("Die Herkunft der Datei konnte nicht verifiziert werden. Dennoch behalten?")) return;
+	}
+	else{
+		var signaturpruefenWorker = new Worker("../../js/signaturpruefenWorker.js");
+		signaturpruefenWorker.addEventListener('message', function(event){
+			if (event.data){
+				$("#signaturpruefenAnzeige").hide();
+				entschluesseleDatei(AESKeyVerschluesselt,AESKeyIv,dateiVerschluesselt64,passwort);
 			}
-		}
-		
-		var AESKeyUnverschluesselt = dateischluesselUnverschluesselt.decrypt(AESKeyVerschluesselt);
-		var entschluesseler = forge.aes.createDecryptionCipher(AESKeyUnverschluesselt, 'CBC');
-		entschluesseler.start(AESKeyIv);
-		entschluesseler.update(forge.util.createBuffer(atob(dateiVerschluesselt)));
-		entschluesseler.finish();
-		
-		var byteString = entschluesseler.output.data;
-		var byteArray = new Uint8Array(byteString.length);
-		for (var i = 0; i<byteString.length;i++){
-			byteArray[i]=byteString.charCodeAt(i);
-		}
-		
-		var outputBlob = new Blob([byteArray]);
-		saveAs(outputBlob,ausgewaehlt.Name);
+			else{
+				if(confirm("Die Herkunft der Datei konnte nicht verifiziert werden. Dennoch behalten?")){
+					$("#signaturpruefenAnzeige").hide();
+					entschluesseleDatei(AESKeyVerschluesselt,AESKeyIv,dateiVerschluesselt64,passwort);
+				}
+				else{
+					$("#signaturpruefenAnzeige").hide();
+					$("#editorcontent").show();
+				}
+			}
+		});
+		signaturpruefenWorker.postMessage({verifizierungsSchluessel:verifizierungsSchluessel,dateiVerschluesselt64:dateiVerschluesselt64,signatur:signatur});
+	}
+	
+	
+}
+function entschluesseleDatei(AESKeyVerschluesselt,AESKeyIv,dateiVerschluesselt64,passwort){
+	$("#entschluesselnAnzeige").show();
+	var AESKeyUnverschluesselt = dateischluesselUnverschluesselt.decrypt(AESKeyVerschluesselt);
+	var aesWorkerEntschluesseln = new Worker("../../js/aesWorkerEntschluesseln.js");
+	
+	var dateiGroesse = dateiVerschluesselt64.length;
+	entschluesselnAnzeige.anzeige.setLimit(dateiGroesse);
+	entschluesselnAnzeige.anzeige.setStatus(0);
+	var position = 0;
+	var blockGroesse = 32768;//128*256
+	var dateiEntschluesselt="";
+	dateiVerschluesselt = atob(dateiVerschluesselt64);
+	
+	aesWorkerEntschluesseln.addEventListener('message', function(event){
+			console.log(event.data);
+			switch(event.data.aktion){
+				case "weiter":
+					dateiEntschluesselt+=event.data.output;
+					entschluesselnAnzeige.anzeige.setStatus(position);
+					if (position+blockGroesse<dateiGroesse){
+						byteString="";
+						for (var i = position; i<position+blockGroesse;i++){
+							byteString += dateiVerschluesselt[i];
+						}
+						position+=blockGroesse;
+						aesWorkerEntschluesseln.postMessage({aktion:"update",byteString:byteString});
+					}
+					else{
+						byteString="";
+						for (var i = position; i<dateiGroesse;i++){
+							byteString += dateiVerschluesselt[i];
+						}
+						aesWorkerEntschluesseln.postMessage({aktion:"finish",byteString:byteString});
+					}
+					break;
+				case "fertig":
+					entschluesselnAnzeige.anzeige.setStatus(dateiGroesse);
+					dateiEntschluesselt+=event.data.output;
+					var byteArray = new Uint8Array(dateiEntschluesselt.length);
+					for (var i = 0; i<dateiEntschluesselt.length;i++){
+						byteArray[i]=dateiEntschluesselt.charCodeAt(i);
+					}
+					var outputBlob = new Blob([byteArray]);
+					saveAs(outputBlob,ausgewaehlt.Name);
+					$("#entschluesselnAnzeige").hide();
+					$("#editorcontent").show();
+				break;
+			}
 	});
+	aesWorkerEntschluesseln.postMessage({aktion:"start",AESKeyUnverschluesselt:AESKeyUnverschluesselt,AESKeyIv:AESKeyIv});
 }
 
 function bereiteDateischluesselVor(passwort){
@@ -211,3 +291,26 @@ function holeVerifizierungsSchluessel(){
 	});
 	return schluessel;
 }
+
+//UI-Funktionen
+$(document).ready(function() {
+	$(".anzeigeUpload").hide();
+	downloadAnzeige = $("#downloadAnzeige").fortschrittBox(
+		{
+			label: "Datei wird heruntergeladen...",
+			typ: "fortschritt"
+		}
+	);
+	entschluesselnAnzeige = $("#entschluesselnAnzeige").fortschrittBox(
+		{
+			label: "Datei wird entschlüsselt...",
+			typ: "fortschritt"
+		}
+	);
+	$("#signaturpruefenAnzeige").fortschrittBox(
+		{
+			label: "Signatur wird überprüft...",
+			typ: "ewigerKreis"
+		}
+	);
+});

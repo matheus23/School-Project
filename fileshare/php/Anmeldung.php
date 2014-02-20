@@ -83,8 +83,6 @@
 </table>
 <div class="bottom_fix_right">Passwort vergessen? <a href="pwvergessen.php">Hier</a> klicken</div>
 <div class="bottom_fix_left">Noch nicht registriert? <a href="registrierung.php">Hier</a> Registrieren</div>
-
-<script src="../js/pruefeRegistrierung.js"></script>
 <?php $nrt->genJsCode(); ?>
 </body>
 </html>

@@ -37,9 +37,14 @@ $menu = new Menu($frontendMenu, "download", "../../");
             </div>
             <div id="editor">
 				<div class="label">Download</div>
-                <p>Schlüssel: <span id="schluessel"></span></p>
-                Passwort für den Dateischlüssel:<input type="password" id="dateischluesselPasswort">
-                <input type="button" value="Herunterladen" id="runterladen">
+				<div id="editorcontent">
+	                <p>Schlüssel: <span id="schluessel"></span></p>
+	                Passwort für den Dateischlüssel:<input type="password" id="dateischluesselPasswort">
+	                <input type="button" value="Herunterladen" id="runterladen">
+	            </div>
+	            <div id="downloadAnzeige" class="anzeigeUpload"></div>
+	            <div id="signaturpruefenAnzeige" class="anzeigeUpload"></div>
+	            <div id="entschluesselnAnzeige" class="anzeigeUpload"></div>
             </div>
         </div>
 	</div>
