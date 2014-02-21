@@ -2,7 +2,7 @@
 
 	function verarbeiteRegistrierung($nrt, $nutzername, $passwort, $passwortBestaetigen, $email) {
 		$db = oeffneBenutzerDB($nrt);
-		$user = $db->real_escape_string($nutzername);
+		$user = strip_tags($db->real_escape_string($nutzername));
 		$email = $db->real_escape_string(strtolower($email));
 		
 		if ($passwort != $passwortBestaetigen) {
