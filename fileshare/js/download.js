@@ -187,13 +187,13 @@ function entschluesseleDatei(AESKeyVerschluesselt,AESKeyIv,dateiVerschluesselt64
 	var AESKeyUnverschluesselt = dateischluesselUnverschluesselt.decrypt(AESKeyVerschluesselt);
 	var aesWorkerEntschluesseln = new Worker("../../js/aesWorkerEntschluesseln.js");
 	
-	var dateiGroesse = dateiVerschluesselt64.length;
-	entschluesselnAnzeige.anzeige.setLimit(dateiGroesse);
-	entschluesselnAnzeige.anzeige.setStatus(0);
 	var position = 0;
 	var blockGroesse = 32768;//128*256
 	var dateiEntschluesselt="";
-	dateiVerschluesselt = atob(dateiVerschluesselt64);
+	var dateiVerschluesselt = atob(dateiVerschluesselt64);
+	var dateiGroesse = dateiVerschluesselt.length;
+	entschluesselnAnzeige.anzeige.setLimit(dateiGroesse);
+	entschluesselnAnzeige.anzeige.setStatus(0);
 	
 	aesWorkerEntschluesseln.addEventListener('message', function(event){
 			console.log(event.data);

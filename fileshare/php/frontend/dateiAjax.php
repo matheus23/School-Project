@@ -135,7 +135,7 @@ function frageNachURL(){
 					$nrt->fehler("Es gab einen Fehler beim Zugänglichmachen der Datei");
 				}
 				else{
-					$url = "http://".host."/download_tmp/$dateiname";//Muss später in https geändert werden
+					$url = "https://".host."/download_tmp/$dateiname";
 				}
 			},
 			function($fehlerNachricht) use (&$nrt) {
