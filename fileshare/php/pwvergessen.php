@@ -6,6 +6,7 @@ include "generate.php";
 <head>
 	<meta charset="UTF-8" />
 	<link href="../css/style.css"  rel="stylesheet" type="text/css"/>
+	<script src="../js/jquery-1.10.2.min.js"></script>
 	<script src="../js/jsUtilities.js" type="text/javascript"></script>
 	<title>Passwort-reset</title>
 </head>

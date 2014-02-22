@@ -122,7 +122,7 @@ function schickePasswortResetEmail($nrt,$email,$resetID,$verfallsdatum){
 		host."$pfad/passwortreset.php?resetID=$resetID\n\n".
 		"Der Link ist 24 Stunden gültig.";
 	if(!$mail->send()) {
-		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
+		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo."  $email,$resetID,$verfallsdatum");
 		return false;
 	}
 	return true;
