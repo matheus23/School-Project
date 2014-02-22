@@ -7,6 +7,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<link href="../css/style.css"  rel="stylesheet" type="text/css"/>
+	<script src="../js/jquery-1.10.2.min.js"></script>
 	<script src="../js/jsUtilities.js" type="text/javascript"></script>
 	<title>Passwort zurücksetzen</title>
 </head>
@@ -62,7 +63,6 @@ if (alleSchluesselGesetzt($data, "resetID", "NPw", "NPwb")){
 	$resetID=$db->real_escape_string($data["resetID"]);
 	$NPw=$data["NPw"];
 	$NPwb=$data["NPwb"];
-	$resetID=$db->real_escape_string($data["resetID"]);
 	if ($NPw != $NPwb) {
 		$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein.");
 	}
