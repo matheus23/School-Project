@@ -1,20 +1,35 @@
 <!DOCTYPE html>
+<?php
+include_once "utilities.php";
+debugModus();
+require_once(rootdir."fileshare/php/benutzerEmail.php");
+require_once(rootdir."fileshare/php/generate.php");
+
+$data = $_GET;
+$nrt = new Nachrichten("#fehlerListe");
+if (alleSchluesselGesetzt($data, "nutzerID")){
+	$db = oeffneBenutzerDB($nrt);
+	$nutzerID = $db->real_escape_string($data["nutzerID"]);
+	
+	pruefeRegistrierungsEmail($nutzerID, $db, $nrt);
+} else {
+	$nrt->fehler("Keine nutzerID in der URL. Sicher, dass du auf der richtigen Seite bist?");
+}
+?>
 <html>
 <head>
 	<meta charset="UTF-8" />
 	<link href="../css/style.css"  rel="stylesheet" type="text/css"/>
 	<script src="../js/jsUtilities.js" type="text/javascript"></script>
-	<title>Email bestätigen</title>
+	<title>Email bestätigt</title>
 </head>
 <body>
-<div id='header'>
-	<i><h1 id='banner'>Fileshare</h1></i>
-</div>
+<?=generateHeaderBanner();?>
 <table width="100%" height="100%">
 <tr>
 	<td colspan="2">
 		<table align="center">
-		<tr><td align="center"><h1>E-mail bestätigen</h1></td></tr>
+		<tr><td align="center"><h1>E-mail bestätigt</h1></td></tr>
 		<tr>
 			<td>
 				<!-- Falls fehler auftreten, werden hier <div>'s erzeugt, die fehlernachrichten beinhalten: -->
@@ -39,27 +54,11 @@
 		</td>
 	</tr>
 	<tr>
-	<td class='bottom_fix_right'>
-		Zurück zur <a href="Anmeldung.php">Startseite
+	<td style="font-size: 2em">
+		Zurück zur <a href="Anmeldung.php">Anmeldung</a>
 	</td>
 </tr>
 </table>
-<?php
-include_once "utilities.php";
-debugModus();
-$data = $_GET;
-$nrt = new Nachrichten("fehlerListe");
-if (alleSchluesselGesetzt($data, "nutzerID")){
-	$db = oeffneBenutzerDB($nrt);
-	tabelleNeueSpalte($db, "Benutzer", "Bestaetigt","BOOL");//MUSS SPÄTER ENTFERNT WERDEN ### NUR ZUR TABELLEN-MIGRATION
-	$nutzerID=$db->real_escape_string($data["nutzerID"]);
-	require_once("benutzerEmail.php");
-	pruefeRegistrierungsEmail($nutzerID,$db,$nrt);
-}
-else{
-	$nrt->fehler("Keine nutzerID in der URL. Sicher, dass du auf der richtigen Seite bist?");
-}
-?>
 <?php $nrt->genJsCode(); ?>
 </body>
 </html>
