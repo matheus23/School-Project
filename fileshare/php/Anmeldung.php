@@ -8,7 +8,7 @@
 	
 	function zumDashboard() {
 		// Umleitung auf Dashboard:
-		header("Location: http://".host.dirname($_SERVER["REQUEST_URI"])."/frontend/dashboard.php");
+		header("Location: https://".host.dirname($_SERVER["REQUEST_URI"])."/frontend/dashboard.php");
 	}
 	
 	if (istAngemeldet()){
