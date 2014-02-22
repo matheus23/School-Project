@@ -68,7 +68,7 @@
 		$db->query("SELECT ID WHERE ModeratorID='$userID'")->fold(
 			function($ergebnis) use (&$db) {
 				while ($zeile = $ergebnis->fetch_assoc()) {
-					$db->query("DELETE FROM Gruppenmitglieder WHERE GruppenID='$zeile["ID"]'");
+					$db->query("DELETE FROM Gruppenmitglieder WHERE GruppenID='".$zeile["ID"]."'");
 				}
 			},
 			function () {}
