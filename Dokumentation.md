@@ -133,6 +133,12 @@ Eine Vorstellung der Funktionsweise bekommt man durch folgendes Bild, oder einfa
 
 [von MathiasRav at da.wikipedia [Public domain], via Wikimedia Commons](http://commons.wikimedia.org/wiki/File%3ABase64-da.png)
 
+
+#### Die Webworker
+Da Schlüsselgenerierung, Signieren, Vertifizieren und Ver-/Entschlüsseln rechenaufwendige Prozesse sind, werden sie nicht im Hauptthread durgeführt, sondern asynchron durch Webworker realisiert. Das hat den Vorteil, dass UI-Funktionen nicht unterbrochen werden und der Browser keine Meldung über zu lange Skriptausführung ausgibt. Der Webworker zum Verschlüsseln einer Datei sieht schematisch dargestellt etwa so aus:
+
+!["Worker"](https://docs.google.com/drawings/d/1ziv8ys4l1dzWrLOoQXfhoBFRyZVI6mV33Fz6YBBxPTw/pub?w=1440&h=1080)
+
 ###Dateigröße
 Die Bestimmung der Dateigröße ist auf den ersten Blick verwirrend. Diese muss allerdings ermittelt werden, um den Nutzer vor dem Upload zu großer Dateien zu warnen.
 Am besten lässt sich das an einem Beispiel nachvollziehen.
