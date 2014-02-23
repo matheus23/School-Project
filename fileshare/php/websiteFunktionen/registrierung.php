@@ -19,7 +19,7 @@
 		}
 		else {
 			$pwHash = passwordHash($passwort);
-			$nutzerID=uniqid("reg_",true);
+			$regID=sichereID("reg_",30);
 			
 			// So geht das überprüfen von passwörtern dann:
 			//if (passwordVerify($passwort, $pwHash))  {
@@ -28,10 +28,10 @@
 			$sql = 
 				"INSERT INTO ".
 				"`Benutzer`(`Nutzername`, `Passwort`, `Email`, `RegistrierungsID`, `Bestaetigt`) ".
-				"VALUES ('$user', '$pwHash', '$email','$nutzerID','0')"; 
+				"VALUES ('$user', '$pwHash', '$email','$regID','0')"; 
 			$db->query($sql)->fold(
-				function($ergebnis) use (&$nrt, $user, $email, $nutzerID) {
-					$mail = schickeRegistrierungsEmail($user,$email,$nutzerID,$nrt);
+				function($ergebnis) use (&$nrt, $user, $email, $regID) {
+					$mail = schickeRegistrierungsEmail($user,$email,$regID,$nrt);
 					if ($mail) {//Bei einem Fehler wurde dieser bereits in $nrt geschrieben
 						$nrt->okay("Erfolgreich registriert! Eine E-Mail ist auf dem Weg...");
 						return true;

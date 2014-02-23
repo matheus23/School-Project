@@ -7,13 +7,13 @@ require_once(rootdir."fileshare/php/generate.php");
 
 $data = $_GET;
 $nrt = new Nachrichten("#fehlerListe");
-if (alleSchluesselGesetzt($data, "nutzerID")){
+if (alleSchluesselGesetzt($data, "regID")){
 	$db = oeffneBenutzerDB($nrt);
-	$nutzerID = $db->real_escape_string($data["nutzerID"]);
+	$regID = $db->real_escape_string($data["regID"]);
 	
-	pruefeRegistrierungsEmail($nutzerID, $db, $nrt);
+	pruefeRegistrierungsEmail($regID, $db, $nrt);
 } else {
-	$nrt->fehler("Keine nutzerID in der URL. Sicher, dass du auf der richtigen Seite bist?");
+	$nrt->fehler("Keine regID in der URL. Sicher, dass du auf der richtigen Seite bist?");
 }
 ?>
 <html>
