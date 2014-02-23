@@ -135,6 +135,22 @@ function EmailZuNutzerID($email){//Nachrichten-dummy, falls intern ohne Fehlerbe
 	return $id;
 }
 
+function NutzerIDZuNutzername($nutzerID, $nrt){
+	if(!isset($nrt)) $nrt = new Nachrichten("","");//Nachrichten-dummy, falls intern ohne Fehlerbehandlung benutzt
+	$db = oeffneBenutzerDB($nrt);
+	$sql="SELECT Nutzername FROM Benutzer  WHERE ID='$nutzerID'";
+	$email;
+	$db->query($sql)->fold(
+		function ($ergebnis) use (&$email){
+			$email = $ergebnis->fetch_array()[0];
+		},
+		function($fehlerNachricht) use (&$nrt) {
+			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+		}
+	);
+	return $email;
+}
+
 $frontendMenu = array(
   new Menupunkt("dashboard","Dashboard","dashboard.php", "img/house.png"),
   new Menupunkt("download","Download","download.php", "img/application_put.png"),

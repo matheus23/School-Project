@@ -37,7 +37,7 @@ class ExtPHPMailer extends PHPMailer {
 	}
 }
 
-function schickeRegistrierungsEmail($user,$email,$nutzerID,$nrt){
+function schickeRegistrierungsEmail($user,$email,$regID,$nrt){
 	$mail= new ExtPHPMailer();
 	$mail->Subject = 'Registrierung abschließen';
 	$pfad = dirname($_SERVER["REQUEST_URI"]);
@@ -45,11 +45,13 @@ function schickeRegistrierungsEmail($user,$email,$nutzerID,$nrt){
 	$mail->Body =//Email-Text für HTML-Mails (Link anklickbar)
 		"Hallo $user,<br>".
 		"um deine Registrierung abzuschließen öffne folgenden Link:<br>".
-		"<a href='".host."$pfad/emailBestaetigen.php?nutzerID=$nutzerID'>".host."$pfad/emailBestaetigen.php?nutzerID=$nutzerID</a>";
+		"<a href='https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$regID'>".
+		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$regID".
+		"</a>";
 	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
 		"Hallo $user,\n".
 		"um deine Registrierung abzuschließen öffne folgenden Link:\n".
-		host."$pfad/emailBestaetigen.php?nutzerID=$nutzerID";
+		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$regID";
 	if(!$mail->send()) {
 		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
 		return false;
@@ -78,9 +80,9 @@ function schickeGeloeschtEmail($user,$email,$nrt){
 
 
 //Prüft die NutzerID und setzt den jeweilgin Nutzer auf bestätigt
-function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
-	$db->query("SELECT * from Benutzer where RegistrierungsID='$nutzerID'")->fold(
-		function($ergebnis) use (&$nrt,$nutzerID,$db){
+function pruefeRegistrierungsEmail($regID,$db,$nrt){
+	$db->query("SELECT * from Benutzer where RegistrierungsID='$regID'")->fold(
+		function($ergebnis) use (&$nrt,$regID,$db){
 			$nutzer=$ergebnis->fetch_array(MYSQLI_ASSOC);
 			if(count($nutzer)==0){
 				$nrt->fehler("Kein passender Nutzer gefunden");
@@ -90,7 +92,7 @@ function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
 				$nrt->warnung("Nutzer schon bestätigt");
 				return;
 			}
-			$db->query("UPDATE `Benutzer` SET Bestaetigt=1 where RegistrierungsID='$nutzerID'")->fold(
+			$db->query("UPDATE `Benutzer` SET Bestaetigt=1 where RegistrierungsID='$regID'")->fold(
 				function($ergebnis)use (&$nrt,$nutzer){
 					$email = $nutzer["Email"];
 					$nrt->okay("Das Konto mit der E-Mail '$email' wurde erfolgreich bestätigt.");
@@ -109,17 +111,16 @@ function pruefeRegistrierungsEmail($nutzerID,$db,$nrt){
 function schickePasswortResetEmail($nrt,$email,$resetID,$verfallsdatum){
 	$mail= new ExtPHPMailer();
 	$mail->Subject = 'Passwort zurücksetzen';
-	$pfad = dirname($_SERVER["REQUEST_URI"]);
 	$mail->addAddress($email);
 	$mail->Body =//Email-Text für HTML-Mails (Link anklickbar)
 		"Hallo,<br>".
 		"Um dein Passwort zu ändern, benutze den folgenden Link:<br>".
-		"<a href='".host."$pfad/passwortreset.php?resetID=$resetID'>".host."$pfad/passwortreset.php?resetID=$resetID</a><br><br>".
+		"<a href='https://".host."/".githubdir."/fileshare/php/passwortreset.php?resetID=$resetID'>https://".host."/".githubdir."/fileshare/php/passwortreset.php?resetID=$resetID</a><br><br>".
 		"Der Link ist 24 Stunden gültig.";
 	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
 		"Hallo,\n".
 		"Um dein Passwort zu ändern, benutze den folgenden Link:\n".
-		host."$pfad/passwortreset.php?resetID=$resetID\n\n".
+		"https://".host."/".githubdir."/fileshare/php/passwortreset.php?resetID=$resetID\n\n".
 		"Der Link ist 24 Stunden gültig.";
 	if(!$mail->send()) {
 		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo."  $email,$resetID,$verfallsdatum");
@@ -175,4 +176,36 @@ function istNutzerBestaetigt($nutzerID,$db){
 		}
 	);
 }
+
+function setzteNutzerBestaetigt($db, $nutzerID, $bestaetigt) {
+	return $db->query("UPDATE Benutzer SET Bestaetigt='$bestaetigt' WHERE ID='$nutzerID'")->fold(
+		function($ergebnis) use (&$nrt,$nutzerID,$db){
+			return true;
+		},
+		function($fehlerNachricht)use (&$nrt){
+			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+			return false;
+		}
+	);
+}
+
+function schickeBestaetigungsEmail($user,$email,$nutzerID,$nrt){
+	$mail= new ExtPHPMailer();
+	$mail->Subject = 'Emailänderung abschließen';
+	$mail->addAddress($email);
+	$mail->Body =//Email-Text für HTML-Mails (Link anklickbar)
+		"Hallo $user,<br>".
+		"um deine Emailänderung abzuschließen öffne folgenden Link:<br>".
+		"<a href='https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID'>https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID</a>";
+	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
+		"Hallo $user,\n".
+		"um deine Emailänderung abzuschließen öffne folgenden Link:\n".
+		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID";
+	if(!$mail->send()) {
+		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
+		return false;
+	}
+	return true;
+}
+
 ?>

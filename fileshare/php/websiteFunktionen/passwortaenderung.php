@@ -1,5 +1,5 @@
 <?php
-	include_once "../utilities.php";
+	require_once "../utilities.php";
 	debugModus();
 
 	function verarbeitePasswortaenderung($nrt, $emailUnencoded, $pw, $neuesPw, $neuesPwWiederholung) {

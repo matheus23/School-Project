@@ -44,10 +44,6 @@ function oeffneBenutzerDB($nrt) {
 define("PASSWORD_PASS", 0);
 define("WRONG_EMAIL", 1);
 define("WRONG_COMBINATION", 2);
-define("WRONG_REPETITION", 3);
-define("NO_ENTRY", 4);
-define("PASS_THROUGH", 5);
-define("DB_FAIL", 6);
 // Testet das Passwort für einen Benutzer:
 // PASSWORD_PASS, (also 0) wenn das Passwort stimmt.
 // WRONG_EMAIL, (also 1) wenn es die Email nicht gibt.
@@ -70,7 +66,8 @@ function benutzerPwTest($db, $email, $passwort) {
 			// Hmmmm naja...
 			// Sollte _eigentlich_ einen fehler Ausgeben...
 			return WRONG_COMBINATION;
-		});
+		}
+	);
 }
 
 // Benutzung:
@@ -83,18 +80,18 @@ function benutzerPwTest($db, $email, $passwort) {
 // Gibt True zurück, wenn alle gegebenen Keys im array $array 
 // exestieren.
 function alleSchluesselGesetzt($array) {
- $allargs = func_get_args();
- for ($i = 1; $i < count($allargs); $i++) {
-  if (!isset($array[$allargs[$i]])) {
-   return false;
-  } else {
-   $value = $array[$allargs[$i]];
-   if (empty($value)) {
-    return false;
-   }
-  }
- }
- return true;
+	$allargs = func_get_args();
+	for ($i = 1; $i < count($allargs); $i++) {
+ 		if (!isset($array[$allargs[$i]])) {
+  			return false;
+ 		} else {
+			$value = $array[$allargs[$i]];
+			if (empty($value)) {
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 function orDefault($array, $index, $default) {
