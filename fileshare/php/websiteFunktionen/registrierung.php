@@ -7,12 +7,15 @@
 		
 		if ($passwort != $passwortBestaetigen) {
 			$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein.");
+			return false;
 		}
 		elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
 			$nrt->fehler("Die E-Mail-Adresse hat ein ungültiges Format.");
+			return false;
 		}
 		elseif (userExestiertBereits($db, $email)) {
 			$nrt->fehler("Diese E-Mail ist bereits vergeben.");
+			return false;
 		}
 		else {
 			$pwHash = passwordHash($passwort);
@@ -31,9 +34,11 @@
 					$mail = schickeRegistrierungsEmail($user,$email,$nutzerID,$nrt);
 					if ($mail) {//Bei einem Fehler wurde dieser bereits in $nrt geschrieben
 						$nrt->okay("Erfolgreich registriert! Eine E-Mail ist auf dem Weg...");
+						return true;
 					}
 				}, function($fehlerNachricht) use (&$nrt) {
 					$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+					return false;
 				}
 			);
 		}

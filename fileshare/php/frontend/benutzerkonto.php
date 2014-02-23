@@ -16,35 +16,12 @@ $data = $_POST;
 $menu = new Menu($frontendMenu, "konto", "../../");
 $nrt = new Nachrichten("#fehlerListe", "../../");
 
-// Returnt "false", wenn der Fehlercode einen Fehler repraesentiert,
-// ansonsten "true".
-function fehlerBehandlung($nrt, $fehlerCode) {
-	switch ($fehlerCode) {
-		case WRONG_EMAIL:
-			$nrt->fehler("Die eingegebene Email ist nicht vorhanden");
-			return false;
-		case WRONG_COMBINATION:
-			$nrt->fehler("Email und Passwort stimmen nicht überein");
-			return false;
-		case DB_FAIL:
-			$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff");
-			return false;
-		case WRONG_REPETITION:
-			$nrt->fehler("Das Passwort stimmt nicht mit der Wiederholung überein");
-			return false;
-		case PASS_THROUGH:
-			return true;
-		default:
-			return true;
-	}
-}
-
 if (isset($data["accloeschen"])) {
 	if (!alleSchluesselGesetzt($data, "email", "passwort", "check")) {
 		$nrt->fehler("Es wurden keine Angaben gemacht");
 	} else {
-		$loeschen = verarbeiteLoeschung($nrt, $data["email"], $data["passwort"]);
-		if (fehlerBehandlung($nrt, $loeschen)) {
+		$erfolgreich = verarbeiteLoeschung($nrt, $data["email"], $data["passwort"]);
+		if ($erfolgreich) {
 			session_destroy();
 			umleitenZuAnmeldung();
 		}
@@ -55,8 +32,8 @@ if (isset($data["emailaendern"])) {
 	if (!alleSchluesselGesetzt($data, "email", "passwort", "neueemail")) {
 		$nrt->fehler("Es wurden keine Angaben gemacht");
 	} else {
-		$mailaendern = verarbeiteEmailaenderung($nrt, $data["email"], $data["passwort"], $data["neueemail"]);
-		if (fehlerBehandlung($nrt, $mailaendern)) {
+		$erfolgreich = verarbeiteEmailaenderung($nrt, $data["email"], $data["passwort"], $data["neueemail"]);
+		if ($erfolgreich) {
 	        session_destroy();
 			umleitenZuAnmeldung();
 		}
@@ -68,8 +45,8 @@ if(isset($data["passwortaendern"])) {
 	if (!alleSchluesselGesetzt($data, "email", "aktuellespasswort", "neuespasswort", "neuespasswort2")) {
 		$nrt->fehler("Es wurden keine Angaben gemacht");
 	} else {
-		$pwaendern = verarbeitePasswortaenderung($nrt, $data["email"], $data["aktuellespasswort"], $data["neuespasswort"], $data["neuespasswort2"]);
-		if (fehlerBehandlung($nrt, $pwaendern)) {
+		$erfolgreich = verarbeitePasswortaenderung($nrt, $data["email"], $data["aktuellespasswort"], $data["neuespasswort"], $data["neuespasswort2"]);
+		if ($erfolgreich) {
 			session_destroy();
 			umleitenZuAnmeldung();
 		}
@@ -80,10 +57,8 @@ if(isset($data["nameaendern"])) {
 	if (!alleSchluesselGesetzt($data, "email", "passwort", "neuername")) {
 		$nrt->fehler("Es wurden keine Angaben gemacht");
 	} else {
-		$nameaendern = verarbeiteNamensaenderung($nrt, $data["email"], $data["passwort"], $data["neuername"]);
-		if (fehlerBehandlung($nrt, $nameaendern)) {
-			$nrt->okay("Der Name wurde erfolgreich geändert");
-		}
+		verarbeiteNamensaenderung($nrt, $data["email"], $data["passwort"], $data["neuername"]);
+		// verarbeiteNamensaenderung() gibt bereits fehler/okay Nachrichten aus.
 	}
 }
 

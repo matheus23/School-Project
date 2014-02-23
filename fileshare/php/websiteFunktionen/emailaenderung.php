@@ -15,18 +15,23 @@
 					function($ergebnis) use (&$nrt) {
 						$nrt->okay("Email erfolgreich geändert");
 						//Bestätigungs Email, dass das Pw geändert wurde
-						return PASS_THROUGH;
+						return true;
 					}, function($fehlerNachricht) use (&$nrt) {
-						return DB_FAIL;
+						$nrt->fehler("Es gabe einen fehler beim Datenbankzugriff: $fehlerNachricht");
+						return false;
 					}
 				);
-				} elseif ($passwortTest == WRONG_EMAIL) {
-					return WRONG_EMAIL;
-				} elseif ($passwortTest == WRONG_COMBINATION) {
-					return WRONG_COMBINATION;
-				}
+			} elseif ($passwortTest == WRONG_EMAIL) {
+				$nrt->fehler("Die angegebene Email exestiert nicht");
+				return false;
+			} elseif ($passwortTest == WRONG_COMBINATION) {
+				$nrt->fehler("Die Email-Passwort Kombination passt nicht");
+				return false;
+			}
+		} else {
+			$nrt->fehler("Die angegebene Email exestiert nicht");
+			return false;
 		}
-		else { return WRONG_EMAIL; }
 	}
 	
 ?>
