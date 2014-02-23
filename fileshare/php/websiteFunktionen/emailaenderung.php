@@ -16,17 +16,20 @@
 				return $db->query("UPDATE `Benutzer` SET Email='$neueemail' WHERE Email='$email'")->fold(
 					function($ergebnis) use (&$db, &$nrt, $nutzerID, $email) {
 						$nutzername = NutzerIDZuNutzername($nutzerID, $nrt);
-						$mail = schickeBestaetigungsEmail($nutzername, $email, sichereID("reg_"), $nrt);
-						if ($mail) {
-							if (setzteNutzerBestaetigt($db, $nutzerID, "0")) {
-								$nrt->okay("Email erfolgreich geändert");
-								return true;
+						$regID = sichereID("reg_");
+						if (setzteRegID($db, $nrt, $nutzerID, $regID)) {
+							$mail = schickeBestaetigungsEmail($nutzername, $email, $regID, $nrt);
+							if ($mail) {
+								if (setzteNutzerBestaetigt($db, $nutzerID, "0")) {
+									$nrt->okay("Email erfolgreich geändert");
+									return true;
+								} else {
+									return false;
+								}
 							} else {
 								return false;
 							}
-						} else {
-							return false;
-						}
+						} else return false;
 					}, function($fehlerNachricht) use (&$nrt) {
 						$nrt->fehler("Es gabe einen fehler beim Datenbankzugriff: $fehlerNachricht");
 						return false;
@@ -45,4 +48,15 @@
 		}
 	}
 	
+	function setzteRegID($db, $nrt, $nutzerID, $regID) {
+		return $db->query("UPDATE Benutzer SET RegistrierungsID='$regID' WHERE ID='$nutzerID'")->fold(
+			function($ergebnis) {
+				return true;
+			},
+			function($fehlerNachricht) {
+				$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
+				return false;
+			}
+		);
+	}	
 ?>

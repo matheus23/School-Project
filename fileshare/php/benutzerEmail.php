@@ -196,11 +196,11 @@ function schickeBestaetigungsEmail($user,$email,$nutzerID,$nrt){
 	$mail->Body =//Email-Text für HTML-Mails (Link anklickbar)
 		"Hallo $user,<br>".
 		"um deine Emailänderung abzuschließen öffne folgenden Link:<br>".
-		"<a href='https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID'>https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID</a>";
+		"<a href='https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$nutzerID'>https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID</a>";
 	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
 		"Hallo $user,\n".
 		"um deine Emailänderung abzuschließen öffne folgenden Link:\n".
-		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID";
+		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$nutzerID";
 	if(!$mail->send()) {
 		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
 		return false;
