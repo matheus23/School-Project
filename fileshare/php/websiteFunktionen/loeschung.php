@@ -1,7 +1,10 @@
 <?php
 	include_once "../benutzerEmail.php";
+	include_once "../utilities.php";
+	
 	function verarbeiteLoeschung($nrt, $email, $passwort) {
 		$db = oeffneBenutzerDB($nrt);
+		
 		$emailEscaped = $db->real_escape_string(strtolower($email));
 	
 		if (userExestiertBereits($db, $emailEscaped)) {
@@ -32,10 +35,9 @@
 				$nrt->fehler("Email-Passwort Kombination passt nicht.");
 				return false;
 			}
-		} 
-		else {
-			$nrt->fehler("Diese Email ist nicht registriert");
-			return false;
-		}	
+			
+		}
+		$nrt->fehler("Es wurden keine Angaben gemacht");
+		return false;
 	}
 ?>

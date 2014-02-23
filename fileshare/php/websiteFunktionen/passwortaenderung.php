@@ -1,5 +1,6 @@
 <?php
 	include_once "../utilities.php";
+	debugModus();
 
 	function verarbeitePasswortaenderung($nrt, $emailUnencoded, $pw, $neuesPw, $neuesPwWiederholung) {
 		$db = oeffneBenutzerDB($nrt);
@@ -8,31 +9,29 @@
 		
 		if (userExestiertBereits($db, $email)) {
 			if ($neuesPw != $neuesPwWiederholung) {
-				$nrt->fehler("Das neue Passwort stimmt nicht mit der Wiederholung überein");
-				return false;
+				return WRONG_REPETITION;
 			}
 			else {
 				$passwortTest = benutzerPwTest($db, $email, $pw);
-				if ($passwortTest == PASSWORD_PASS)  {
+				if ($passwortTest == PASSWORD_PASS) {
 					$neuesPwHash = passwordHash($neuesPw);
 					return $db->query("UPDATE `Benutzer` SET Passwort='$neuesPwHash' WHERE Email='$email'")->fold(
 						function($ergebnis) use (&$nrt) {
 							$nrt->okay("Passwort erfolgreich geändert");
 							//Bestätigungs Email, dass das Pw geändert wurde
-							return true;
+							return PASS_THROUGH;
 						}, function($fehlerNachricht) use (&$nrt) {
-							$nrt->fehler("Es gab einen Fehler beim Datenbankzugriff: $fehlerNachricht");
-							return false;
+							return DB_FAIl;
 						}
 					);
 				} elseif ($passwortTest == WRONG_EMAIL) {
-					$nrt->fehler("Diese Email ist nicht registriert.");
-					return false;
-				} else {
-					$nrt->fehler("Email-Passwort Kombination passt nicht.");
-					return false;
+					return WRONG_EMAIL;
+				} elseif ($passwortTest == WRONG_COMBINATION) {
+					return WRONG_COMBINATION;
 				}
 			}
 		}
+		else { return WRONG_EMAIL; }
 	}
+	
 ?>
