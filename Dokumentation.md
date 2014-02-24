@@ -19,9 +19,17 @@ Dokumentation
 		- [Der Signaturschlüssel](#der-signaturschl%C3%BCssel)
 		- [Beispiel](#beispiel)
 		- [Dateiverarbeitung](#dateiverarbeitung)
+		- [Die Webworker](#die-webworker)
 	- [Dateigröße](#dateigr%C3%B6%C3%9Fe)
 	- [aktuelle Probleme](#aktuelle-probleme)
 		- [Lösungsmöglichkeiten](#l%C3%B6sungsm%C3%B6glichkeiten)
+- [Änderungen außerhalb des Webverzeichnisses](#%C3%84nderungen-au%C3%9Ferhalb-des-webverzeichnisses)
+	- [php.ini (/etc/php5/cli/php.ini)](#phpini-etcphp5cliphpini)
+	- [apache](#apache)
+		- [Das SSL-Zertifikat](#das-ssl-zertifikat)
+	- [Verzeichnisse](#verzeichnisse)
+	- [loesche_temporaere_dateien.php](#loesche_temporaere_dateienphp)
+		- [Der Cronjob](#der-cronjob)
 
 ##Datenbankstruktur
 kursiv geschriebene Schlüssel sind Primärschlüssel in der Tabelle
