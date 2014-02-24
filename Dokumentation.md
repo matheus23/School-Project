@@ -198,3 +198,97 @@ Hier ein Schaubild des CBC-Modus:
 ####Lösungsmöglichkeiten
 1. Das meiste lässt sich durch mehr Programmieren beheben.
 2. Ähnlich wie FileSaver.js den Download behandelt wüden zusätzliche Bibliotheken einen umfassenden Browser-Support ermöglichen.
+
+##Änderungen außerhalb des Webverzeichnisses
+Aus verschiedenen Gründen mussten Daten außerhalb des Webverzeichnisses geändert werden.
+
+###php.ini (**/etc/php5/cli/php.ini**)
+````
+post_max_size = 30M
+````
+Lässt Post-Requests mit maximal 30 Megabyte zu. Das ist wichtig um größere Dateien hochladen zu können.
+
+````
+session.cookie_secure = True
+````
+Das Session-cookie wird nur über https weitergegeben.
+
+###apache
+####Das SSL-Zertifikat
+Das Zertifikat wurde mit openssl erstellt und befindet sich hier: **/etc/apache2/ssl/apache.pem**
+Dabei wurde folgende Anleitung benutzt:
+http://wiki.ubuntuusers.de/Apache/SSL
+Nach dieser Anleitung wurden auch die Ports konfiguriert bzw. die Datei **/etc/apache2/sites-available/ssl.conf** erstellt.
+
+Zum Umschreiben von http-Verbindungen zu https wurde Folgendes in der .htaccess-Datei im Stammverzeichnis des Servers ergänzt:
+````
+RewriteEngine On
+# This will enable the Rewrite capabilities
+
+RewriteCond %{HTTPS} !=on
+# This checks to make sure the connection is not already HTTPS
+
+RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+# This rule will redirect users from their original location, to the same location but using HTTPS.
+# i.e.  http://www.example.com/foo/ to https://www.example.com/foo/
+# The leading slash is made optional so that this will work either in httpd.conf
+# or .htaccess context
+````
+Diese Lösung stammt von http://wiki.apache.org/httpd/RewriteHTTPToHTTPS
+
+###Verzeichnisse
+Das Verzeichnis **/mnt/usb** wurde erstellt
+Folgente Zeile wurde in **/etc/rc.local** ergänzt:
+````
+mount -t ext4 /dev/sda1 /mnt/usb
+````
+Diese mountet den ext4 formatierten USB-Stick im oben genannten Verzeichnis (bei jedem Systemstart)
+
+Die Verzeichnisse **dateien** und **download_tmp** wurden als Unterverzeichnisse von **/mnt/usb** erstellt.
+Sie gehören dem Nutzer www-data (Nutzer, der den Server ausführt)
+
+Das Verzeichnis **/home/www-data/** wurde erstellt (gehört ebenfalls www-data). Darum wiederum befindet sich ein Verzeichnis **dateien**. Im Webserver-Verzeichnis (**/var/www**) befindet sich ein Verzeichnis **download_tmp**.
+
+Nun wurden die Verzeichnisse im Benutzerverzeichnis von www-data bzw. im Webserver-Verzeichnis mit denen auf dem USB-Stick durch symbolische Links verknüpft.
+
+````
+ln -s /mnt/usb/dateien /home/www-data/dateien
+ln -s /mnt/usb/download_tmp /var/www/download_tmp
+````
+
+So werden Dateien tatsächlich auf dem USB-Stick gespeichert. Während die Dateien über **/home/www-data/dateien** nur für den Server aufrufbar sind und nicht durch eine URL erreicht werden, kann der Server temporäre Kopien zum Download in **/var/www/download_tmp** (eigentlich **/mnt/usb/download_tmp**) kopieren. Diese sind anschließend über https://[Host]/download_tmp/[zufällige_ID] aufrufbar.
+
+###loesche_temporaere_dateien.php
+Das ist eine Datei in **/home/www-data**. Sie sieht volgendermaßen aus:
+````
+#!/usr/bin/php
+<?php
+	$files=scandir("/var/www/download_tmp/");
+	//Dateienwerdengefiltert:
+	$files=preg_grep("/(?=datei_).*/",$files);
+
+	$time=strtotime("-30minutes");
+	foreach($filesas$file){
+		if(filemtime("/var/www/download_tmp/".$file)<$time){
+			unlink("/var/www/download_tmp/".$file);
+		}
+	}
+?>
+````
+
+Die erste Zeile sorgt für das Ausführen mit php, wenn das Skript z.B aus einer Shell aufgerufen wird.
+Im restlichen Skript werden die Dateien, die sich in **/var/www/download_tmp/** befinden auf das Datum geprüft, wann sie zuletzt verändert worden sind. Sollte dieses Datum mehr als 30 Minuten in der Vergangenheit liegen wird die entsprechende Datei gelöscht. Das dient dazu den temporören Ordner ordentlich zu halten.
+
+####Der Cronjob
+Damit loesche_temporaere_dateien.php regelmäßig aufgerufen wird wurde über den Befehl
+````
+sudo crontab -e -u www-data
+````
+
+folgender Cronjob hinzugefügt:
+````
+*/5 * * * * /home/www-data/loesche_temporaere_dateien.php
+````
+
+Das ````*/5```` gibt an, dass **/home/www-data/loesche_temporaere_dateien.php** alle 5 Minuten ausgeführt wird.
+Die anderen Asteriske geben an, dass es unabhängig von Stunden, Tagen,... ausgeführt wird. Wegen ````-u www-data```` Ist das ein Job von www-data, somit gibt es kein Rechteproblem beim Löschen der Dateien im Webverzeichnis.
