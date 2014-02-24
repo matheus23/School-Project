@@ -139,6 +139,12 @@ Da Schlüsselgenerierung, Signieren, Vertifizieren und Ver-/Entschlüsseln reche
 
 !["Worker"](https://docs.google.com/drawings/d/1ziv8ys4l1dzWrLOoQXfhoBFRyZVI6mV33Fz6YBBxPTw/pub?w=1440&h=1080)
 
+Insgesamt werden Worker zum (AES-)Verschlüsseln und Entschlüsseln der Dateien benutzt sowie zum Signieren und Verifizieren. Da bei der Ver-/Entschlüsselung eine bestimmte Anzahl an Bytes pro Nachricht an den Worker geschickt wird, ist es möglich den Fortschritt der Verschlüsselung genau nachzuvollziehen und als Balken darzustellen.
+
+Zum Signieren und Verifizieren fragt der Webworker keine neuen Daten vom Haupthread ab und dient nur zur Parallelisierung.
+
+Auch die Bibliothek forge benutzt einen Webworker (forge/prime.worker.js) bzw. es werden vom Skript schluessel.js 8 parallel erstellt. Diese werden zur Suche nach Primzahlen eigesetzt. Die Dauer dieses Prozesses hängt allerdings vom Zufall ab und kann bei gleicher Leistung unterschiedlich lange dauern.
+
 ###Dateigröße
 Die Bestimmung der Dateigröße ist auf den ersten Blick verwirrend. Diese muss allerdings ermittelt werden, um den Nutzer vor dem Upload zu großer Dateien zu warnen.
 Am besten lässt sich das an einem Beispiel nachvollziehen.
