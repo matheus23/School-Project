@@ -102,8 +102,6 @@ Tabelle ordnet einem Nutzer den aktuellsten Dateischlüssel zu.
 
 ##Das Uploadsystem
 ###Verschlüsselung
-####NEU
-* private Schlüssel werden AES-Verschlüsselt auf dem Server, statt verschlüsselt im localStorage gespeichert. Das ermöglicht den geräteübergreifenden Zugriff auf den Service.
 
 ####Der Dateischlüssel
 Der Dateischlüssel ist ein __RSA-Schlüsselpaar__, das heißt er besteht aus einem privaten und einem öffentlichen Schlüssel. Der öffentliche Schlüssel wird an den Server übergeben, sodass andere Nutzer Dateien mit ihm verschlüsseln können. Der private Schlüssel wird mit einem Passwort verschlüsselt (symmetrische Verschlüsselung, __AES-256__) und anschließend ebenfalls zum Server geschickt.
@@ -113,15 +111,15 @@ Der Signaturschlüssel ist ebenfalls ein __RSA-Schlüsselppar__, mit dem genauso
 
 ####Beispiel
 NutzerA und NutzerB melden sich bei Mangoshare an und erstellen jeweils einen Dateischlüssel und einen Signaturschlüssel:
-!["Schlüsselgenerierung"](https://docs.google.com/drawings/d/1qu8DQHO7GqdgA9DXN1K8gV8QXQ8jhT4YvXxYkOhP87o/pub?w=1440&amp;h=1080)
+!["Schlüsselgenerierung"](/doc_bilder/Schluesselgenerierung.png)
 NutzerA möchte nun NutzerB "vollGeheimesDokument.pdf" schicken. Dazu wählt er die Datei in upload.php aus und gibt sein Passwort für den Signaturschlüssel ein:
-!["Schlüsselgenerierung"](https://docs.google.com/drawings/d/13FjYPSqNeYbAmohra5PBzIUbZceny03RBBPMAJ1PA8w/pub?1440&h=1080)
+!["Upload"](/doc_bilder/Upload.png)
 NutzerB kann in download.php nun die Datei downloaden und mit seinem privaten Dateischlüssel entschlüsseln:
-!["Schlüsselgenerierung"](https://docs.google.com/drawings/d/1jJdk9J3yu8SbUYlQYK8x9rKtf2zt4lBPs2MaB_ZbPJc/pub?w=1440&h=1080)
+!["Download"](/doc_bilder/Download.png)
 
 \* Die Ver-/Entschlüsselung der privaten Schlüssel ist hier nur vereinfacht dargestellt. Tatsächlich sieht die  Ver-/Entschlüsselung ähnlich aus wie bei den verschlüsselten Dateien. Das heißt es werden zusätzliche Schlüsselinformationen übertragen, die gebraucht werden, um den Schlüssel und den Algorithmus zu "rekonstruieren".
 
-Für die Erstellung des 256 Bit langen AES-Schlüssels aus dem Passwort wir die Funktion "Password-Based Key Derivation Function 2" oder kurz __PBKDF2__ benutzt. Diese wiederum benötigt einen zufällig generierten __Salt__, damit Nutzer mit dem gleichen Passwort dennoch einen unterschiedlichen Schlüssel haben. Dann kommt noch der __AES-Initialisierungsvektor__ oder kurz IV dazu, der eine ähnliche Possition in der AES-Ver-/Entschlüsselung einnimmt, wie der Salt in der PBKDF2-Funktion (also das Bilden unterschiedlicher Ergebnisse bei gleichen Anfangswerten). Salt und IV werden nach der AES-Verschlüsselung der privaten Schlüssel an diese angehängt und später bei der Entschlüsselung zur "Rekonstruktion" eingesetzt.
+Für die Erstellung des 256 Bit langen AES-Schlüssels aus dem Passwort wir die Funktion "Password-Based Key Derivation Function 2" oder kurz __PBKDF2__ benutzt. Diese wiederum benötigt einen zufällig generierten __Salt__, damit Nutzer mit dem gleichen Passwort dennoch einen unterschiedlichen Schlüssel haben. Dann kommt noch der __AES-Initialisierungsvektor__ oder kurz IV dazu, der eine ähnliche Position in der AES-Ver-/Entschlüsselung einnimmt, wie der Salt in der PBKDF2-Funktion (also das Bilden unterschiedlicher Ergebnisse bei gleichen Anfangswerten). Salt und IV werden nach der AES-Verschlüsselung der privaten Schlüssel an diese angehängt und später bei der Entschlüsselung zur "Rekonstruktion" eingesetzt.
 
 Außerdem sind Schlüssel und Informationen natürlich auch base64 gespeichert und werden erst auf dem Client dekodiert.
 
@@ -145,7 +143,7 @@ Eine Vorstellung der Funktionsweise bekommt man durch folgendes Bild, oder einfa
 #### Die Webworker
 Da Schlüsselgenerierung, Signieren, Vertifizieren und Ver-/Entschlüsseln rechenaufwendige Prozesse sind, werden sie nicht im Hauptthread durgeführt, sondern asynchron durch Webworker realisiert. Das hat den Vorteil, dass UI-Funktionen nicht unterbrochen werden und der Browser keine Meldung über zu lange Skriptausführung ausgibt. Der Webworker zum Verschlüsseln einer Datei sieht schematisch dargestellt etwa so aus:
 
-!["Worker"](https://docs.google.com/drawings/d/1ziv8ys4l1dzWrLOoQXfhoBFRyZVI6mV33Fz6YBBxPTw/pub?w=1440&h=1080)
+!["Worker"](/doc_bilder/Webworker.png)
 
 Insgesamt werden Worker zum (AES-)Verschlüsseln und Entschlüsseln der Dateien benutzt sowie zum Signieren und Verifizieren. Da bei der Ver-/Entschlüsselung eine bestimmte Anzahl an Bytes pro Nachricht an den Worker geschickt wird, ist es möglich den Fortschritt der Verschlüsselung genau nachzuvollziehen und als Balken darzustellen.
 
@@ -154,6 +152,7 @@ Zum Signieren und Verifizieren fragt der Webworker keine neuen Daten vom Haupthr
 Auch die Bibliothek forge benutzt einen Webworker (forge/prime.worker.js) bzw. es werden vom Skript schluessel.js 8 parallel erstellt. Diese werden zur Suche nach Primzahlen eigesetzt. Die Dauer dieses Prozesses hängt allerdings vom Zufall ab und kann bei gleicher Leistung unterschiedlich lange dauern.
 
 ###Dateigröße
+__Tatsächlich finden folgende Beispiele keine konkrete Anwendung innerhalb der Anwendung, da das Uploadlimit wesentlich höher als das Dateilimit ist. Sie sind allerdings dennoch hilfreich, um den Aufbau der verschlüsselten Datei oder die Funktionsweise der Webworker nachvollziehen zu können__
 Die Bestimmung der Dateigröße ist auf den ersten Blick verwirrend. Diese muss allerdings ermittelt werden, um den Nutzer vor dem Upload zu großer Dateien zu warnen.
 Am besten lässt sich das an einem Beispiel nachvollziehen.
 Hochgeladen werden soll eine Datei mit einer Größe von 2360764 Byte (ca. 2,4 MB)
@@ -192,20 +191,12 @@ Hier ein Schaubild des CBC-Modus:
 
 [By WhiteTimberwolf (SVG version) (PNG version) [Public domain], via Wikimedia Commons](http://upload.wikimedia.org/wikipedia/commons/thumb/8/80/CBC_encryption.svg/1000px-CBC_encryption.svg.png)
 
-###aktuelle Probleme
-* Noch kein Gruppenupload
-* Kein wirkliches Uploadlimit, bis auf das Standartlimit von php, das bei Überschreitung zu Fehlern führt.
-* <del>Bisher sind private Schlüssel im localStorage nicht übertragbar auf andere Browser, was das Benutzen an anderen Browsern oder Geräten unmöglich macht.</del>
-* Dateien sind noch nicht löschbar.
-* Dateiliste zeigt alle Dateien an und besitzt kein Limit
-* <del>Permanentes Speichern der Schlüssel auf die localStorage-Technologie beschränkt</del>
-* viele Funktionen sind auf älteren Browsern so nicht vorhanden.
-* mehrere kleine bis mittelschwere Designproblemchen
-* forge ist eigentlich die Implementierung von TLS in Javascript, deshalb können noch ein paar Dateien gelöscht werden, die nicht gebraucht werden
-
-####Lösungsmöglichkeiten
-1. Das meiste lässt sich durch mehr Programmieren beheben.
-2. Ähnlich wie FileSaver.js den Download behandelt wüden zusätzliche Bibliotheken einen umfassenden Browser-Support ermöglichen.
+##Schutztechniken
+* Die Dateien sind außerhalb des Webverzeichnisses gespeichert (siehe unten)
+* Eingaben, die an MySQL weitergegeben werden, werden entsprechend "entschärft" (mysql_real_escape_string())
+* Für jede Anfrage, die etwas benutzerbezogenes am Server abfragt, wird ein Geheimnis benutzt:
+	* Für Änderungen am Benutzerkonto ist das Passwort erforderlich
+	* sonstige Aktionen benötigen den bei jedem Seitenaufruf generierten CSRF-Token. Pro Session werden maximal 42 ausgestellt, bevor der erste wieder verworfen wird (*ermöglicht das Benutzen der Seite in mehreren Tabs, ohne dass der CSRF-Token des ersten Tabs ungültig wird*)
 
 ##Änderungen außerhalb des Webverzeichnisses
 Aus verschiedenen Gründen mussten Daten außerhalb des Webverzeichnisses geändert werden.
@@ -255,7 +246,7 @@ Diese mountet den ext4 formatierten USB-Stick im oben genannten Verzeichnis (bei
 Die Verzeichnisse **dateien** und **download_tmp** wurden als Unterverzeichnisse von **/mnt/usb** erstellt.
 Sie gehören dem Nutzer www-data (Nutzer, der den Server ausführt)
 
-Das Verzeichnis **/home/www-data/** wurde erstellt (gehört ebenfalls www-data). Darum wiederum befindet sich ein Verzeichnis **dateien**. Im Webserver-Verzeichnis (**/var/www**) befindet sich ein Verzeichnis **download_tmp**.
+Das Verzeichnis **/home/www-data/** wurde erstellt (gehört ebenfalls www-data). Darin wiederum befindet sich ein Verzeichnis **dateien**. Im Webserver-Verzeichnis (**/var/www**) befindet sich ein Verzeichnis **download_tmp**.
 
 Nun wurden die Verzeichnisse im Benutzerverzeichnis von www-data bzw. im Webserver-Verzeichnis mit denen auf dem USB-Stick durch symbolische Links verknüpft.
 
@@ -285,7 +276,7 @@ Das ist eine Datei in **/home/www-data**. Sie sieht volgendermaßen aus:
 ````
 
 Die erste Zeile sorgt für das Ausführen mit php, wenn das Skript z.B aus einer Shell aufgerufen wird.
-Im restlichen Skript werden die Dateien, die sich in **/var/www/download_tmp/** befinden auf das Datum geprüft, wann sie zuletzt verändert worden sind. Sollte dieses Datum mehr als 30 Minuten in der Vergangenheit liegen wird die entsprechende Datei gelöscht. Das dient dazu den temporören Ordner ordentlich zu halten.
+Im restlichen Skript werden die Dateien, die sich in **/var/www/download_tmp/** befinden auf das Datum geprüft, wann sie zuletzt verändert worden sind. Sollte dieses Datum länger als 30 Minuten in der Vergangenheit liegen wird die entsprechende Datei gelöscht. Das dient dazu den temporören Ordner ordentlich zu halten.
 
 ####Der Cronjob
 Damit loesche_temporaere_dateien.php regelmäßig aufgerufen wird wurde über den Befehl
@@ -300,3 +291,11 @@ folgender Cronjob hinzugefügt:
 
 Das ````*/5```` gibt an, dass **/home/www-data/loesche_temporaere_dateien.php** alle 5 Minuten ausgeführt wird.
 Die anderen Asteriske geben an, dass es unabhängig von Stunden, Tagen,... ausgeführt wird. Wegen ````-u www-data```` Ist das ein Job von www-data, somit gibt es kein Rechteproblem beim Löschen der Dateien im Webverzeichnis.
+
+##Mögliche weiterführende Funktionen
+* Gruppenupload
+* Uploadlimit pro Benutzer
+* Dateien individuell löschbar machen (sowohl für den Sender als auch für den Empfänger)
+* Mehr Funktionen in der Dateiliste
+	* Seiten, statt endlos lange Liste
+	* Suchfilter
