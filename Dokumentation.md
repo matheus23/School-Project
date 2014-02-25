@@ -14,15 +14,13 @@ Dokumentation
 	- [Datei](#datei)
 - [Das Uploadsystem](#das-uploadsystem)
 	- [Verschlüsselung](#verschl%C3%BCsselung)
-		- [NEU](#neu)
 		- [Der Dateischlüssel](#der-dateischl%C3%BCssel)
 		- [Der Signaturschlüssel](#der-signaturschl%C3%BCssel)
 		- [Beispiel](#beispiel)
 		- [Dateiverarbeitung](#dateiverarbeitung)
 		- [Die Webworker](#die-webworker)
 	- [Dateigröße](#dateigr%C3%B6%C3%9Fe)
-	- [aktuelle Probleme](#aktuelle-probleme)
-		- [Lösungsmöglichkeiten](#l%C3%B6sungsm%C3%B6glichkeiten)
+- [Schutztechniken](#schutztechniken)
 - [Änderungen außerhalb des Webverzeichnisses](#%C3%84nderungen-au%C3%9Ferhalb-des-webverzeichnisses)
 	- [php.ini (/etc/php5/cli/php.ini)](#phpini-etcphp5cliphpini)
 	- [apache](#apache)
@@ -30,6 +28,7 @@ Dokumentation
 	- [Verzeichnisse](#verzeichnisse)
 	- [loesche_temporaere_dateien.php](#loesche_temporaere_dateienphp)
 		- [Der Cronjob](#der-cronjob)
+- [Mögliche zukünftige Funktionen](#m%C3%B6gliche-zuk%C3%BCnftige-funktionen)
 
 ##Datenbankstruktur
 kursiv geschriebene Schlüssel sind Primärschlüssel in der Tabelle
@@ -292,7 +291,7 @@ folgender Cronjob hinzugefügt:
 Das ````*/5```` gibt an, dass **/home/www-data/loesche_temporaere_dateien.php** alle 5 Minuten ausgeführt wird.
 Die anderen Asteriske geben an, dass es unabhängig von Stunden, Tagen,... ausgeführt wird. Wegen ````-u www-data```` Ist das ein Job von www-data, somit gibt es kein Rechteproblem beim Löschen der Dateien im Webverzeichnis.
 
-##Mögliche weiterführende Funktionen
+##Mögliche zukünftige Funktionen
 * Gruppenupload
 * Uploadlimit pro Benutzer
 * Dateien individuell löschbar machen (sowohl für den Sender als auch für den Empfänger)
