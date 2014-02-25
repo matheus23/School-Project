@@ -10,7 +10,6 @@ $nrt = new Nachrichten("#fehlerListe");
 if (alleSchluesselGesetzt($data, "regID")){
 	$db = oeffneBenutzerDB($nrt);
 	$regID = $db->real_escape_string($data["regID"]);
-	
 	pruefeRegistrierungsEmail($regID, $db, $nrt);
 } else {
 	$nrt->fehler("Keine regID in der URL. Sicher, dass du auf der richtigen Seite bist?");

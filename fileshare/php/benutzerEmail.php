@@ -38,6 +38,7 @@ class ExtPHPMailer extends PHPMailer {
 }
 
 function schickeRegistrierungsEmail($user,$email,$regID,$nrt){
+	$regID = urlencode($regID);
 	$mail= new ExtPHPMailer();
 	$mail->Subject = 'Registrierung abschließen';
 	$pfad = dirname($_SERVER["REQUEST_URI"]);
@@ -109,6 +110,7 @@ function pruefeRegistrierungsEmail($regID,$db,$nrt){
 }
 
 function schickePasswortResetEmail($nrt,$email,$resetID,$verfallsdatum){
+	$resetID = urlencode($resetID);
 	$mail= new ExtPHPMailer();
 	$mail->Subject = 'Passwort zurücksetzen';
 	$mail->addAddress($email);
@@ -189,18 +191,19 @@ function setzteNutzerBestaetigt($db, $nutzerID, $bestaetigt) {
 	);
 }
 
-function schickeBestaetigungsEmail($user,$email,$nutzerID,$nrt){
+function schickeBestaetigungsEmail($user,$email,$regID,$nrt){
+	$regID = urlencode($regID);
 	$mail= new ExtPHPMailer();
 	$mail->Subject = 'Emailänderung abschließen';
 	$mail->addAddress($email);
 	$mail->Body =//Email-Text für HTML-Mails (Link anklickbar)
 		"Hallo $user,<br>".
 		"um deine Emailänderung abzuschließen öffne folgenden Link:<br>".
-		"<a href='https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$nutzerID'>https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID</a>";
+		"<a href='https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$regID'>https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$nutzerID</a>";
 	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
 		"Hallo $user,\n".
 		"um deine Emailänderung abzuschließen öffne folgenden Link:\n".
-		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$nutzerID";
+		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$regID";
 	if(!$mail->send()) {
 		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
 		return false;
