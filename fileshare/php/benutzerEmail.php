@@ -45,13 +45,13 @@ function schickeRegistrierungsEmail($user,$email,$regID,$nrt){
 	$mail->Body =//Email-Text für HTML-Mails (Link anklickbar)
 		"Hallo $user,<br>".
 		"um deine Registrierung abzuschließen öffne folgenden Link:<br>".
-		"<a href='https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$regID'>".
-		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$regID".
+		"<a href='https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$regID'>".
+		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$regID".
 		"</a>";
 	$mail->AltBody = //Email-Text, wenn HTML nicht aktiviert ist
 		"Hallo $user,\n".
 		"um deine Registrierung abzuschließen öffne folgenden Link:\n".
-		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?nutzerID=$regID";
+		"https://".host."/".githubdir."/fileshare/php/emailBestaetigen.php?regID=$regID";
 	if(!$mail->send()) {
 		$nrt->fehler("Fehler beim Mailversand:".$mail->ErrorInfo);
 		return false;
