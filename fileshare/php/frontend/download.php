@@ -17,6 +17,7 @@ $menu = new Menu($frontendMenu, "download", "../../");
 	<link type="text/css" rel="stylesheet" href="../../css/style.css">
 	<link type="text/css" rel="stylesheet" href="../../css/frontendStyle.css">
 	<script type="text/javascript" src="../../js/jquery-1.10.2.min.js"></script>
+	<script src="../../js/ajaxFehler.js" type="text/javascript"></script>
 	<script src="../../js/forge/forge.bundle.js"></script>
     <script src="../../js/fileSaver/FileSaver.js"></script>
 	<script src="../../js/frontend.js"></script>

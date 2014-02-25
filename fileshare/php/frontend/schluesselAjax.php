@@ -7,12 +7,12 @@ require_once(rootdir."fileshare/php/frontend/frontendUtilities.php");
 
 $data = $_POST;
 $nrt = new Nachrichten("#fehlerListe","../../");
-if((!isset($_SESSION["semail"]))||($_SESSION["semail"]=="")){
+if(!istAngemeldet()){
 	session_destroy();
 	echo "interner Fehler";
 	die();
 }
-if(!(new CSRFSchutz())->post()->pruefe()){//Übernimmt den CSRFToken aus den Post-Daten und überprüft ihn mit dem Token in der Session
+if(!(new CSRFSchutz())->post()->pruefe()){//Übernimmt den CSRFToken aus den Post-Daten und überprüft ihn mit den Token in der Session
 	session_destroy();
 	echo "interner Fehler";
 	die();

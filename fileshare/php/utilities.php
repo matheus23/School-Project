@@ -133,7 +133,7 @@ class Nachricht {
 	}
 	
 	public function toJsonUnencoded() {
-		$n = addslashes($this->nachricht);
+		$n = $this->nachricht;
 		$a = $this->art;
 		$path = $this->path;
 		return array("typ" => $a, "nachricht" => $n);

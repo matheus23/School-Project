@@ -58,28 +58,41 @@ function aktuelleNutzerIDJavaScript(){
 //Benötigt eine offene Session
 class CSRFSchutz{
 	public $token;
-	public function __construct($token=""){
-		$this->token=$token;
+	public function __construct(){
+		$this->token = array();
+		if (isset($_SESSION["token"])){
+			$this->token = $_SESSION["token"];
+		}
+		else{
+			$_SESSION["token"] = $this->token;
+		}
+		$this->tokenAktuell = "";
+		$this->tokenClient = "";
 	}
 	public function neu(){//Erstellung eines neuen Tokens (pro request oder mehrere requests)
-		$_SESSION["token"] = sichereID("CSRFToken_",30);
-		$this->token = $_SESSION["token"];
+		if (count($this->token)>42){
+			array_shift($this->token);
+			$_SESSION["token"] = $this->token;
+		}
+		$this->tokenAktuell = sichereID("CSRFToken_",30);
+		array_push($this->token,$this->tokenAktuell);
+		$_SESSION["token"] = $this->token;
 		return $this;
 	}
-	public function get(){//Gibt den Token zurück
+	public function get(){//Gibt den Token-Array zurück
 		return $this->token;
 	}
 	public function post(){//Liest den Token aus den Formulardaten
 		if(alleSchluesselGesetzt($_POST,"CSRFToken")){
-			$this->token = $_POST["CSRFToken"];
+			$this->tokenClient = $_POST["CSRFToken"];
 		}
 		else{
-			$this->token = "";
+			$this->tokenClient = "";
 		}
 		return $this;
 	}
-	public function pruefe(){//Prüft ob der jetzige Token mit der Sessionvariable übereinstimmt
-		if($this->token == $_SESSION["token"]){
+	public function pruefe(){//Prüft ob tokenClient mit der Sessionvariable übereinstimmt
+		if(in_array($this->tokenClient,$_SESSION["token"])){
 			return true;
 		}
 		else{
@@ -94,11 +107,11 @@ class CSRFSchutz{
 		}
 	}
 	public function genHTML(){//Generiert ein Input mit dem Token
-		$token = $this->token;
+		$token = $this->tokenAktuell;
 		return "<input type='hidden' id='CSRFToken' name='CSRFToken' value='$token'/>";
 	}
 	public function genJS(){//Generiert javascript mit dem Token
-		$token = $this->token;
+		$token = $this->tokenAktuell;
 		return "<script>var CSRFToken='$token'</script>";
 	}
 }
