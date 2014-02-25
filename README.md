@@ -29,4 +29,8 @@ Philipp Krüger
 
 ###FileSaver.js
 * Ort: /fileshare/js/fileSaver/
-* Lizenz: [MIT/X11 license](/fileshare/js/fileSaver/LICENSE.md)
+* Lizenz: [MIT/X11 License](/fileshare/js/fileSaver/LICENSE.md)
+
+###jQuery
+* Ort: /fileshare/js/jquery-1.10.2.min.js
+* Lizenz: [MIT License](https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt)
